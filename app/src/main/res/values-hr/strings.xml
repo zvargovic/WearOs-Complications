@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Cijena zlata</string>
+
+    <!-- UI strings -->
+    <string name="title">Complication Provider</string>
+    <string name="subtitle">Aplikacija prikazuje komplikacije.</string>
+    <string name="mode_display">Prikaz</string>
+    <string name="mode_layout">Raspored</string>
+    <string name="button_label">Osvježi</string>
+    <string name="switch_label">Auto osvježavanje</string>
+
+    <!-- Complication textovi -->
+    <string name="gold_short">Zlato: %1$s</string>
+    <string name="gold_long">Cijena zlata: %1$s po unci</string>
+    <string name="gold_desc">Cijena zlata u eurima</string>
+    <string name="gold_icon_desc">Ikona zlata</string>
+    <string name="gold_photo_desc">Fotografija zlata</string>
+
+    <string name="setup_label">Setup</string>
+    <string name="setup_title">Setup</string>
+    <string name="api_key_label">API Key</string>
+    <string name="api_key_placeholder">Enter API key</string>
+    <string name="alarm_label">Alarm</string>
+    <string name="alerts_label">Alerts</string>
+    <string name="back_label">Back</string>
+    <string name="save_label">Save</string>
+</resources>

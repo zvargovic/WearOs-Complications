@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">AAAA</string>
+    <string name="app_name">Gold Price</string>
+
+    <!-- UI strings (koristit ćemo kasnije) -->
+    <string name="title">Complication Provider</string>
+    <string name="subtitle">This app provides complications.</string>
+    <string name="mode_display">Display</string>
+    <string name="mode_layout">Layout</string>
+    <string name="button_label">Refresh</string>
+    <string name="switch_label">Auto update</string>
+
+    <!-- Complication textovi (koristit ćemo kasnije) -->
+    <string name="gold_short">Gold: %1$s</string>
+    <string name="gold_long">Gold price: %1$s per ounce</string>
+    <string name="gold_desc">Gold price in euros</string>
+    <string name="gold_icon_desc">Gold icon</string>
+    <string name="gold_photo_desc">Gold photo</string>
+    <string name="setup_label">Setup</string>
+    <string name="setup_title">Setup</string>
+    <string name="api_key_label">API Key</string>
+    <string name="api_key_placeholder">Enter API key</string>
+    <string name="alarm_label">Alarm</string>
+    <string name="alerts_label">Alerts</string>
+    <string name="back_label">Back</string>
+    <string name="save_label">Save</string>
 </resources>

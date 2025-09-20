@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Klasični tipovi koji su najrašireniji -->
     <array name="supported_complication_types">
-        <item>3</item>  <!-- RANGED_VALUE (progress "gauge") -->
-        <!-- Opcionalno, ako želiš i novije tipove (ako ih lice podržava):
-             13 = GOAL_PROGRESS, 14 = WEIGHTED_ELEMENTS -->
-        <!-- <item>13</item> --> <!-- GOAL_PROGRESS -->
-        <!-- <item>14</item> --> <!-- WEIGHTED_ELEMENTS -->
+        <item>1</item>  <!-- SHORT_TEXT -->
+        <item>2</item>  <!-- LONG_TEXT -->
+        <item>3</item>  <!-- RANGED_VALUE -->
+        <item>4</item>  <!-- SMALL_IMAGE -->
+        <item>5</item>  <!-- MONOCHROMATIC_IMAGE -->
+        <item>6</item>  <!-- PHOTO_IMAGE -->
     </array>
 </resources>
