@@ -3,6 +3,7 @@ package com.example.complicationprovider
 import android.content.ComponentName
 import android.content.Context
 import android.util.Log
+import android.graphics.drawable.Icon
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
@@ -32,6 +33,8 @@ class ComplicationProviderService : ComplicationDataSourceService() {
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
+        val marketPreview = "Market: Open"
+
         return when (type) {
             ComplicationType.SHORT_TEXT ->
                 ShortTextComplicationData.Builder(
@@ -41,7 +44,7 @@ class ComplicationProviderService : ComplicationDataSourceService() {
 
             ComplicationType.LONG_TEXT ->
                 LongTextComplicationData.Builder(
-                    PlainComplicationText.Builder("$PREVIEW_EUR · Market: Open").build(),
+                    PlainComplicationText.Builder("$PREVIEW_EUR · $marketPreview").build(),
                     PlainComplicationText.Builder("XAU/EUR consensus and market status").build()
                 ).build()
 
@@ -54,6 +57,24 @@ class ComplicationProviderService : ComplicationDataSourceService() {
                 ).setText(PlainComplicationText.Builder(PREVIEW_EUR).build())
                     .build()
 
+            ComplicationType.MONOCHROMATIC_IMAGE -> {
+                val icon = Icon.createWithResource(this, android.R.drawable.presence_online)
+                MonochromaticImageComplicationData.Builder(
+                    MonochromaticImage.Builder(icon).build(),
+                    PlainComplicationText.Builder(marketPreview).build()
+                ).build()
+            }
+
+            ComplicationType.SMALL_IMAGE -> {
+                val icon = Icon.createWithResource(this, android.R.drawable.presence_online)
+                SmallImageComplicationData.Builder(
+                    SmallImage.Builder(icon, SmallImageType.ICON).build(),
+                    PlainComplicationText.Builder(marketPreview).build()
+                ).build()
+            }
+
+            ComplicationType.PHOTO_IMAGE -> NoDataComplicationData()
+
             else -> NoDataComplicationData()
         }
     }
@@ -65,13 +86,13 @@ class ComplicationProviderService : ComplicationDataSourceService() {
         scope.launch {
             try {
                 val repo = SettingsRepo(applicationContext)
-                val snap = repo.snapshotFlow.first()   // zadnji spremljeni snapshot
+                val snap = repo.snapshotFlow.first()   // zadnji snapshot
 
                 val eur: Double = snap.eurConsensus ?: 0.0
                 val eurText = if (eur > 0.0) formatEur(eur) else "—"
 
-                // Ne oslanjamo se na DataStore za status tržišta – izračun lokalno (UTC vikend zatvoreno).
-                val marketStatus = if (isMarketOpenUtc()) "Open" else "Closed"
+                val marketOpenNow = isMarketOpenUtc()
+                val marketStatusText = if (marketOpenNow) "Market: Open" else "Market: Closed"
 
                 val data: ComplicationData = when (request.complicationType) {
                     ComplicationType.SHORT_TEXT -> {
@@ -83,7 +104,7 @@ class ComplicationProviderService : ComplicationDataSourceService() {
 
                     ComplicationType.LONG_TEXT -> {
                         LongTextComplicationData.Builder(
-                            text = PlainComplicationText.Builder("$eurText · Market: $marketStatus").build(),
+                            text = PlainComplicationText.Builder("$eurText · $marketStatusText").build(),
                             contentDescription = PlainComplicationText.Builder("XAU/EUR with market status").build()
                         ).build()
                     }
@@ -98,6 +119,32 @@ class ComplicationProviderService : ComplicationDataSourceService() {
                         ).setText(PlainComplicationText.Builder(eurText).build())
                             .build()
                     }
+
+                    ComplicationType.MONOCHROMATIC_IMAGE -> {
+                        val iconRes = if (marketOpenNow)
+                            android.R.drawable.presence_online
+                        else
+                            android.R.drawable.presence_busy
+                        val icon = Icon.createWithResource(this@ComplicationProviderService, iconRes)
+                        MonochromaticImageComplicationData.Builder(
+                            MonochromaticImage.Builder(icon).build(),
+                            PlainComplicationText.Builder(marketStatusText).build()
+                        ).build()
+                    }
+
+                    ComplicationType.SMALL_IMAGE -> {
+                        val iconRes = if (marketOpenNow)
+                            android.R.drawable.presence_online
+                        else
+                            android.R.drawable.presence_busy
+                        val icon = Icon.createWithResource(this@ComplicationProviderService, iconRes)
+                        SmallImageComplicationData.Builder(
+                            SmallImage.Builder(icon, SmallImageType.ICON).build(),
+                            PlainComplicationText.Builder(marketStatusText).build()
+                        ).build()
+                    }
+
+                    ComplicationType.PHOTO_IMAGE -> NoDataComplicationData()
 
                     else -> NoDataComplicationData()
                 }

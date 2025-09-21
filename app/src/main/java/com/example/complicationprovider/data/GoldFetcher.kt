@@ -15,6 +15,8 @@ import java.text.DecimalFormatSymbols
 import java.time.DayOfWeek
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
+import java.time.Duration
+import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlin.math.abs
 
@@ -73,12 +75,20 @@ object GoldFetcher {
                     val runNow = !didFirstFetch || isMarketOpenUtc()
 
                     if (!didFirstFetch && !isMarketOpenUtc()) {
-                        Log.i(TAG, "[MARKET] Closed on first start → performing one initial fetch anyway (warm cache).")
-                    } else if (!runNow) {
                         val now = ZonedDateTime.now(ZoneOffset.UTC)
+                        val until = timeUntilMarketOpen(now)
                         Log.i(
                             TAG,
-                            "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — snooze ${CHECK_WHEN_CLOSED_MINUTES}m."
+                            "[MARKET] Closed on first start → performing one initial fetch anyway (warm cache). " +
+                                    "UTC ${now.dayOfWeek} ${now.toLocalTime()} — time until open: $until"
+                        )
+                    } else if (!runNow) {
+                        val now = ZonedDateTime.now(ZoneOffset.UTC)
+                        val until = timeUntilMarketOpen(now)
+                        Log.i(
+                            TAG,
+                            "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — snooze ${CHECK_WHEN_CLOSED_MINUTES}m. " +
+                                    "Time until open: $until"
                         )
                         delay(CHECK_WHEN_CLOSED_MINUTES * 60_000L)
                         continue
@@ -144,7 +154,7 @@ object GoldFetcher {
                     )
                     Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-                    // >>> ODMAH OSVJEŽI SVE KOMPLIKACIJE NA SATU <<<
+                    // osvježi komplikacije
                     requestUpdateAllComplications(context)
                     Log.d(TAG, "Complications refresh requested right after snapshot save.")
 
@@ -170,6 +180,22 @@ object GoldFetcher {
         return when (now.dayOfWeek) {
             DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
             else -> true
+        }
+    }
+
+    /** Koliko je još do otvaranja tržišta (ponedjeljak 00:00 UTC). */
+    private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String {
+        return when (now.dayOfWeek) {
+            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> {
+                val nextOpen = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+                    .toLocalDate()
+                    .atStartOfDay(ZoneOffset.UTC)
+                val dur = Duration.between(now, nextOpen)
+                val h = dur.toHours()
+                val m = dur.minusHours(h).toMinutes()
+                "${h}h ${m}m"
+            }
+            else -> "0h 0m"
         }
     }
 
