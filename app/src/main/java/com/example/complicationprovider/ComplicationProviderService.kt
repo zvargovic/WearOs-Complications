@@ -1,86 +1,126 @@
 package com.example.complicationprovider
 
-import android.graphics.drawable.Icon
+import android.content.ComponentName
+import android.content.Context
+import android.util.Log
 import androidx.wear.watchface.complications.data.*
+import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
+import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
-import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
+import com.example.complicationprovider.data.SettingsRepo
 
-class ComplicationProviderService : SuspendingComplicationDataSourceService() {
+private const val TAG = "ComplicationSvc"
 
-    override suspend fun onComplicationRequest(
-        request: ComplicationRequest
-    ): ComplicationData? {
-        return when (request.complicationType) {
-            ComplicationType.SHORT_TEXT          -> shortText()
-            ComplicationType.LONG_TEXT           -> longText()
-            ComplicationType.RANGED_VALUE        -> rangedValue()
-            ComplicationType.SMALL_IMAGE         -> smallImageIcon()
-            ComplicationType.MONOCHROMATIC_IMAGE -> monochromeIcon()
-            ComplicationType.PHOTO_IMAGE         -> photoImage()
-            else -> NotConfiguredComplicationData()
+// za preview i fallback
+private const val PREVIEW_EUR = "€3149"
+private const val RANGE_MIN = 0f
+private const val RANGE_MAX = 5000f
+
+class ComplicationProviderService : ComplicationDataSourceService() {
+
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
+
+    override fun getPreviewData(type: ComplicationType): ComplicationData? {
+        return when (type) {
+            ComplicationType.SHORT_TEXT ->
+                ShortTextComplicationData.Builder(
+                    PlainComplicationText.Builder(PREVIEW_EUR).build(),
+                    PlainComplicationText.Builder("XAU/EUR").build()
+                ).build()
+
+            ComplicationType.LONG_TEXT ->
+                LongTextComplicationData.Builder(
+                    PlainComplicationText.Builder("$PREVIEW_EUR · Open").build(),
+                    PlainComplicationText.Builder("XAU/EUR consensus").build()
+                ).build()
+
+            ComplicationType.RANGED_VALUE ->
+                RangedValueComplicationData.Builder(
+                    value = 3149f,
+                    min = RANGE_MIN,
+                    max = RANGE_MAX,
+                    contentDescription = PlainComplicationText.Builder("XAU/EUR").build()
+                ).setText(PlainComplicationText.Builder(PREVIEW_EUR).build())
+                    .build()
+
+            else -> NoDataComplicationData()
         }
     }
 
-    override fun getPreviewData(type: ComplicationType): ComplicationData? =
-        when (type) {
-            ComplicationType.SHORT_TEXT          -> shortText()
-            ComplicationType.LONG_TEXT           -> longText()
-            ComplicationType.RANGED_VALUE        -> rangedValue()
-            ComplicationType.SMALL_IMAGE         -> smallImageIcon()
-            ComplicationType.MONOCHROMATIC_IMAGE -> monochromeIcon()
-            ComplicationType.PHOTO_IMAGE         -> photoImage()
-            else -> null
+    override fun onComplicationRequest(
+        request: ComplicationRequest,
+        listener: ComplicationRequestListener
+    ) {
+        scope.launch {
+            try {
+                val repo = SettingsRepo(applicationContext)
+
+                // Snapshot iz DataStore-a
+                val snap = repo.snapshotFlow.first()
+
+                val eur: Double = snap.eurConsensus ?: 0.0
+                val eurText = if (eur > 0.0) formatEur(eur) else "—"
+
+                val data: ComplicationData = when (request.complicationType) {
+                    ComplicationType.SHORT_TEXT -> {
+                        ShortTextComplicationData.Builder(
+                            text = PlainComplicationText.Builder(eurText).build(),
+                            contentDescription = PlainComplicationText.Builder("XAU/EUR").build()
+                        ).build()
+                    }
+
+                    ComplicationType.LONG_TEXT -> {
+                        LongTextComplicationData.Builder(
+                            text = PlainComplicationText.Builder("$eurText · XAU/EUR").build(),
+                            contentDescription = PlainComplicationText.Builder("XAU/EUR").build()
+                        ).build()
+                    }
+
+                    ComplicationType.RANGED_VALUE -> {
+                        val v = eur.toFloat().coerceIn(RANGE_MIN, RANGE_MAX)
+                        RangedValueComplicationData.Builder(
+                            value = v,
+                            min = RANGE_MIN,
+                            max = RANGE_MAX,
+                            contentDescription = PlainComplicationText.Builder("XAU/EUR").build()
+                        ).setText(PlainComplicationText.Builder(eurText).build())
+                            .build()
+                    }
+
+                    else -> NoDataComplicationData()
+                }
+
+                listener.onComplicationData(data)
+            } catch (t: Throwable) {
+                Log.e(TAG, "onComplicationRequest error: ${t.message}", t)
+                listener.onComplicationData(NoDataComplicationData())
+            }
         }
-
-    // --- TEXT ---
-    private fun shortText(): ComplicationData =
-        ShortTextComplicationData.Builder(
-            text = PlainComplicationText.Builder("Zlato 1850€").build(),
-            contentDescription = PlainComplicationText.Builder("Cijena zlata u eurima").build()
-        ).setTitle(PlainComplicationText.Builder("Zlato").build())
-            .build()
-
-    private fun longText(): ComplicationData =
-        LongTextComplicationData.Builder(
-            text = PlainComplicationText.Builder("Cijena zlata: 1850€ po unci").build(),
-            contentDescription = PlainComplicationText.Builder("Cijena zlata u eurima").build()
-        ).setTitle(PlainComplicationText.Builder("Zlato").build())
-            .build()
-
-    // --- RANGED/PROGRESS ---
-    private fun rangedValue(): ComplicationData =
-        RangedValueComplicationData.Builder(
-            value = 75f, min = 0f, max = 100f,
-            contentDescription = PlainComplicationText.Builder("Napredak").build()
-        ).setText(PlainComplicationText.Builder("75%").build())
-            .build()
-
-    // --- IMAGES ---
-    private fun smallImageIcon(): ComplicationData {
-        val img = SmallImage.Builder(
-            image = Icon.createWithResource(this, R.drawable.ic_gold),
-            type = SmallImageType.ICON
-        ).build()
-        return SmallImageComplicationData.Builder(
-            smallImage = img,
-            contentDescription = PlainComplicationText.Builder("Ikona zlata").build()
-        ).build()
     }
+}
 
-    private fun monochromeIcon(): ComplicationData {
-        val mono = MonochromaticImage.Builder(
-            Icon.createWithResource(this, R.drawable.ic_gold)
-        ).build()
-        return MonochromaticImageComplicationData.Builder(
-            monochromaticImage = mono,
-            contentDescription = PlainComplicationText.Builder("Monokromatska ikona zlata").build()
-        ).build()
-    }
+/** Format: €3149.11 */
+private fun formatEur(v: Double): String {
+    val dfs = DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
+    return "€" + DecimalFormat("0.##", dfs).format(v)
+}
 
-    private fun photoImage(): ComplicationData {
-        return PhotoImageComplicationData.Builder(
-            photoImage = Icon.createWithResource(this, R.drawable.ic_gold_photo),
-            contentDescription = PlainComplicationText.Builder("Fotografija zlata").build()
-        ).build()
+/** Ručni trigger refresh-a komplikacija (možeš zvati iz mjesta gdje spremamo snapshot). */
+fun requestUpdateAllComplications(ctx: Context) {
+    try {
+        ComplicationDataSourceUpdateRequester
+            .create(ctx, ComponentName(ctx, ComplicationProviderService::class.java))
+            .requestUpdateAll()
+        Log.d(TAG, "Complications refresh requested.")
+    } catch (t: Throwable) {
+        Log.w(TAG, "requestUpdateAllComplications failed: ${t.message}")
     }
 }
