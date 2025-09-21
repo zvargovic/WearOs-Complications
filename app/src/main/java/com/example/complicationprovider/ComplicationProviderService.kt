@@ -14,12 +14,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.time.DayOfWeek
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.Locale
 import com.example.complicationprovider.data.SettingsRepo
 
 private const val TAG = "ComplicationSvc"
 
-// za preview i fallback
+// preview i range za RANGED_VALUE
 private const val PREVIEW_EUR = "€3149"
 private const val RANGE_MIN = 0f
 private const val RANGE_MAX = 5000f
@@ -38,8 +41,8 @@ class ComplicationProviderService : ComplicationDataSourceService() {
 
             ComplicationType.LONG_TEXT ->
                 LongTextComplicationData.Builder(
-                    PlainComplicationText.Builder("$PREVIEW_EUR · Open").build(),
-                    PlainComplicationText.Builder("XAU/EUR consensus").build()
+                    PlainComplicationText.Builder("$PREVIEW_EUR · Market: Open").build(),
+                    PlainComplicationText.Builder("XAU/EUR consensus and market status").build()
                 ).build()
 
             ComplicationType.RANGED_VALUE ->
@@ -62,12 +65,13 @@ class ComplicationProviderService : ComplicationDataSourceService() {
         scope.launch {
             try {
                 val repo = SettingsRepo(applicationContext)
-
-                // Snapshot iz DataStore-a
-                val snap = repo.snapshotFlow.first()
+                val snap = repo.snapshotFlow.first()   // zadnji spremljeni snapshot
 
                 val eur: Double = snap.eurConsensus ?: 0.0
                 val eurText = if (eur > 0.0) formatEur(eur) else "—"
+
+                // Ne oslanjamo se na DataStore za status tržišta – izračun lokalno (UTC vikend zatvoreno).
+                val marketStatus = if (isMarketOpenUtc()) "Open" else "Closed"
 
                 val data: ComplicationData = when (request.complicationType) {
                     ComplicationType.SHORT_TEXT -> {
@@ -79,8 +83,8 @@ class ComplicationProviderService : ComplicationDataSourceService() {
 
                     ComplicationType.LONG_TEXT -> {
                         LongTextComplicationData.Builder(
-                            text = PlainComplicationText.Builder("$eurText · XAU/EUR").build(),
-                            contentDescription = PlainComplicationText.Builder("XAU/EUR").build()
+                            text = PlainComplicationText.Builder("$eurText · Market: $marketStatus").build(),
+                            contentDescription = PlainComplicationText.Builder("XAU/EUR with market status").build()
                         ).build()
                     }
 
@@ -113,7 +117,15 @@ private fun formatEur(v: Double): String {
     return "€" + DecimalFormat("0.##", dfs).format(v)
 }
 
-/** Ručni trigger refresh-a komplikacija (možeš zvati iz mjesta gdje spremamo snapshot). */
+/** Jednostavna provjera: tržište zatvoreno vikendom (UTC). */
+private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean {
+    return when (now.dayOfWeek) {
+        DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
+        else -> true
+    }
+}
+
+/** Ručni trigger refresh-a komplikacija. */
 fun requestUpdateAllComplications(ctx: Context) {
     try {
         ComplicationDataSourceUpdateRequester
