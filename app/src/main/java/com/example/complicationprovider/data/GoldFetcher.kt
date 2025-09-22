@@ -13,9 +13,9 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.time.Duration
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlin.math.abs
@@ -29,11 +29,11 @@ object GoldFetcher {
 
     private val INVESTING_USD = listOf(
         "https://www.investing.com/currencies/xau-usd",
-        "https://www.investing.com/commodities/gold?quote=1"
+        "https://www.investing.com/commodities/gold?quote=1",
     )
     private val INVESTING_EUR = listOf(
         "https://www.investing.com/currencies/xau-eur",
-        "https://www.investing.com/commodities/gold?quote=1"
+        "https://www.investing.com/commodities/gold?quote=1",
     )
 
     private const val GOLDPRICE_USD_URL = "https://data-asg.goldprice.org/dbXRates/USD"
@@ -79,16 +79,16 @@ object GoldFetcher {
                         val until = timeUntilMarketOpen(now)
                         Log.i(
                             TAG,
-                            "[MARKET] Closed on first start → performing one initial fetch anyway (warm cache). " +
-                                    "UTC ${now.dayOfWeek} ${now.toLocalTime()} — time until open: $until"
+                            "[MARKET] Closed on first start → initial fetch anyway (warm cache). " +
+                                    "UTC ${now.dayOfWeek} ${now.toLocalTime()} — until open: $until",
                         )
                     } else if (!runNow) {
                         val now = ZonedDateTime.now(ZoneOffset.UTC)
                         val until = timeUntilMarketOpen(now)
                         Log.i(
                             TAG,
-                            "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — snooze ${CHECK_WHEN_CLOSED_MINUTES}m. " +
-                                    "Time until open: $until"
+                            "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — " +
+                                    "snooze ${CHECK_WHEN_CLOSED_MINUTES}m. Until open: $until",
                         )
                         delay(CHECK_WHEN_CLOSED_MINUTES * 60_000L)
                         continue
@@ -104,7 +104,7 @@ object GoldFetcher {
                         listOf(
                             fetchGoldpriceUsd(),
                             fetchInvestingUsd(),
-                            fetchTdUsd(apiKey)
+                            fetchTdUsd(apiKey),
                         )
                     }
                     // FX
@@ -113,7 +113,7 @@ object GoldFetcher {
                     val eurDeferred = async {
                         listOf(
                             fetchGoldpriceEur(),
-                            fetchInvestingEur()
+                            fetchInvestingEur(),
                         )
                     }
 
@@ -134,29 +134,34 @@ object GoldFetcher {
                                 "TD",
                                 tdEur?.setScale(2, RoundingMode.HALF_UP),
                                 unit = "EUR/oz",
-                                ccy = "EUR"
-                            )
+                                ccy = "EUR",
+                            ),
                         )
                     }
                     logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
 
-                    // -------- Snapshot: spremi zadnje konsenzuse u DataStore --------
+                    // ---- Snapshot → DataStore (čekamo commit) ----
                     val usdCons = consensus(usdQuotes.filter { it.value != null })
                     val eurCons = consensus(eurQuotes.filter { it.value != null })
 
-                    repo.saveSnapshot(
-                        Snapshot(
-                            usdConsensus = usdCons.toDouble(),
-                            eurConsensus = eurCons.toDouble(),
-                            eurUsdRate = eurUsd.toDouble(),
-                            updatedEpochMs = System.currentTimeMillis()
-                        )
+                    val snap = Snapshot(
+                        usdConsensus = usdCons.toDouble(),
+                        eurConsensus = eurCons.toDouble(),
+                        eurUsdRate = eurUsd.toDouble(),
+                        updatedEpochMs = System.currentTimeMillis(),
                     )
+
+                    // 1) Spremi i PRIČEKAJ da se commit završi
+                    repo.saveSnapshot(snap)
                     Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-                    // osvježi komplikacije
+                    // 2) Yield + kratki delay da DataStore emituje novi value kroz flow
+                    yield()               // prepusti scheduleru
+                    delay(60)             // 60ms je dovoljno da flow propagira
+
+                    // 3) Tek onda tražimo refresh komplikacija
                     requestUpdateAllComplications(context)
-                    Log.d(TAG, "Complications refresh requested right after snapshot save.")
+                    Log.d(TAG, "Complications refresh requested (after confirmed snapshot commit).")
 
                     didFirstFetch = true
                 } catch (t: Throwable) {
@@ -204,7 +209,7 @@ object GoldFetcher {
         val name: String,
         val value: BigDecimal?,
         val unit: String = "USD/oz",
-        val ccy: String = "USD"
+        val ccy: String = "USD",
     )
 
     private fun req(url: String): Request =
@@ -270,7 +275,7 @@ object GoldFetcher {
                 "Goldprice.org",
                 price.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
                 unit = "EUR/oz",
-                ccy = "EUR"
+                ccy = "EUR",
             ).also {
                 Log.i(TAG, "[OK] Goldprice.org: XAU/EUR = ${fmt(it.value)} EUR/oz")
             }
@@ -310,7 +315,7 @@ object GoldFetcher {
             "Investing",
             value.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
             unit = "EUR/oz",
-            ccy = "EUR"
+            ccy = "EUR",
         ).also {
             Log.i(TAG, "[OK] Investing: XAU/EUR = ${fmt(it.value)} EUR/oz")
         }
@@ -362,7 +367,7 @@ object GoldFetcher {
         // data-test
         Regex(
             """data-test="instrument-price-last"[^>]*>(.*?)</""",
-            setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
+            setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)?.let { inner ->
             Regex("""[\d\.,\u00A0\u202F]+""").findAll(inner).map { it.value }
                 .sortedByDescending { it.length }.forEach { cand ->
@@ -372,7 +377,7 @@ object GoldFetcher {
         // id="last_last"
         Regex(
             """id="last_last"[^>]*>(.*?)<""",
-            setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
+            setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.replace(Regex("<[^>]+>"), "")?.trim()
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
@@ -380,14 +385,14 @@ object GoldFetcher {
         // "last":"..."
         Regex(
             """"last"\s*:\s*"([\d\.,\u00A0\u202F]+)""",
-            setOf(RegexOption.IGNORE_CASE)
+            setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
         // itemprop price
         Regex(
             """itemprop="price"\s+content="([\d\.,\u00A0\u202F]+)""",
-            setOf(RegexOption.IGNORE_CASE)
+            setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
@@ -414,7 +419,7 @@ object GoldFetcher {
             val cons = consensus(ok)
             Log.i(
                 TAG,
-                "[CONSENSUS] XAU/USD = ${fmt(cons)} USD/oz  |  conf=1.00 (spread=${fmt(sp)} USD/oz; kept=${ok.size}/${quotes.size})"
+                "[CONSENSUS] XAU/USD = ${fmt(cons)} USD/oz  |  conf=1.00 (spread=${fmt(sp)} USD/oz; kept=${ok.size}/${quotes.size})",
             )
         } else {
             Log.w(TAG, "[CONSENSUS] Nema dovoljno valjanih USD izvora.")
@@ -435,7 +440,7 @@ object GoldFetcher {
             val usdText = usdRef?.value?.let { fmt(it) } ?: "n/a"
             Log.i(
                 TAG,
-                "[CONSENSUS] XAU/EUR = ${fmt(cons)} EUR/oz  |  conf=1.00 (spread=${fmt(sp)} EUR/oz; kept=${eurQuotes.size}/${eurQuotes.size}) | XAU/USD = $usdText USD/oz, Tečaj EUR/USD = $eurRate"
+                "[CONSENSUS] XAU/EUR = ${fmt(cons)} EUR/oz  |  conf=1.00 (spread=${fmt(sp)} EUR/oz; kept=${eurQuotes.size}/${eurQuotes.size}) | XAU/USD = $usdText USD/oz, Tečaj EUR/USD = $eurRate",
             )
         } else {
             Log.w(TAG, "[CONSENSUS] Nema dovoljno valjanih EUR izvora.")
@@ -465,7 +470,8 @@ object GoldFetcher {
             sorted[sorted.size / 2 - 1].add(sorted[sorted.size / 2])
                 .divide(BigDecimal(2), 6, RoundingMode.HALF_UP)
         }
-        val thr = if (quotes.firstOrNull()?.ccy == "EUR") THR_EUR else THR_USD
+        val isEur = quotes.firstOrNull()?.ccy == "EUR"
+        val thr = if (isEur) THR_EUR else THR_USD
         val kept = vals.filter { abs(it.subtract(med).toDouble()) <= thr }
         val base = if (kept.isEmpty()) vals else kept
         val sum = base.reduce { a, b -> a.add(b) }

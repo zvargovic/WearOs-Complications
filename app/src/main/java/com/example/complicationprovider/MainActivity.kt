@@ -1,5 +1,5 @@
 package com.example.complicationprovider
-
+import com.example.complicationprovider.data.Snapshot
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -10,34 +10,34 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.wear.compose.material.*
-import com.example.complicationprovider.ui.AppTheme
+import androidx.wear.compose.foundation.lazy.AutoCenteringParams
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.foundation.lazy.AutoCenteringParams
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Add
+import androidx.wear.compose.material.*
 import com.example.complicationprovider.data.SettingsRepo
+import com.example.complicationprovider.ui.AppTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -49,96 +49,157 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent { AppTheme { AppRoot() } }
 
-        // pokreni periodički dohvat (svakih 2 min; interval se mijenja u GoldFetcher-u)
+        // pokreni fetch petlju
         com.example.complicationprovider.data.GoldFetcher.start(applicationContext)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // zaustavi petlju
         com.example.complicationprovider.data.GoldFetcher.stop()
     }
 }
 
 private enum class Screen { HOME, SETUP, ALERTS, EDIT_ALERT }
 
+/* ---------------- ROOT ---------------- */
 @Composable
 private fun AppRoot() {
     var screen by remember { mutableStateOf(Screen.HOME) }
 
+    // shared alerts list
+    var alerts by remember { mutableStateOf(listOf<String>()) }
     var editIndex by remember { mutableStateOf(-1) }
-    var editText  by remember { mutableStateOf("") }
 
     when (screen) {
-        Screen.HOME   -> HomeScreen(onOpenSetup = { screen = Screen.SETUP })
-        Screen.SETUP  -> SetupScreen(
+        Screen.HOME -> HomeScreen(
+            onOpenSetup = { screen = Screen.SETUP }
+        )
+        Screen.SETUP -> SetupScreen(
             onBack = { screen = Screen.HOME },
             onOpenAlerts = { screen = Screen.ALERTS },
             onSaved = { screen = Screen.HOME }
         )
         Screen.ALERTS -> AlertsScreen(
+            alerts = alerts,
             onBack = { screen = Screen.SETUP },
-            onEdit = { idx, text ->
+            onDelete = { idx -> alerts = alerts.toMutableList().also { it.removeAt(idx) } },
+            onEdit = { idx -> editIndex = idx; screen = Screen.EDIT_ALERT },
+            onAddNew = {
+                val idx = alerts.size
+                alerts = alerts + ""
                 editIndex = idx
-                editText  = text
                 screen = Screen.EDIT_ALERT
             }
         )
         Screen.EDIT_ALERT -> EditAlertScreen(
-            index = editIndex,
-            initialText = editText,
+            initial = alerts.getOrNull(editIndex).orEmpty(),
             onBack = { screen = Screen.ALERTS },
-            onSaved = { screen = Screen.ALERTS }
+            onSave = { newText ->
+                val list = alerts.toMutableList()
+                if (editIndex in list.indices) list[editIndex] = newText
+                alerts = list
+                screen = Screen.ALERTS
+            }
         )
     }
 }
 
-/* ------------ HOME (start) SCREEN ------------ */
+/* ---------------- HOME ---------------- */
 @Composable
 private fun HomeScreen(onOpenSetup: () -> Unit) {
+    val context = LocalContext.current
+    val repo = remember { SettingsRepo(context) }
+
+    // ⇩ KLJUČNO: ovo sluša DataStore snapshot i automatski recompose-a UI kad GoldFetcher spremi novi snapshot
+    val snap by repo.snapshotFlow.collectAsState(
+        initial = com.example.complicationprovider.data.Snapshot(
+            usdConsensus = 0.0,
+            eurConsensus = 0.0,
+            eurUsdRate = 1.0,
+            updatedEpochMs = 0L
+        )
+    )
+
+    val usd: Double? = snap.usdConsensus.takeIf { it > 0.0 }
+    val eur: Double? = snap.eurConsensus.takeIf { it > 0.0 }
+    val fx : Double? = snap.eurUsdRate.takeIf { it > 0.0 }
+
+    LaunchedEffect(snap.updatedEpochMs) {
+        Log.d(TAG, "Home snapshot updated -> ts=${snap.updatedEpochMs} USD=$usd EUR=$eur FX=$fx")
+    }
+
     Scaffold(timeText = { TimeText() }) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 14.dp)
+                    .padding(top = 24.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
                 Text(
-                    text = stringResource(R.string.title),
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
+                    text = stringResource(R.string.app_name),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.onBackground
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = stringResource(R.string.subtitle),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.85f)
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colors.onBackground
                 )
-                Spacer(Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        Log.d(TAG, "Open Setup tapped")
-                        onOpenSetup()
-                    },
-                    modifier = Modifier.size(48.dp),
-                    shape = CircleShape
+                Spacer(Modifier.height(18.dp))
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Setup",
-                        tint = MaterialTheme.colors.onBackground,
-                        modifier = Modifier.size(22.dp)
+                    Text(
+                        text = "USD: ${usd?.let { euroFmt(it, '$') } ?: "—"}",
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        text = "EUR: ${eur?.let { euroFmt(it, '€') } ?: "—"}",
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colors.onBackground
+                    )
+                    Text(
+                        text = "FX: EUR/USD ${fx?.let { fxFmt(it) } ?: "—"}",
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onBackground
                     )
                 }
+            }
+
+            Button(
+                onClick = onOpenSetup,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 24.dp)
+                    .size(56.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Setup",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
+        }
+    }
+    LaunchedEffect(Unit) {
+        repo.historyFlow.collect { list ->
+            Log.d("HISTORY", "Ukupno = ${list.size}")
+            list.takeLast(5).forEach { rec ->
+                Log.d("HISTORY", "ts=${rec.ts} usd=${rec.usd} eur=${rec.eur} fx=${rec.fx}")
             }
         }
     }
 }
-
-/* ------------ SETUP SCREEN ------------ */
+/* ---------------- SETUP ---------------- */
 @Composable
 private fun SetupScreen(
     onBack: () -> Unit,
@@ -148,15 +209,11 @@ private fun SetupScreen(
     val context = LocalContext.current
     val repo = remember { SettingsRepo(context) }
     val scope = rememberCoroutineScope()
-
     var apiKey by remember { mutableStateOf("") }
-    var alarmOn by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        val current = repo.flow.first()
-        apiKey = current.apiKey
-        alarmOn = current.alarmOn
-        Log.d(TAG, "Loaded Settings: apiKey='$apiKey', alarmOn=$alarmOn")
+        val s = repo.flow.first()
+        apiKey = s.apiKey.orEmpty()
     }
 
     val listState = rememberScalingLazyListState()
@@ -170,32 +227,29 @@ private fun SetupScreen(
         ScalingLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(horizontal = 12.dp),
             state = listState,
-            autoCentering = AutoCenteringParams(itemIndex = 0),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            autoCentering = AutoCenteringParams(0),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             item {
                 Text(
                     text = "Setup",
-                    color = MaterialTheme.colors.primary,
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(top = 6.dp, bottom = 12.dp),
-                    textAlign = TextAlign.Center
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-
             item {
                 Text(
                     text = "API Key",
-                    color = MaterialTheme.colors.onBackground,
                     fontSize = 14.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                    color = MaterialTheme.colors.onBackground,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
-
             item {
                 val shape = RoundedCornerShape(16.dp)
                 Box(
@@ -205,7 +259,6 @@ private fun SetupScreen(
                         .clip(shape)
                         .background(MaterialTheme.colors.surface)
                         .clickable {
-                            Log.d(TAG, "API field clicked -> request focus + show keyboard")
                             focusRequester.requestFocus()
                             keyboard?.show()
                         }
@@ -214,10 +267,7 @@ private fun SetupScreen(
                 ) {
                     BasicTextField(
                         value = apiKey,
-                        onValueChange = {
-                            apiKey = it
-                            Log.d(TAG, "API key changed: '$apiKey'")
-                        },
+                        onValueChange = { apiKey = it },
                         singleLine = true,
                         cursorBrush = SolidColor(MaterialTheme.colors.onBackground),
                         textStyle = TextStyle(
@@ -239,76 +289,34 @@ private fun SetupScreen(
                         }
                     )
                 }
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(8.dp))
             }
-
             item {
-                ToggleChip(
-                    checked = alarmOn,
-                    onCheckedChange = {
-                        alarmOn = it
-                        Log.d(TAG, "Alarm toggled: $alarmOn")
-                    },
-                    label = { Text(if (alarmOn) "Alarm ON" else "Alarm OFF") },
-                    toggleControl = { Switch(checked = alarmOn, onCheckedChange = null) }
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(6.dp))
                 Chip(
-                    onClick = {
-                        Log.d(TAG, "Alerts clicked")
-                        onOpenAlerts()
-                    },
-                    label = {
-                        Text(
-                            text = "Alerts",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
+                    onClick = onOpenAlerts,
+                    label = { Text("Alerts", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
-            item { Spacer(Modifier.height(8.dp)) }
-
             item {
+                Spacer(Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     CompactChip(
-                        onClick = {
-                            Log.d(TAG, "Back tapped (Setup)")
-                            onBack()
-                        },
-                        label = {
-                            Text(
-                                text = "Back",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        },
+                        onClick = onBack,
+                        label = { Text("Back", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                         modifier = Modifier.weight(1f)
                     )
                     CompactChip(
                         onClick = {
-                            Log.d(TAG, "Save tapped (apiKey='$apiKey', alarmOn=$alarmOn)")
                             scope.launch {
-                                repo.save(apiKey = apiKey, alarmOn = alarmOn)
-                                Log.d(TAG, "Settings saved")
+                                repo.saveApiKey(apiKey)
                                 onSaved()
                             }
                         },
-                        label = {
-                            Text(
-                                text = "Save",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        },
+                        label = { Text("Save", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -317,23 +325,15 @@ private fun SetupScreen(
     }
 }
 
-/* ------------ ALERTS SCREEN ------------ */
+/* ---------------- ALERTS ---------------- */
 @Composable
 private fun AlertsScreen(
+    alerts: List<String>,
     onBack: () -> Unit,
-    onEdit: (index: Int, text: String) -> Unit,
+    onDelete: (Int) -> Unit,
+    onEdit: (Int) -> Unit,
+    onAddNew: () -> Unit
 ) {
-    val context = LocalContext.current
-    val repo = remember { SettingsRepo(context) }
-    val scope = rememberCoroutineScope()
-
-    var alerts by remember { mutableStateOf(listOf<String>()) }
-
-    LaunchedEffect(Unit) {
-        alerts = repo.alertsFlow.first()
-        Log.d(TAG, "Loaded Alerts: $alerts")
-    }
-
     val listState = rememberScalingLazyListState()
 
     Scaffold(
@@ -369,77 +369,49 @@ private fun AlertsScreen(
                         Text(
                             text = "No alerts — add one with +",
                             color = MaterialTheme.colors.onBackground.copy(alpha = 0.6f),
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 } else {
                     items(alerts.size) { index ->
-                        val original = alerts[index]
-                        val display = formatAmountLabel(original)
-
                         AlertRowCompact(
-                            displayText = display,
-                            onClick = { onEdit(index, original) },
-                            onDelete = {
-                                Log.d(TAG, "Delete alert: '$original'")
-                                val updated = alerts.toMutableList().also { it.removeAt(index) }
-                                alerts = updated
-                                scope.launch { repo.saveAlerts(updated) }
-                            }
+                            displayText = formatAmountLabel(alerts[index]),
+                            onClick = { onEdit(index) },
+                            onDelete = { onDelete(index) }
                         )
                         Spacer(Modifier.height(6.dp))
                     }
                 }
             }
 
-            // Back – centriran dolje, kompaktan
             CompactChip(
-                onClick = {
-                    Log.d(TAG, "Back tapped (Alerts)")
-                    onBack()
-                },
-                label = {
-                    Text(
-                        text = "Back",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
+                onClick = onBack,
+                label = { Text("Back", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(0.6f)
             )
 
-            // FAB “+” – DESNO SREDINA (manji: 40dp)
             Button(
-                onClick = {
-                    val newLabel = "Alert #${alerts.size + 1}"
-                    val updated = alerts + newLabel
-                    alerts = updated
-                    Log.d(TAG, "Added alert: '$newLabel'")
-                    scope.launch { repo.saveAlerts(updated) }
-                },
+                onClick = onAddNew,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .size(40.dp),
-                shape = CircleShape
+                    .size(48.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
-                    tint = MaterialTheme.colors.onBackground,
-                    modifier = Modifier.size(18.dp)
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         }
     }
 }
 
-/** Kompaktni redak: centrirana širina, mali razmak do kante, kanta 24dp / ikona 14dp */
 @Composable
 private fun AlertRowCompact(
     displayText: String,
@@ -481,23 +453,22 @@ private fun AlertRowCompact(
     }
 }
 
-/* ------------ EDIT ALERT SCREEN ------------ */
+/* ---------------- EDIT ALERT ---------------- */
 @Composable
 private fun EditAlertScreen(
-    index: Int,
-    initialText: String,
+    initial: String,
     onBack: () -> Unit,
-    onSaved: () -> Unit
+    onSave: (String) -> Unit
 ) {
-    val context = LocalContext.current
-    val repo = remember { SettingsRepo(context) }
-    val scope = rememberCoroutineScope()
-
-    var text by remember { mutableStateOf(initialText) }
-
+    var text by remember { mutableStateOf(initial) }
     val listState = rememberScalingLazyListState()
     val keyboard = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+        keyboard?.show()
+    }
 
     Scaffold(
         timeText = { TimeText() },
@@ -530,19 +501,12 @@ private fun EditAlertScreen(
                         .height(40.dp)
                         .clip(shape)
                         .background(MaterialTheme.colors.surface)
-                        .clickable {
-                            focusRequester.requestFocus()
-                            keyboard?.show()
-                        }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     BasicTextField(
                         value = text,
-                        onValueChange = {
-                            text = it
-                            Log.d(TAG, "Editing alert text: '$text'")
-                        },
+                        onValueChange = { text = it },
                         singleLine = true,
                         cursorBrush = SolidColor(MaterialTheme.colors.onBackground),
                         textStyle = TextStyle(
@@ -555,7 +519,7 @@ private fun EditAlertScreen(
                         decorationBox = { inner ->
                             if (text.isEmpty()) {
                                 Text(
-                                    text = "Alert text",
+                                    text = "Alert text (npr. 3140.50)",
                                     color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f),
                                     fontSize = 12.sp
                                 )
@@ -573,38 +537,13 @@ private fun EditAlertScreen(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     CompactChip(
-                        onClick = { onBack() },
-                        label = {
-                            Text(
-                                text = "Back",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        },
+                        onClick = onBack,
+                        label = { Text("Back", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                         modifier = Modifier.weight(1f)
                     )
                     CompactChip(
-                        onClick = {
-                            Log.d(TAG, "Save edited alert at index=$index text='$text'")
-                            scope.launch {
-                                val current = SettingsRepo(context).alertsFlow.first().toMutableList()
-                                if (index in current.indices) {
-                                    current[index] = text
-                                    SettingsRepo(context).saveAlerts(current)
-                                    Log.d(TAG, "Edited alert saved: $current")
-                                } else {
-                                    Log.w(TAG, "Index out of bounds while saving edited alert")
-                                }
-                            }
-                            onSaved()
-                        },
-                        label = {
-                            Text(
-                                text = "Save",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        },
+                        onClick = { onSave(text.trim()) },
+                        label = { Text("Save", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -613,23 +552,22 @@ private fun EditAlertScreen(
     }
 }
 
-/* ------------ FORMATIRANJE PRIKAZA  ------------ */
-private fun formatAmountLabel(raw: String): String {
-    val normalized = raw.trim().replace(',', '.')
-    return try {
-        val bd = BigDecimal(normalized)
-        val symbols = DecimalFormatSymbols(Locale.US).apply {
-            decimalSeparator = '.'
-            groupingSeparator = ','
-        }
-        val df = DecimalFormat("0.00", symbols)
-        "${df.format(bd)} eur"
-    } catch (e: Exception) {
-        raw
-    }
+/* ---------------- HELPERS ---------------- */
+private fun euroFmt(v: Double, symbol: Char): String {
+    val df = DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' })
+    return "${df.format(v)} $symbol"
 }
+private fun fxFmt(v: Double): String {
+    val df = DecimalFormat("0.0000", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' })
+    return df.format(v)
+}
+private fun formatAmountLabel(raw: String): String = try {
+    val n = raw.trim().replace(',', '.').toDouble()
+    val df = DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' })
+    "${df.format(n)} eur"
+} catch (_: Exception) { raw }
 
-/* ------------ PREVIEWS ------------ */
+/* ---------------- PREVIEWS ---------------- */
 @Preview(device = "wearos_small_round", showSystemUi = true)
 @Composable
 private fun PreviewHome() { AppTheme { HomeScreen(onOpenSetup = {}) } }
@@ -640,8 +578,18 @@ private fun PreviewSetup() { AppTheme { SetupScreen(onBack = {}, onOpenAlerts = 
 
 @Preview(device = "wearos_small_round", showSystemUi = true)
 @Composable
-private fun PreviewAlerts() { AppTheme { AlertsScreen(onBack = {}, onEdit = {_,_->}) } }
+private fun PreviewAlerts() {
+    AppTheme {
+        AlertsScreen(
+            alerts = listOf("3140.50", "3180.00"),
+            onBack = {},
+            onDelete = {},
+            onEdit = {},
+            onAddNew = {}
+        )
+    }
+}
 
 @Preview(device = "wearos_small_round", showSystemUi = true)
 @Composable
-private fun PreviewEdit() { AppTheme { EditAlertScreen(index = 0, initialText = "3140,36", onBack = {}, onSaved = {}) } }
+private fun PreviewEdit() { AppTheme { EditAlertScreen(initial = "", onBack = {}, onSave = {}) } }
