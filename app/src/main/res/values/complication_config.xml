@@ -1,0 +1,20 @@
+<resources>
+    <!-- Imena za chooser -->
+    <string name="comp_spot_name">Spot</string>
+    <string name="comp_rsi_name">RSI (14)</string>
+    <string name="comp_roc_name">ROC (1)</string>
+
+    <!-- Tipovi za svaku komplikaciju -->
+    <string-array name="supported_types_spot">
+        <item>SHORT_TEXT</item>
+        <item>LONG_TEXT</item>
+    </string-array>
+
+    <string-array name="supported_types_rsi">
+        <item>SHORT_TEXT</item>
+    </string-array>
+
+    <string-array name="supported_types_roc">
+        <item>SHORT_TEXT</item>
+    </string-array>
+</resources>

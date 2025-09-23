@@ -24,4 +24,9 @@
     <string name="alerts_label">Alerts</string>
     <string name="back_label">Back</string>
     <string name="save_label">Save</string>
+    <string name="comp_spot_name">Spot</string>
+    <string name="comp_rsi_name">RSI (14)</string>
+    <string name="comp_roc_name">ROC (1)</string>
+
+
 </resources>

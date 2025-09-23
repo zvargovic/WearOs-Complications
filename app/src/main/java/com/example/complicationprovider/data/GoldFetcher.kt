@@ -140,7 +140,7 @@ object GoldFetcher {
                     }
                     logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
 
-                    // ---- Snapshot → DataStore (čekamo commit) ----
+                    // ---- Snapshot → DataStore ----
                     val usdCons = consensus(usdQuotes.filter { it.value != null })
                     val eurCons = consensus(eurQuotes.filter { it.value != null })
 
@@ -151,17 +151,27 @@ object GoldFetcher {
                         updatedEpochMs = System.currentTimeMillis(),
                     )
 
-                    // 1) Spremi i PRIČEKAJ da se commit završi
+                    // 1) spremi snapshot + history (i pričekaj commit)
                     repo.saveSnapshot(snap)
+                    repo.appendHistory(
+                        HistoryRec(
+                            ts = snap.updatedEpochMs,
+                            usd = snap.usdConsensus,
+                            eur = snap.eurConsensus,
+                            fx  = snap.eurUsdRate
+                        )
+                    )
                     Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-                    // 2) Yield + kratki delay da DataStore emituje novi value kroz flow
-                    yield()               // prepusti scheduleru
-                    delay(60)             // 60ms je dovoljno da flow propagira
+                    // 2) Izračun indikatora na temelju povijesti (sada već uključuje i ovaj zapis)
+                    val history = repo.historyFlow.first()
+                    logIndicators(history)
 
-                    // 3) Tek onda tražimo refresh komplikacija
+                    // 3) yield + kratko, pa refresh komplikacija
+                    yield()
+                    delay(60)
                     requestUpdateAllComplications(context)
-                    Log.d(TAG, "Complications refresh requested (after confirmed snapshot commit).")
+                    Log.d(TAG, "Complications refresh requested (after indicators).")
 
                     didFirstFetch = true
                 } catch (t: Throwable) {
@@ -178,6 +188,74 @@ object GoldFetcher {
     fun stop() {
         job?.cancel()
         job = null
+    }
+
+    // ----------------- INDIKATORI: log -----------------
+    private fun logIndicators(history: List<HistoryRec>) {
+        if (history.isEmpty()) {
+            Log.i(TAG, "[IND] Nema history zapisa još.")
+            return
+        }
+        // Odaberi serije
+        val closeEur = history.map { it.eur }.filter { it > 0.0 }
+        val closeUsd = history.map { it.usd }.filter { it > 0.0 }
+
+        // Periodi
+        val pRsi = 14
+        val pShort = 9
+        val pMid = 20
+        val pLong = 50
+
+        // Pomoćna za pretty ispis
+        fun d2(v: Double?) = if (v == null) "n/a" else DecimalFormat(
+            "0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        fun d4(v: Double?) = if (v == null) "n/a" else DecimalFormat(
+            "0.0000", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+
+        // Dan 00:00 UTC
+        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC)
+            .toInstant().toEpochMilli()
+
+        // EUR indikatori
+        val eurRsi = Indicators.rsi(closeEur, pRsi)
+        val eurSma20 = Indicators.sma(closeEur, pMid)
+        val eurEma20 = Indicators.ema(closeEur, pMid)
+        val eurStd20 = Indicators.stddev(closeEur, pMid)
+        val eurRoc1  = Indicators.roc(closeEur, 1)
+        val (eurMin, eurMax) = Indicators.dayMinMax(history, dayStartUtc) { it.eur }
+
+        Log.i(
+            TAG,
+            "[IND][EUR] close=${d2(closeEur.lastOrNull())}  RSI${
+                pRsi
+            }=${d2(eurRsi)}  SMA$pMid=${d2(eurSma20)}  EMA$pMid=${d2(eurEma20)}  " +
+                    "σ$pMid=${d2(eurStd20)}  ROC1=${d2(eurRoc1)}%  DayMin=${d2(eurMin)}  DayMax=${d2(eurMax)}"
+        )
+
+        // USD indikatori
+        val usdRsi = Indicators.rsi(closeUsd, pRsi)
+        val usdSma20 = Indicators.sma(closeUsd, pMid)
+        val usdEma20 = Indicators.ema(closeUsd, pMid)
+        val usdStd20 = Indicators.stddev(closeUsd, pMid)
+        val usdRoc1  = Indicators.roc(closeUsd, 1)
+        val (usdMin, usdMax) = Indicators.dayMinMax(history, dayStartUtc) { it.usd }
+
+        Log.i(
+            TAG,
+            "[IND][USD] close=${d2(closeUsd.lastOrNull())}  RSI${
+                pRsi
+            }=${d2(usdRsi)}  SMA$pMid=${d2(usdSma20)}  EMA$pMid=${d2(usdEma20)}  " +
+                    "σ$pMid=${d2(usdStd20)}  ROC1=${d2(usdRoc1)}%  DayMin=${d2(usdMin)}  DayMax=${d2(usdMax)}"
+        )
+
+        // Brzi kratki/dugi signali (cross check – samo informativno)
+        val eurSma9 = Indicators.sma(closeEur, pShort)
+        val eurSma50 = Indicators.sma(closeEur, pLong)
+        val usdSma9 = Indicators.sma(closeUsd, pShort)
+        val usdSma50 = Indicators.sma(closeUsd, pLong)
+
+        Log.i(TAG, "[IND][EUR] SMA$pShort=${d2(eurSma9)}  SMA$pLong=${d2(eurSma50)}")
+        Log.i(TAG, "[IND][USD] SMA$pShort=${d2(usdSma9)}  SMA$pLong=${d2(usdSma50)}")
     }
 
     // ----- market status -----

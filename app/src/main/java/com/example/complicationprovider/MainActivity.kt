@@ -135,21 +135,24 @@ private fun HomeScreen(onOpenSetup: () -> Unit) {
                     .fillMaxSize()
                     .padding(horizontal = 14.dp)
                     .padding(top = 24.dp),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = stringResource(R.string.app_name),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colors.onBackground
+
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = stringResource(R.string.subtitle),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colors.onBackground
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colors.onBackground,
+
                 )
-                Spacer(Modifier.height(18.dp))
+
+                Spacer(Modifier.height(12.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -157,17 +160,17 @@ private fun HomeScreen(onOpenSetup: () -> Unit) {
                 ) {
                     Text(
                         text = "USD: ${usd?.let { euroFmt(it, '$') } ?: "—"}",
-                        fontSize = 20.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colors.onBackground
                     )
                     Text(
                         text = "EUR: ${eur?.let { euroFmt(it, '€') } ?: "—"}",
-                        fontSize = 20.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colors.onBackground
                     )
                     Text(
                         text = "FX: EUR/USD ${fx?.let { fxFmt(it) } ?: "—"}",
-                        fontSize = 16.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colors.onBackground
                     )
                 }
