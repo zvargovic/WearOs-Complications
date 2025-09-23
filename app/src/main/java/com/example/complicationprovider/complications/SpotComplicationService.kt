@@ -30,7 +30,7 @@ class SpotComplicationService : ComplicationDataSourceService() {
         ).build()
 
         return ShortTextComplicationData.Builder(
-            PlainComplicationText.Builder("€3149.00").build(),
+            PlainComplicationText.Builder("3149.00").build(),
             PlainComplicationText.Builder(getString(R.string.comp_spot_name)).build()
         )
             .setMonochromaticImage(img)
@@ -65,7 +65,7 @@ class SpotComplicationService : ComplicationDataSourceService() {
             DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
         ).format(v)
 
-        val text = if (snap.eurConsensus > 0.0) "€${fmt2(snap.eurConsensus)}" else "—"
+        val text = if (snap.eurConsensus > 0.0) "${fmt2(snap.eurConsensus)}" else "—"
 
         // DODANO: što ćemo prikazati
         Log.d(TAG_SPOT, "render text='$text' (elapsed=${System.currentTimeMillis() - t0}ms)")

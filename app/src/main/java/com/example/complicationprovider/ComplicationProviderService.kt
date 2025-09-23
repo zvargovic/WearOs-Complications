@@ -123,13 +123,3 @@ class ComplicationProviderService : ComplicationDataSourceService() {
 }
 
 /** Ručni trigger refresh-a komplikacija (pozovi nakon snimanja snapshota). */
-fun requestUpdateAllComplications(ctx: Context) {
-    try {
-        ComplicationDataSourceUpdateRequester
-            .create(ctx, ComponentName(ctx, ComplicationProviderService::class.java))
-            .requestUpdateAll()
-        Log.d(TAG, "Complications refresh requested.")
-    } catch (t: Throwable) {
-        Log.w(TAG, "requestUpdateAllComplications failed: ${t.message}")
-    }
-}

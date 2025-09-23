@@ -4,27 +4,24 @@ import android.content.ComponentName
 import android.content.Context
 import android.util.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
-import com.example.complicationprovider.complications.RocComplicationService
-import com.example.complicationprovider.complications.RsiComplicationService
 import com.example.complicationprovider.complications.SpotComplicationService
+import com.example.complicationprovider.complications.RsiComplicationService
+import com.example.complicationprovider.complications.RocComplicationService
 
-private const val TAG = "CompRefresh"
+private const val TAG = "ComplicationSvc"
 
-/** Pozovi nakon što snapshot i history budu spremljeni. */
-fun requestUpdateAllComplicationsForAll(ctx: Context) {
-    val services = listOf(
-        SpotComplicationService::class.java,
-        RsiComplicationService::class.java,
-        RocComplicationService::class.java
-    )
-    services.forEach { clazz ->
+fun requestUpdateAllComplications(ctx: Context) {
+    fun bump(klass: Class<*>, label: String) {
         try {
-            ComplicationDataSourceUpdateRequester
-                .create(ctx, ComponentName(ctx, clazz))
-                .requestUpdateAll()
-            Log.d(TAG, "Requested complication update for ${clazz.simpleName}.")
+            val cn = ComponentName(ctx, klass)
+            ComplicationDataSourceUpdateRequester.create(ctx, cn).requestUpdateAll()
+            Log.d(TAG, "requestUpdateAll() -> $label  |  $cn")
         } catch (t: Throwable) {
-            Log.w(TAG, "Update request failed for ${clazz.simpleName}: ${t.message}")
+            Log.w(TAG, "requestUpdateAll($label) failed: ${t.message}")
         }
     }
+
+    bump(SpotComplicationService::class.java, "Spot")
+    bump(RsiComplicationService::class.java,  "RSI")
+    bump(RocComplicationService::class.java,  "ROC")
 }
