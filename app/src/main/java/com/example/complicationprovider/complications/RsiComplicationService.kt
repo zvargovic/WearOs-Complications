@@ -39,6 +39,8 @@ class RsiComplicationService : ComplicationDataSourceService() {
         request: ComplicationRequest,
         listener: ComplicationRequestListener
     ) {
+        Log.d("RsiComp", "onComplicationRequest type=${request.complicationType} at ${System.currentTimeMillis()}")
+
         val repo = SettingsRepo(this)
 
         // Uzmemo do 200 zadnjih točaka pa računamo RSI(14) po EUREN close-u

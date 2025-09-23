@@ -171,8 +171,9 @@ object GoldFetcher {
                     yield()
                     delay(60)
                     requestUpdateAllComplications(context)
-                    Log.d(TAG, "Complications refresh requested (after indicators).")
+                    Log.d("CompRefresh", "Trigger after snapshot ts=${snap.updatedEpochMs}  eur=${snap.eurConsensus}  usd=${snap.usdConsensus}")
 
+                    Log.d(TAG, "Complications refresh requested for Spot/RSI/ROC (after indicators).")
                     didFirstFetch = true
                 } catch (t: Throwable) {
                     Log.e(TAG, "Loop error: ${t.message}", t)
@@ -180,6 +181,7 @@ object GoldFetcher {
 
                 val elapsed = System.currentTimeMillis() - t0
                 val waitMs = (FETCH_MINUTES * 60_000L + JITTER_SECONDS * 1000L) - elapsed
+                Log.d(TAG, "Loop done in ${elapsed}ms; next in ${if (waitMs > 0) waitMs else 0}ms.")
                 if (waitMs > 0) delay(waitMs)
             }
         }
