@@ -3,6 +3,7 @@ package com.example.complicationprovider.data
 import android.content.Context
 import android.util.Log
 import com.example.complicationprovider.requestUpdateAllComplications
+import com.example.complicationprovider.scheduleComplicationRefresh
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
@@ -23,7 +24,12 @@ import kotlin.math.abs
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
 
-    private const val FETCH_MINUTES: Long = 2L
+    // Bazni intervali (min) – prebacujemo ih iz receivera (točka 5)
+    private const val AGGR_MIN = 2L
+    private const val BG_MIN   = 6L
+
+    @Volatile private var fetchMinutesCurrent: Long = BG_MIN
+
     private const val JITTER_SECONDS: Long = 0L
     private const val CHECK_WHEN_CLOSED_MINUTES: Long = 30L
 
@@ -63,6 +69,16 @@ object GoldFetcher {
             .build()
     }
 
+    /** Poziv iz receivera: postavi ritam. */
+    fun setAggressive(aggressive: Boolean) {
+        val newVal = if (aggressive) AGGR_MIN else BG_MIN
+        if (fetchMinutesCurrent != newVal) {
+            Log.d(TAG, "Interval -> ${newVal}m (aggressive=$aggressive)")
+            fetchMinutesCurrent = newVal
+        }
+    }
+
+    /** Idempotentan “poke” – start će samo osigurati da petlja radi. */
     fun start(context: Context) {
         if (job?.isActive == true) return
         job = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
@@ -77,19 +93,12 @@ object GoldFetcher {
                     if (!didFirstFetch && !isMarketOpenUtc()) {
                         val now = ZonedDateTime.now(ZoneOffset.UTC)
                         val until = timeUntilMarketOpen(now)
-                        Log.i(
-                            TAG,
-                            "[MARKET] Closed on first start → initial fetch anyway (warm cache). " +
-                                    "UTC ${now.dayOfWeek} ${now.toLocalTime()} — until open: $until",
-                        )
+                        Log.i(TAG, "[MARKET] Closed on first start → initial fetch anyway (warm cache). " +
+                                "UTC ${now.dayOfWeek} ${now.toLocalTime()} — until open: $until")
                     } else if (!runNow) {
                         val now = ZonedDateTime.now(ZoneOffset.UTC)
                         val until = timeUntilMarketOpen(now)
-                        Log.i(
-                            TAG,
-                            "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — " +
-                                    "snooze ${CHECK_WHEN_CLOSED_MINUTES}m. Until open: $until",
-                        )
+                        Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — snooze ${CHECK_WHEN_CLOSED_MINUTES}m. Until open: $until")
                         delay(CHECK_WHEN_CLOSED_MINUTES * 60_000L)
                         continue
                     }
@@ -129,14 +138,7 @@ object GoldFetcher {
 
                     val eurQuotes = buildList {
                         addAll(eurBase)
-                        add(
-                            Quote(
-                                "TD",
-                                tdEur?.setScale(2, RoundingMode.HALF_UP),
-                                unit = "EUR/oz",
-                                ccy = "EUR",
-                            ),
-                        )
+                        add(Quote("TD", tdEur?.setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR"))
                     }
                     logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
 
@@ -163,25 +165,22 @@ object GoldFetcher {
                     )
                     Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-                    // 2) Izračun indikatora na temelju povijesti (sada već uključuje i ovaj zapis)
+                    // 2) Izračun indikatora (sada povijest uključuje i ovaj zapis)
                     val history = repo.historyFlow.first()
                     logIndicators(history)
 
-                    // 3) yield + kratko, pa refresh komplikacija
-                    yield()
-                    delay(60)
+                    // 3) pingaj komplikacije + osiguraj alarm i kad app nije u prvom planu
                     requestUpdateAllComplications(context)
-                    Log.d("CompRefresh", "Trigger after snapshot ts=${snap.updatedEpochMs}  eur=${snap.eurConsensus}  usd=${snap.usdConsensus}")
-
+                    scheduleComplicationRefresh(context, 60_000L)  // kratko “nudgne” nakon upisa (brz UI)
                     Log.d(TAG, "Complications refresh requested for Spot/RSI/ROC (after indicators).")
+
                     didFirstFetch = true
                 } catch (t: Throwable) {
                     Log.e(TAG, "Loop error: ${t.message}", t)
                 }
 
                 val elapsed = System.currentTimeMillis() - t0
-                val waitMs = (FETCH_MINUTES * 60_000L + JITTER_SECONDS * 1000L) - elapsed
-                Log.d(TAG, "Loop done in ${elapsed}ms; next in ${if (waitMs > 0) waitMs else 0}ms.")
+                val waitMs = (fetchMinutesCurrent * 60_000L + JITTER_SECONDS * 1000L) - elapsed
                 if (waitMs > 0) delay(waitMs)
             }
         }
@@ -198,27 +197,20 @@ object GoldFetcher {
             Log.i(TAG, "[IND] Nema history zapisa još.")
             return
         }
-        // Odaberi serije
         val closeEur = history.map { it.eur }.filter { it > 0.0 }
         val closeUsd = history.map { it.usd }.filter { it > 0.0 }
 
-        // Periodi
         val pRsi = 14
         val pShort = 9
         val pMid = 20
         val pLong = 50
 
-        // Pomoćna za pretty ispis
-        fun d2(v: Double?) = if (v == null) "n/a" else DecimalFormat(
-            "0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
-        fun d4(v: Double?) = if (v == null) "n/a" else DecimalFormat(
-            "0.0000", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        fun d2(v: Double?) = if (v == null) "n/a" else DecimalFormat("0.00",
+            DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
 
-        // Dan 00:00 UTC
         val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC)
             .toInstant().toEpochMilli()
 
-        // EUR indikatori
         val eurRsi = Indicators.rsi(closeEur, pRsi)
         val eurSma20 = Indicators.sma(closeEur, pMid)
         val eurEma20 = Indicators.ema(closeEur, pMid)
@@ -226,15 +218,12 @@ object GoldFetcher {
         val eurRoc1  = Indicators.roc(closeEur, 1)
         val (eurMin, eurMax) = Indicators.dayMinMax(history, dayStartUtc) { it.eur }
 
-        Log.i(
-            TAG,
-            "[IND][EUR] close=${d2(closeEur.lastOrNull())}  RSI${
-                pRsi
-            }=${d2(eurRsi)}  SMA$pMid=${d2(eurSma20)}  EMA$pMid=${d2(eurEma20)}  " +
+        Log.i(TAG,
+            "[IND][EUR] close=${d2(closeEur.lastOrNull())}  RSI$pRsi=${d2(eurRsi)}  " +
+                    "SMA$pMid=${d2(eurSma20)}  EMA$pMid=${d2(eurEma20)}  " +
                     "σ$pMid=${d2(eurStd20)}  ROC1=${d2(eurRoc1)}%  DayMin=${d2(eurMin)}  DayMax=${d2(eurMax)}"
         )
 
-        // USD indikatori
         val usdRsi = Indicators.rsi(closeUsd, pRsi)
         val usdSma20 = Indicators.sma(closeUsd, pMid)
         val usdEma20 = Indicators.ema(closeUsd, pMid)
@@ -242,15 +231,12 @@ object GoldFetcher {
         val usdRoc1  = Indicators.roc(closeUsd, 1)
         val (usdMin, usdMax) = Indicators.dayMinMax(history, dayStartUtc) { it.usd }
 
-        Log.i(
-            TAG,
-            "[IND][USD] close=${d2(closeUsd.lastOrNull())}  RSI${
-                pRsi
-            }=${d2(usdRsi)}  SMA$pMid=${d2(usdSma20)}  EMA$pMid=${d2(usdEma20)}  " +
+        Log.i(TAG,
+            "[IND][USD] close=${d2(closeUsd.lastOrNull())}  RSI$pRsi=${d2(usdRsi)}  " +
+                    "SMA$pMid=${d2(usdSma20)}  EMA$pMid=${d2(usdEma20)}  " +
                     "σ$pMid=${d2(usdStd20)}  ROC1=${d2(usdRoc1)}%  DayMin=${d2(usdMin)}  DayMax=${d2(usdMax)}"
         )
 
-        // Brzi kratki/dugi signali (cross check – samo informativno)
         val eurSma9 = Indicators.sma(closeEur, pShort)
         val eurSma50 = Indicators.sma(closeEur, pLong)
         val usdSma9 = Indicators.sma(closeUsd, pShort)
@@ -268,7 +254,6 @@ object GoldFetcher {
         }
     }
 
-    /** Koliko je još do otvaranja tržišta (ponedjeljak 00:00 UTC). */
     private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String {
         return when (now.dayOfWeek) {
             DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> {
@@ -367,11 +352,7 @@ object GoldFetcher {
 
     private fun fetchInvestingUsd(): Quote = try {
         val html = INVESTING_USD.firstNotNullOfOrNull { url ->
-            try {
-                client.newCall(req(url)).execute().use { it.body?.string() }
-            } catch (_: Throwable) {
-                null
-            }
+            try { client.newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "USD") ?: error("extract fail")
         Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)).also {
@@ -384,19 +365,10 @@ object GoldFetcher {
 
     private fun fetchInvestingEur(): Quote = try {
         val html = INVESTING_EUR.firstNotNullOfOrNull { url ->
-            try {
-                client.newCall(req(url)).execute().use { it.body?.string() }
-            } catch (_: Throwable) {
-                null
-            }
+            try { client.newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "EUR") ?: error("extract fail")
-        Quote(
-            "Investing",
-            value.toBigDecimal().setScale(2, RoundingMode.HALF_UP),
-            unit = "EUR/oz",
-            ccy = "EUR",
-        ).also {
+        Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR").also {
             Log.i(TAG, "[OK] Investing: XAU/EUR = ${fmt(it.value)} EUR/oz")
         }
     } catch (t: Throwable) {
@@ -444,9 +416,7 @@ object GoldFetcher {
         val (lo, hi) = if (currency.equals("USD", true)) MIN_USD to MAX_USD else MIN_EUR to MAX_EUR
         fun ok(v: Double) = v in lo..hi
 
-        // data-test
-        Regex(
-            """data-test="instrument-price-last"[^>]*>(.*?)</""",
+        Regex("""data-test="instrument-price-last"[^>]*>(.*?)</""",
             setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)?.let { inner ->
             Regex("""[\d\.,\u00A0\u202F]+""").findAll(inner).map { it.value }
@@ -454,24 +424,19 @@ object GoldFetcher {
                     runCatching { normalizeNumber(cand) }.getOrNull()?.let { if (ok(it)) return it }
                 }
         }
-        // id="last_last"
-        Regex(
-            """id="last_last"[^>]*>(.*?)<""",
+
+        Regex("""id="last_last"[^>]*>(.*?)<""",
             setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.replace(Regex("<[^>]+>"), "")?.trim()
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
-        // "last":"..."
-        Regex(
-            """"last"\s*:\s*"([\d\.,\u00A0\u202F]+)""",
+        Regex(""""last"\s*:\s*"([\d\.,\u00A0\u202F]+)""",
             setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
-        // itemprop price
-        Regex(
-            """itemprop="price"\s+content="([\d\.,\u00A0\u202F]+)""",
+        Regex("""itemprop="price"\s+content="([\d\.,\u00A0\u202F]+)""",
             setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
@@ -481,7 +446,7 @@ object GoldFetcher {
 
     // ----- Log sekcije / statistika -----
     private fun logHeader() {
-        Log.i(TAG, "Starting XAU multi (USD → EUR) — interval ${FETCH_MINUTES}m, jitter +${JITTER_SECONDS}s.")
+        Log.i(TAG, "Starting XAU multi (USD → EUR) — interval ${fetchMinutesCurrent}m, jitter +${JITTER_SECONDS}s.")
     }
 
     private fun logUsdSection(quotes: List<Quote>) {
@@ -497,10 +462,7 @@ object GoldFetcher {
             val dGpInv = if (gp != null && inv != null) fmt(gp - inv) else "n/a"
             Log.i(TAG, "[A] USD spread (max–min): ${fmt(sp)} USD/oz  |  ΔTD-Inv: $dTdInv  ΔGP-Inv: $dGpInv")
             val cons = consensus(ok)
-            Log.i(
-                TAG,
-                "[CONSENSUS] XAU/USD = ${fmt(cons)} USD/oz  |  conf=1.00 (spread=${fmt(sp)} USD/oz; kept=${ok.size}/${quotes.size})",
-            )
+            Log.i(TAG, "[CONSENSUS] XAU/USD = ${fmt(cons)} USD/oz  |  conf=1.00 (spread=${fmt(sp)} USD/oz; kept=${ok.size}/${quotes.size})")
         } else {
             Log.w(TAG, "[CONSENSUS] Nema dovoljno valjanih USD izvora.")
         }
@@ -518,10 +480,7 @@ object GoldFetcher {
             Log.i(TAG, "[A] EUR spread (max–min): ${fmt(sp)} EUR/oz  |  ΔTD-Inv: $dTdInv  ΔGP-Inv: $dGpInv")
             val cons = consensus(eurQuotes)
             val usdText = usdRef?.value?.let { fmt(it) } ?: "n/a"
-            Log.i(
-                TAG,
-                "[CONSENSUS] XAU/EUR = ${fmt(cons)} EUR/oz  |  conf=1.00 (spread=${fmt(sp)} EUR/oz; kept=${eurQuotes.size}/${eurQuotes.size}) | XAU/USD = $usdText USD/oz, Tečaj EUR/USD = $eurRate",
-            )
+            Log.i(TAG, "[CONSENSUS] XAU/EUR = ${fmt(cons)} EUR/oz  |  conf=1.00 (spread=${fmt(sp)} EUR/oz; kept=${eurQuotes.size}/${eurQuotes.size}) | XAU/USD = $usdText USD/oz, Tečaj EUR/USD = $eurRate")
         } else {
             Log.w(TAG, "[CONSENSUS] Nema dovoljno valjanih EUR izvora.")
         }

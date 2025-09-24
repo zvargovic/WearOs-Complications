@@ -1,13 +1,8 @@
 package com.example.complicationprovider.complications
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.filter
 import android.graphics.drawable.Icon
 import android.util.Log
-import androidx.wear.watchface.complications.data.ComplicationData
-import androidx.wear.watchface.complications.data.ComplicationType
-import androidx.wear.watchface.complications.data.MonochromaticImage
-import androidx.wear.watchface.complications.data.PlainComplicationText
-import androidx.wear.watchface.complications.data.ShortTextComplicationData
+import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import com.example.complicationprovider.R
@@ -15,7 +10,6 @@ import com.example.complicationprovider.data.SettingsRepo
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import java.text.DecimalFormat
-import kotlin.math.abs
 
 private const val TAG_ROC = "RocComp"
 
@@ -29,9 +23,7 @@ class RocComplicationService : ComplicationDataSourceService() {
         return ShortTextComplicationData.Builder(
             PlainComplicationText.Builder("ROC -0.12%").build(),
             PlainComplicationText.Builder(getString(R.string.comp_roc_name)).build()
-        )
-            .setMonochromaticImage(img)
-            .build()
+        ).setMonochromaticImage(img).build()
     }
 
     override fun onComplicationRequest(
@@ -40,9 +32,7 @@ class RocComplicationService : ComplicationDataSourceService() {
     ) {
         val repo = SettingsRepo(this)
         val closes: List<Double> = runBlocking {
-            withTimeoutOrNull(1500) {
-                repo.historyFlow.first().map { it.eur }.filter { it > 0.0 }
-            } ?: emptyList()
+            withTimeoutOrNull(1500) { repo.historyFlow.first().map { it.eur }.filter { it > 0.0 } } ?: emptyList()
         }
 
         val roc = computeRocPercent(closes, 1)
@@ -55,9 +45,7 @@ class RocComplicationService : ComplicationDataSourceService() {
         val data = ShortTextComplicationData.Builder(
             PlainComplicationText.Builder(txt).build(),
             PlainComplicationText.Builder(getString(R.string.comp_roc_name)).build()
-        )
-            .setMonochromaticImage(img)
-            .build()
+        ).setMonochromaticImage(img).build()
 
         Log.d(TAG_ROC, "emit $txt")
         listener.onComplicationData(data)
