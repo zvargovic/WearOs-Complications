@@ -1,61 +1,51 @@
 package com.example.complicationprovider.complications
-import kotlinx.coroutines.flow.first
-import android.graphics.drawable.Icon
+
 import android.util.Log
 import androidx.wear.watchface.complications.data.*
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceService
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import com.example.complicationprovider.R
+import com.example.complicationprovider.data.HistoryRec
+import com.example.complicationprovider.data.Indicators
 import com.example.complicationprovider.data.SettingsRepo
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.math.abs
 import java.text.DecimalFormat
 
-private const val TAG_ROC = "RocComp"
+private const val TAG = "RocComp"
 
 class RocComplicationService : ComplicationDataSourceService() {
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
-        val img = MonochromaticImage.Builder(
-            Icon.createWithResource(this, R.drawable.ic_gold_roc)
-        ).build()
-
         return ShortTextComplicationData.Builder(
-            PlainComplicationText.Builder("ROC -0.12%").build(),
+            PlainComplicationText.Builder("0.7").build(), // bez “%”
             PlainComplicationText.Builder(getString(R.string.comp_roc_name)).build()
-        ).setMonochromaticImage(img).build()
+        ).build()
     }
 
     override fun onComplicationRequest(
         request: ComplicationRequest,
         listener: ComplicationRequestListener
     ) {
+        Log.d(TAG, "onComplicationRequest type=${request.complicationType}")
+
         val repo = SettingsRepo(this)
-        val closes: List<Double> = runBlocking {
-            withTimeoutOrNull(1500) { repo.historyFlow.first().map { it.eur }.filter { it > 0.0 } } ?: emptyList()
-        }
+        val history: List<HistoryRec> = runBlocking {
+            withTimeoutOrNull(1200) { repo.historyFlow.first() } ?: emptyList()
+        }.takeLast(50)
 
-        val roc = computeRocPercent(closes, 1)
-        val txt = if (roc != null) "ROC ${DecimalFormat("0.##").format(roc)}%" else "ROC —"
-
-        val img = MonochromaticImage.Builder(
-            Icon.createWithResource(this, R.drawable.ic_gold_roc)
-        ).build()
+        val eurCloses = history.map { it.eur }.filter { it > 0.0 }
+        val roc1 = Indicators.roc(eurCloses, 1) // npr. -0.42
+        val df = DecimalFormat("0.0")
+        val text = if (roc1 == null) "—" else df.format(abs(roc1)) // bez znaka, bez “%”
 
         val data = ShortTextComplicationData.Builder(
-            PlainComplicationText.Builder(txt).build(),
+            PlainComplicationText.Builder(text).build(),
             PlainComplicationText.Builder(getString(R.string.comp_roc_name)).build()
-        ).setMonochromaticImage(img).build()
+        ).build()
 
-        Log.d(TAG_ROC, "emit $txt")
         listener.onComplicationData(data)
-    }
-
-    private fun computeRocPercent(closes: List<Double>, period: Int): Double? {
-        if (closes.size <= period) return null
-        val last = closes.last()
-        val ref = closes[closes.size - 1 - period]
-        if (ref == 0.0) return null
-        return (last - ref) / ref * 100.0
     }
 }

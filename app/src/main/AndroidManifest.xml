@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Wear uređaj -->
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -30,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Complication: Spot cijena (OSTAVLJENO TOČNO KAKO SI DAO) -->
+        <!-- Complication: Spot cijena -->
         <service
             android:name=".complications.SpotComplicationService"
             android:label="@string/comp_spot_name"
@@ -51,7 +52,7 @@
                 android:value="0" />
         </service>
 
-        <!-- Complication: RSI (OSTAVLJENO TOČNO KAKO SI DAO) -->
+        <!-- Complication: RSI -->
         <service
             android:name=".complications.RsiComplicationService"
             android:label="@string/comp_rsi_name"
@@ -72,7 +73,7 @@
                 android:value="0" />
         </service>
 
-        <!-- Complication: ROC (OSTAVLJENO TOČNO KAKO SI DAO) -->
+        <!-- Complication: ROC -->
         <service
             android:name=".complications.RocComplicationService"
             android:label="@string/comp_roc_name"
@@ -93,14 +94,37 @@
                 android:value="0" />
         </service>
 
+        <!-- Complication: Sparkline -->
+        <service
+            android:name=".complications.SparklineComplicationService"
+            android:label="@string/comp_spark_name"
+            android:icon="@drawable/ic_gold_spot"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <!-- Držimo SHORT_TEXT (najšire podržan). Image se šalje kroz MonochromaticImage u tom tipu. -->
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
         <!-- RECEIVER: alarm + wake događaji -->
         <receiver
-            android:name="com.example.complicationprovider.ComplicationRefreshReceiver"
+            android:name=".ComplicationRefreshReceiver"
             android:exported="true"
             android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="com.example.complicationprovider.ACTION_REFRESH_ALARM" />
             </intent-filter>

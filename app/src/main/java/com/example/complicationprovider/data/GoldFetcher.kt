@@ -24,9 +24,9 @@ import kotlin.math.abs
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
 
-    // Bazni intervali (min) – prebacujemo ih iz receivera (točka 5)
+    // Korak 4: pozadina je sada watchdog-ritam (60m), agresivno ostaje 2m dok je ekran aktivan
     private const val AGGR_MIN = 2L
-    private const val BG_MIN   = 6L
+    private const val BG_MIN   = 60L
 
     @Volatile private var fetchMinutesCurrent: Long = BG_MIN
 
@@ -46,7 +46,7 @@ object GoldFetcher {
     private const val GOLDPRICE_EUR_URL = "https://data-asg.goldprice.org/dbXRates/EUR"
 
     private const val TD_PRICE_URL = "https://api.twelvedata.com/price"
-    private const val TD_FX_URL = "https://api.twelvedata.com/exchange_rate"
+    private const val TD_FX_URL    = "https://api.twelvedata.com/exchange_rate"
 
     private const val UA =
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
@@ -69,7 +69,6 @@ object GoldFetcher {
             .build()
     }
 
-    /** Poziv iz receivera: postavi ritam. */
     fun setAggressive(aggressive: Boolean) {
         val newVal = if (aggressive) AGGR_MIN else BG_MIN
         if (fetchMinutesCurrent != newVal) {
@@ -78,7 +77,7 @@ object GoldFetcher {
         }
     }
 
-    /** Idempotentan “poke” – start će samo osigurati da petlja radi. */
+    /** Idempotentno pokretanje petlje (ako radi, ne duplira). */
     fun start(context: Context) {
         if (job?.isActive == true) return
         job = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
@@ -107,7 +106,6 @@ object GoldFetcher {
                     val apiKey = settings.apiKey.orEmpty()
 
                     logHeader()
-
                     // USD paralelno
                     val usdDeferred = async {
                         listOf(
@@ -127,8 +125,8 @@ object GoldFetcher {
                     }
 
                     val usdQuotes = usdDeferred.await()
-                    val eurUsd = fxDeferred.await()
-                    val eurBase = eurDeferred.await()
+                    val eurUsd    = fxDeferred.await()
+                    val eurBase   = eurDeferred.await()
 
                     logUsdSection(usdQuotes)
 
@@ -147,9 +145,9 @@ object GoldFetcher {
                     val eurCons = consensus(eurQuotes.filter { it.value != null })
 
                     val snap = Snapshot(
-                        usdConsensus = usdCons.toDouble(),
-                        eurConsensus = eurCons.toDouble(),
-                        eurUsdRate = eurUsd.toDouble(),
+                        usdConsensus   = usdCons.toDouble(),
+                        eurConsensus   = eurCons.toDouble(),
+                        eurUsdRate     = eurUsd.toDouble(),
                         updatedEpochMs = System.currentTimeMillis(),
                     )
 
@@ -169,9 +167,9 @@ object GoldFetcher {
                     val history = repo.historyFlow.first()
                     logIndicators(history)
 
-                    // 3) pingaj komplikacije + osiguraj alarm i kad app nije u prvom planu
+                    // 3) pingaj komplikacije + osiguraj kratki “nudgne” alarm za UI
                     requestUpdateAllComplications(context)
-                    scheduleComplicationRefresh(context, 60_000L)  // kratko “nudgne” nakon upisa (brz UI)
+                    scheduleComplicationRefresh(context, 60_000L)
                     Log.d(TAG, "Complications refresh requested for Spot/RSI/ROC (after indicators).")
 
                     didFirstFetch = true
@@ -190,7 +188,6 @@ object GoldFetcher {
         job?.cancel()
         job = null
     }
-
     // ----------------- INDIKATORI: log -----------------
     private fun logIndicators(history: List<HistoryRec>) {
         if (history.isEmpty()) {
@@ -205,11 +202,18 @@ object GoldFetcher {
         val pMid = 20
         val pLong = 50
 
-        fun d2(v: Double?) = if (v == null) "n/a" else DecimalFormat("0.00",
-            DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        fun d2(v: Double?): String =
+            if (v == null) "n/a"
+            else DecimalFormat(
+                "0.00",
+                DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
+            ).format(v)
 
-        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC)
-            .toInstant().toEpochMilli()
+        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC)
+            .toLocalDate()
+            .atStartOfDay(ZoneOffset.UTC)
+            .toInstant()
+            .toEpochMilli()
 
         val eurRsi = Indicators.rsi(closeEur, pRsi)
         val eurSma20 = Indicators.sma(closeEur, pMid)
@@ -218,7 +222,8 @@ object GoldFetcher {
         val eurRoc1  = Indicators.roc(closeEur, 1)
         val (eurMin, eurMax) = Indicators.dayMinMax(history, dayStartUtc) { it.eur }
 
-        Log.i(TAG,
+        Log.i(
+            TAG,
             "[IND][EUR] close=${d2(closeEur.lastOrNull())}  RSI$pRsi=${d2(eurRsi)}  " +
                     "SMA$pMid=${d2(eurSma20)}  EMA$pMid=${d2(eurEma20)}  " +
                     "σ$pMid=${d2(eurStd20)}  ROC1=${d2(eurRoc1)}%  DayMin=${d2(eurMin)}  DayMax=${d2(eurMax)}"
@@ -231,7 +236,8 @@ object GoldFetcher {
         val usdRoc1  = Indicators.roc(closeUsd, 1)
         val (usdMin, usdMax) = Indicators.dayMinMax(history, dayStartUtc) { it.usd }
 
-        Log.i(TAG,
+        Log.i(
+            TAG,
             "[IND][USD] close=${d2(closeUsd.lastOrNull())}  RSI$pRsi=${d2(usdRsi)}  " +
                     "SMA$pMid=${d2(usdSma20)}  EMA$pMid=${d2(usdEma20)}  " +
                     "σ$pMid=${d2(usdStd20)}  ROC1=${d2(usdRoc1)}%  DayMin=${d2(usdMin)}  DayMax=${d2(usdMax)}"
@@ -416,7 +422,8 @@ object GoldFetcher {
         val (lo, hi) = if (currency.equals("USD", true)) MIN_USD to MAX_USD else MIN_EUR to MAX_EUR
         fun ok(v: Double) = v in lo..hi
 
-        Regex("""data-test="instrument-price-last"[^>]*>(.*?)</""",
+        Regex(
+            """data-test="instrument-price-last"[^>]*>(.*?)</""",
             setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)?.let { inner ->
             Regex("""[\d\.,\u00A0\u202F]+""").findAll(inner).map { it.value }
@@ -425,18 +432,21 @@ object GoldFetcher {
                 }
         }
 
-        Regex("""id="last_last"[^>]*>(.*?)<""",
+        Regex(
+            """id="last_last"[^>]*>(.*?)<""",
             setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.replace(Regex("<[^>]+>"), "")?.trim()
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
-        Regex(""""last"\s*:\s*"([\d\.,\u00A0\u202F]+)""",
+        Regex(
+            """"last"\s*:\s*"([\d\.,\u00A0\u202F]+)""",
             setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
 
-        Regex("""itemprop="price"\s+content="([\d\.,\u00A0\u202F]+)""",
+        Regex(
+            """itemprop="price"\s+content="([\d\.,\u00A0\u202F]+)""",
             setOf(RegexOption.IGNORE_CASE),
         ).find(html)?.groupValues?.getOrNull(1)
             ?.let { runCatching { normalizeNumber(it) }.getOrNull()?.let { v -> if (ok(v)) return v } }
@@ -456,8 +466,8 @@ object GoldFetcher {
         val sp = spread(ok)
         if (sp != null) {
             val inv = ok.find { it.name == "Investing" }?.value
-            val td = ok.find { it.name == "TD" }?.value
-            val gp = ok.find { it.name == "Goldprice.org" }?.value
+            val td  = ok.find { it.name == "TD" }?.value
+            val gp  = ok.find { it.name == "Goldprice.org" }?.value
             val dTdInv = if (td != null && inv != null) fmt(td - inv) else "n/a"
             val dGpInv = if (gp != null && inv != null) fmt(gp - inv) else "n/a"
             Log.i(TAG, "[A] USD spread (max–min): ${fmt(sp)} USD/oz  |  ΔTD-Inv: $dTdInv  ΔGP-Inv: $dGpInv")
@@ -473,8 +483,8 @@ object GoldFetcher {
         val sp = spread(eurQuotes)
         if (sp != null) {
             val inv = eurQuotes.find { it.name == "Investing" }?.value
-            val td = eurQuotes.find { it.name == "TD" }?.value
-            val gp = eurQuotes.find { it.name == "Goldprice.org" }?.value
+            val td  = eurQuotes.find { it.name == "TD" }?.value
+            val gp  = eurQuotes.find { it.name == "Goldprice.org" }?.value
             val dTdInv = if (td != null && inv != null) fmt(td - inv) else "n/a"
             val dGpInv = if (gp != null && inv != null) fmt(gp - inv) else "n/a"
             Log.i(TAG, "[A] EUR spread (max–min): ${fmt(sp)} EUR/oz  |  ΔTD-Inv: $dTdInv  ΔGP-Inv: $dGpInv")
@@ -522,5 +532,8 @@ object GoldFetcher {
 
     private fun fmt(v: BigDecimal?): String =
         if (v == null) "n/a"
-        else DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        else DecimalFormat(
+            "0.00",
+            DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
+        ).format(v)
 }

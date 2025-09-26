@@ -27,6 +27,7 @@
     <string name="comp_spot_name">Spot</string>
     <string name="comp_rsi_name">RSI (14)</string>
     <string name="comp_roc_name">ROC (1)</string>
+    <string name="comp_spark_name">Gold Spark</string>
 
 
 </resources>

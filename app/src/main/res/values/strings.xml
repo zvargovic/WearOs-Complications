@@ -23,5 +23,6 @@
     <string name="alerts_label">Alerts</string>
     <string name="back_label">Back</string>
     <string name="save_label">Save</string>
+    <string name="comp_spark_name">Gold Spark</string>
 
 </resources>

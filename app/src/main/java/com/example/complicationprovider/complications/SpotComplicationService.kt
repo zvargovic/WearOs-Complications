@@ -23,8 +23,8 @@ import kotlin.math.max
 private const val TAG_SPOT = "SpotComp"
 
 // Pragovi starosti (minute) za boju/ikonicu
-private const val FRESH_MIN = 6L
-private const val WARM_MIN  = 12L
+private const val FRESH_MIN = 2L
+private const val WARM_MIN  = 6L
 
 class SpotComplicationService : ComplicationDataSourceService() {
 
@@ -66,9 +66,9 @@ class SpotComplicationService : ComplicationDataSourceService() {
         val ageMin = ageMs / 60_000L
 
         val dotRes = when {
-            ageMin < FRESH_MIN -> R.drawable.ic_dot_fresh  // ≤ 6 min
-            ageMin < WARM_MIN  -> R.drawable.ic_dot_warm   // 6–12 min
-            else               -> R.drawable.ic_dot_stale  // > 12 min
+            ageMin < FRESH_MIN -> R.drawable.ic_dot_fresh  // ≤ 2 min
+            ageMin < WARM_MIN  -> R.drawable.ic_dot_warm   // 2-6 min
+            else               -> R.drawable.ic_dot_stale  // > 6 min
         }
 
         val dot = MonochromaticImage.Builder(
