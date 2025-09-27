@@ -41,6 +41,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.wear.tiles:tiles:1.3.0")
+    implementation("androidx.wear.tiles:tiles-material:1.3.0")
+    implementation("androidx.wear.protolayout:protolayout:1.3.0") // (nije nužno, ali može)
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
@@ -68,4 +71,6 @@ dependencies {
 
     // Wear Compose
     implementation("androidx.wear.compose:compose-material:1.2.0")
+    // Guava za Futures
+    implementation("com.google.guava:guava:32.1.3-android")
 }

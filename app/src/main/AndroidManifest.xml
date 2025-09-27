@@ -116,6 +116,14 @@
                 android:name="android.support.wearable.complications.DATA_SOURCE_ICON"
                 android:resource="@drawable/ic_gold_market"/>
         </service>
+        <service
+            android:name=".tiles.MarketTileService"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+        </service>
 
 
         <!-- RECEIVER: BOOT + naš watchdog alarm -->

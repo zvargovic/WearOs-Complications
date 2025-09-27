@@ -14,6 +14,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUp
 import com.example.complicationprovider.data.OneShotFetcher
 import com.example.complicationprovider.net.NetWatch
 import com.example.complicationprovider.data.GoldFetcher
+import com.example.complicationprovider.tiles.MarketTileService   // ➕ Tile refresh
 
 private const val TAG = "CompRefresh"
 
@@ -111,6 +112,8 @@ class ComplicationRefreshReceiver : BroadcastReceiver() {
 
                 // 2) Pingni komplikacije (da probaju povući zadnje poznato)
                 requestUpdateAllComplications(context)
+                // ➕ osvježi i Tile
+                runCatching { MarketTileService.requestUpdate(context) }
 
                 // 3) Dugi watchdog backup
                 scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
@@ -127,21 +130,25 @@ class ComplicationRefreshReceiver : BroadcastReceiver() {
 
                 // Uvijek nudge-aj komplikacije
                 requestUpdateAllComplications(context)
+                // ➕ i Tile
+                runCatching { MarketTileService.requestUpdate(context) }
 
                 // Re-armaj watchdog
                 scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
             }
 
-            // ➕ Tickovi kalendara tržišta – ne rade mrežu, samo pushnu repaint komplikacija
+            // ➕ Tickovi kalendara tržišta – ne rade mrežu, samo pushnu repaint komplikacija i Tile-a
             ACTION_MARKET_OPEN_TICK,
             ACTION_MARKET_CLOSE_TICK -> {
-                Log.d(TAG, "Market tick → requestUpdateAllComplications()")
+                Log.d(TAG, "Market tick → requestUpdateAllComplications() + Tile")
                 requestUpdateAllComplications(context)
+                runCatching { MarketTileService.requestUpdate(context) }
             }
 
             else -> {
                 // Ostali intenti: samo lagani nudge i re-armaj watchdog
                 requestUpdateAllComplications(context)
+                runCatching { MarketTileService.requestUpdate(context) }
                 scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
             }
         }

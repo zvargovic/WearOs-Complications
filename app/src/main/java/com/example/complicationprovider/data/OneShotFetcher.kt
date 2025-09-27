@@ -4,11 +4,12 @@ import android.content.Context
 import android.os.PowerManager
 import android.util.Log
 import com.example.complicationprovider.requestUpdateAllComplications
+import com.example.complicationprovider.tiles.MarketTileService
 
 /**
  * Jednokratni fetch s PARTIAL_WAKE_LOCK-om.
  * - Drži CPU budnim dok traje mrežni dohvat (ekran se smije ugasiti).
- * - Nakon uspjeha pinga komplikacije.
+ * - Nakon uspjeha pinga komplikacije i tile.
  */
 object OneShotFetcher {
     private const val TAG = "OneShotFetcher"
@@ -19,7 +20,7 @@ object OneShotFetcher {
      * Pokreni jednokratni fetch. Vraća true ako je fetch uspio i spremljen.
      */
     suspend fun run(context: Context, reason: String = "manual"): Boolean {
-        Log.d(TAG, "triggered by $reason") // ⇦ traženi log
+        Log.d(TAG, "triggered by $reason")
 
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_TAG).apply {
@@ -31,8 +32,15 @@ object OneShotFetcher {
         try {
             val ok = GoldFetcher.fetchOnce(context)
             if (ok) {
-                // nakon uspješnog spremanja podataka – pingni komplikacije
+                // Nakon uspješnog spremanja podataka – pingni komplikacije…
                 requestUpdateAllComplications(context)
+                // …i osvježi Tile (MarketTileService)
+                runCatching {
+                    MarketTileService.requestUpdate(context)
+                    Log.d(TAG, "Tile update requested")
+                }.onFailure {
+                    Log.w(TAG, "Tile update request failed: ${it.message}")
+                }
             }
             Log.d(TAG, "Fetch finished (ok=$ok)")
             return ok
