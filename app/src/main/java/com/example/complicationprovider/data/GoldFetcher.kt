@@ -2,8 +2,6 @@ package com.example.complicationprovider.data
 
 import android.content.Context
 import android.util.Log
-import com.example.complicationprovider.requestUpdateAllComplications
-import com.example.complicationprovider.scheduleComplicationRefresh
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
@@ -24,10 +22,9 @@ import kotlin.math.abs
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
 
-    // Bazni intervali (min) – prebacujemo ih iz receivera (točka 5)
+    // Bazni intervali (min) – postojeći “loop mod”, ostavljamo za fallback
     private const val AGGR_MIN = 2L
     private const val BG_MIN   = 6L
-
     @Volatile private var fetchMinutesCurrent: Long = BG_MIN
 
     private const val JITTER_SECONDS: Long = 0L
@@ -69,7 +66,22 @@ object GoldFetcher {
             .build()
     }
 
-    /** Poziv iz receivera: postavi ritam. */
+    // ---------- NOVO: jednokratni fetch ----------
+    /**
+     * Jednokratno pokreni dohvat i spremanje (bez loopa).
+     * Vraća true ako je uspješno spremljeno.
+     */
+    suspend fun fetchOnce(context: Context): Boolean = withContext(Dispatchers.IO) {
+        try {
+            performFetch(context)
+            true
+        } catch (t: Throwable) {
+            Log.w(TAG, "fetchOnce failed: ${t.message}", t)
+            false
+        }
+    }
+
+    // ---------- Postojeći “loop” ostavljen (ne koristi se u našem novom toku) ----------
     fun setAggressive(aggressive: Boolean) {
         val newVal = if (aggressive) AGGR_MIN else BG_MIN
         if (fetchMinutesCurrent != newVal) {
@@ -78,7 +90,6 @@ object GoldFetcher {
         }
     }
 
-    /** Idempotentan “poke” – start će samo osigurati da petlja radi. */
     fun start(context: Context) {
         if (job?.isActive == true) return
         job = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
@@ -103,77 +114,7 @@ object GoldFetcher {
                         continue
                     }
 
-                    val settings = repo.flow.first()
-                    val apiKey = settings.apiKey.orEmpty()
-
-                    logHeader()
-
-                    // USD paralelno
-                    val usdDeferred = async {
-                        listOf(
-                            fetchGoldpriceUsd(),
-                            fetchInvestingUsd(),
-                            fetchTdUsd(apiKey),
-                        )
-                    }
-                    // FX
-                    val fxDeferred = async { fetchTdEurUsdRate(apiKey) }
-                    // EUR bazni (GP + Investing)
-                    val eurDeferred = async {
-                        listOf(
-                            fetchGoldpriceEur(),
-                            fetchInvestingEur(),
-                        )
-                    }
-
-                    val usdQuotes = usdDeferred.await()
-                    val eurUsd = fxDeferred.await()
-                    val eurBase = eurDeferred.await()
-
-                    logUsdSection(usdQuotes)
-
-                    // TD EUR = TD_USD / (EUR/USD)
-                    val tdUsd = usdQuotes.find { it.name == "TD" }?.value
-                    val tdEur = tdUsd?.let { it.divide(eurUsd, 6, RoundingMode.HALF_UP) }
-
-                    val eurQuotes = buildList {
-                        addAll(eurBase)
-                        add(Quote("TD", tdEur?.setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR"))
-                    }
-                    logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
-
-                    // ---- Snapshot → DataStore ----
-                    val usdCons = consensus(usdQuotes.filter { it.value != null })
-                    val eurCons = consensus(eurQuotes.filter { it.value != null })
-
-                    val snap = Snapshot(
-                        usdConsensus = usdCons.toDouble(),
-                        eurConsensus = eurCons.toDouble(),
-                        eurUsdRate = eurUsd.toDouble(),
-                        updatedEpochMs = System.currentTimeMillis(),
-                    )
-
-                    // 1) spremi snapshot + history (i pričekaj commit)
-                    repo.saveSnapshot(snap)
-                    repo.appendHistory(
-                        HistoryRec(
-                            ts = snap.updatedEpochMs,
-                            usd = snap.usdConsensus,
-                            eur = snap.eurConsensus,
-                            fx  = snap.eurUsdRate
-                        )
-                    )
-                    Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
-
-                    // 2) Izračun indikatora (sada povijest uključuje i ovaj zapis)
-                    val history = repo.historyFlow.first()
-                    logIndicators(history)
-
-                    // 3) pingaj komplikacije + osiguraj alarm i kad app nije u prvom planu
-                    requestUpdateAllComplications(context)
-                    scheduleComplicationRefresh(context, 60_000L)  // kratko “nudgne” nakon upisa (brz UI)
-                    Log.d(TAG, "Complications refresh requested for Spot/RSI/ROC (after indicators).")
-
+                    performFetch(context)
                     didFirstFetch = true
                 } catch (t: Throwable) {
                     Log.e(TAG, "Loop error: ${t.message}", t)
@@ -189,6 +130,89 @@ object GoldFetcher {
     fun stop() {
         job?.cancel()
         job = null
+    }
+
+    // ---------- ZAJEDNIČKI FETCH KORACI (koriste i loop i fetchOnce) ----------
+    private suspend fun performFetch(context: Context) {
+        val repo = SettingsRepo(context)
+
+        val runNow = isMarketOpenUtc() || !didFirstFetch
+        if (!runNow) {
+            val now = ZonedDateTime.now(ZoneOffset.UTC)
+            val until = timeUntilMarketOpen(now)
+            Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — skip now, until open: $until")
+            throw IllegalStateException("Market closed")
+        }
+
+        val settings = repo.flow.first()
+        val apiKey = settings.apiKey.orEmpty()
+        logHeader()
+
+        // USD paralelno
+        val usdDeferred = coroutineScope {
+            async {
+                listOf(
+                    fetchGoldpriceUsd(),
+                    fetchInvestingUsd(),
+                    fetchTdUsd(apiKey),
+                )
+            }
+        }
+        // FX
+        val fxDeferred = coroutineScope { async { fetchTdEurUsdRate(apiKey) } }
+        // EUR bazni (GP + Investing)
+        val eurDeferred = coroutineScope {
+            async {
+                listOf(
+                    fetchGoldpriceEur(),
+                    fetchInvestingEur(),
+                )
+            }
+        }
+
+        val usdQuotes = usdDeferred.await()
+        val eurUsd = fxDeferred.await()
+        val eurBase = eurDeferred.await()
+
+        logUsdSection(usdQuotes)
+
+        // TD EUR = TD_USD / (EUR/USD)
+        val tdUsd = usdQuotes.find { it.name == "TD" }?.value
+        val tdEur = tdUsd?.let { it.divide(eurUsd, 6, RoundingMode.HALF_UP) }
+
+        val eurQuotes = buildList {
+            addAll(eurBase)
+            add(Quote("TD", tdEur?.setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR"))
+        }
+        logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
+
+        // ---- Snapshot → DataStore ----
+        val usdCons = consensus(usdQuotes.filter { it.value != null })
+        val eurCons = consensus(eurQuotes.filter { it.value != null })
+
+        val snap = Snapshot(
+            usdConsensus = usdCons.toDouble(),
+            eurConsensus = eurCons.toDouble(),
+            eurUsdRate = eurUsd.toDouble(),
+            updatedEpochMs = System.currentTimeMillis(),
+        )
+
+        // 1) spremi snapshot + history (i pričekaj commit)
+        repo.saveSnapshot(snap)
+        repo.appendHistory(
+            HistoryRec(
+                ts = snap.updatedEpochMs,
+                usd = snap.usdConsensus,
+                eur = snap.eurConsensus,
+                fx  = snap.eurUsdRate
+            )
+        )
+        Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
+
+        // 2) Izračun indikatora (sada povijest uključuje i ovaj zapis)
+        val history = repo.historyFlow.first()
+        logIndicators(history)
+        // (NEMA više scheduleComplicationRefresh ovdje.)
     }
 
     // ----------------- INDIKATORI: log -----------------
@@ -446,7 +470,7 @@ object GoldFetcher {
 
     // ----- Log sekcije / statistika -----
     private fun logHeader() {
-        Log.i(TAG, "Starting XAU multi (USD → EUR) — interval ${fetchMinutesCurrent}m, jitter +${JITTER_SECONDS}s.")
+        Log.i(TAG, "Starting XAU multi (USD → EUR).")
     }
 
     private fun logUsdSection(quotes: List<Quote>) {

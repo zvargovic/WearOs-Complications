@@ -11,16 +11,21 @@ import android.net.NetworkCapabilities
 import android.os.SystemClock
 import android.util.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
+import com.example.complicationprovider.data.OneShotFetcher
+import com.example.complicationprovider.net.NetWatch
 import com.example.complicationprovider.data.GoldFetcher
 
 private const val TAG = "CompRefresh"
 
-/** Custom akcija za naš alarm. */
+/** Custom akcija za naš alarm (watchdog). */
 const val ACTION_REFRESH_ALARM = "com.example.complicationprovider.ACTION_REFRESH_ALARM"
 
-/** Profilirani intervali (usklađeni s točkom 5) */
-private const val INTERVAL_SCREEN_ON_MIN = 2L     // agresivno kad gledaš sat
-private const val INTERVAL_SCREEN_OFF_MIN = 6L    // rjeđe u pozadini
+/** ➕ Tick akcije za prebacivanje CLOSED↔OPEN prikaza bez mreže. */
+const val ACTION_MARKET_OPEN_TICK = "com.example.complicationprovider.ACTION_MARKET_OPEN_TICK"
+const val ACTION_MARKET_CLOSE_TICK = "com.example.complicationprovider.ACTION_MARKET_CLOSE_TICK"
+
+/** Watchdog interval (ms) — dugi backup. */
+private const val WATCHDOG_MIN: Long = 30
 
 /** Jedini točan način kako pingati SVE naše complication datasourcere. */
 fun requestUpdateAllComplications(ctx: Context) {
@@ -29,25 +34,24 @@ fun requestUpdateAllComplications(ctx: Context) {
             ComponentName(ctx, com.example.complicationprovider.complications.SpotComplicationService::class.java),
             ComponentName(ctx, com.example.complicationprovider.complications.RsiComplicationService::class.java),
             ComponentName(ctx, com.example.complicationprovider.complications.RocComplicationService::class.java),
+            ComponentName(ctx, com.example.complicationprovider.complications.SparklineComplicationService::class.java),
+            // ➕ naš novi ranged provider:
+            ComponentName(ctx, com.example.complicationprovider.complications.RangedPriceComplicationService::class.java),
         )
         compNames.forEach { cn ->
-            ComplicationDataSourceUpdateRequester.create(ctx, cn).requestUpdateAll()
-            Log.d(TAG, "requestUpdateAll() -> ${cn.shortClassName}  |  $cn")
+            try {
+                ComplicationDataSourceUpdateRequester.create(ctx, cn).requestUpdateAll()
+                Log.d(TAG, "requestUpdateAll() -> ${cn.shortClassName}  |  $cn")
+            } catch (t: Throwable) {
+                Log.d(TAG, "Complication class not found → skip: ${cn.className}")
+            }
         }
     } catch (t: Throwable) {
         Log.w(TAG, "requestUpdateAllComplications failed: ${t.message}")
     }
 }
 
-private fun hasNetwork(ctx: Context): Boolean {
-    val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val n = cm.activeNetwork ?: return false
-    val caps = cm.getNetworkCapabilities(n) ?: return false
-    return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) ||
-            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-}
-
-/** Zakazivanje sljedećeg “buđenja” za refresh komplikacija. */
+/** Zakazivanje “backup” buđenja (watchdog). */
 fun scheduleComplicationRefresh(ctx: Context, delayMs: Long) {
     val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(ACTION_REFRESH_ALARM).setPackage(ctx.packageName)
@@ -68,55 +72,77 @@ fun scheduleComplicationRefresh(ctx: Context, delayMs: Long) {
 
 /** Helper za minute → ms. */
 private fun mins(m: Long) = m * 60_000L
+private fun secs(s: Long) = s * 1000L
 
-/** Receiver koji reagira na naš alarm i na “wakeup” trenutke sustava. */
+/** Minimalna mrežna provjera (za stare grane koda) — i dalje koristimo za “gate” gdje treba. */
+private fun hasNetwork(ctx: Context): Boolean {
+    val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val n = cm.activeNetwork ?: run {
+        Log.d(TAG, "hasNetwork: NO activeNetwork")
+        return false
+    }
+    val caps = cm.getNetworkCapabilities(n) ?: run {
+        Log.d(TAG, "hasNetwork: NO capabilities for activeNetwork")
+        return false
+    }
+    val validated = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    val internet  = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    val transport = listOfNotNull(
+        "WIFI".takeIf { caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) },
+        "CELL".takeIf { caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) },
+        "BT".takeIf { caps.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) }
+    ).joinToString(",")
+    Log.d(TAG, "hasNetwork: validated=$validated internet=$internet transport=[$transport]")
+    return validated || internet
+}
+
+/** Receiver koji reagira na BOOT i naš WATCHDOG alarm. */
 class ComplicationRefreshReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val action = intent?.action.orEmpty()
         Log.d(TAG, "onReceive action=$action")
 
-        // Ako nema mreže → preskoči fetch, ipak pingaj komplikacije (da se UI “proba” osvježiti), pa pokušaj kasnije.
-        val online = hasNetwork(context)
-        if (!online) {
-            Log.d(TAG, "No network → skip fetch, re-schedule later.")
-            requestUpdateAllComplications(context)
-            scheduleComplicationRefresh(context, mins(INTERVAL_SCREEN_OFF_MIN))
-            return
-        }
-
         when (action) {
-            // Naš custom alarm → kratki ciklus: pobudi fetcher i pingaj komplikacije
-            ACTION_REFRESH_ALARM -> {
-                GoldFetcher.setAggressive(false)                // default “pozadina”
-                GoldFetcher.start(context)                      // “poke” fetcher (ne otvara activity)
-                requestUpdateAllComplications(context)
-                scheduleComplicationRefresh(context, mins(INTERVAL_SCREEN_OFF_MIN))
-            }
-
-            // Uključivanje/otključavanje/boot → odmah refresh + agresivniji interval
-            Intent.ACTION_SCREEN_ON,
-            Intent.ACTION_USER_PRESENT -> {
-                GoldFetcher.setAggressive(true)                 // brži ritam dok je zaslon aktivan
-                GoldFetcher.start(context)
-                requestUpdateAllComplications(context)
-                scheduleComplicationRefresh(context, mins(INTERVAL_SCREEN_ON_MIN))
-            }
-
             Intent.ACTION_BOOT_COMPLETED -> {
-                // Nakon boota: aktiviraj fetcher, pingaj komplikacije i startaj fallback WorkManager
-                GoldFetcher.setAggressive(false)
-                GoldFetcher.start(context)
+                // 1) Registriraj NetworkCallback (globalno) – odmah će pokrenuti fetch kad mreža postane VALIDATED
+                NetWatch.register(context.applicationContext, reason = "boot", debounceMs = 15_000L)
+                // Ako je već VALIDATED u tom trenu → odmah pokreni jednokratni fetch
+                NetWatch.pokeIfAlreadyValidated(context.applicationContext, reason = "boot-immediate")
+
+                // 2) Pingni komplikacije (da probaju povući zadnje poznato)
                 requestUpdateAllComplications(context)
-                scheduleComplicationRefresh(context, mins(INTERVAL_SCREEN_OFF_MIN))
-                WorkFallback.schedule(context)                  // točka 4
+
+                // 3) Dugi watchdog backup
+                scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
+
+                // (opcionalno) Stari WorkManager fallback
+                try { WorkFallback.schedule(context) } catch (_: Throwable) {}
+            }
+
+            ACTION_REFRESH_ALARM -> {
+                // Watchdog: osiguraj da smo “na liniji” s NetworkCallback-om
+                NetWatch.register(context.applicationContext, reason = "watchdog", debounceMs = 15_000L)
+                // Ako je mreža već VALIDATED upravo sada → odradi jednokratni fetch odmah
+                NetWatch.pokeIfAlreadyValidated(context.applicationContext, reason = "watchdog-immediate")
+
+                // Uvijek nudge-aj komplikacije
+                requestUpdateAllComplications(context)
+
+                // Re-armaj watchdog
+                scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
+            }
+
+            // ➕ Tickovi kalendara tržišta – ne rade mrežu, samo pushnu repaint komplikacija
+            ACTION_MARKET_OPEN_TICK,
+            ACTION_MARKET_CLOSE_TICK -> {
+                Log.d(TAG, "Market tick → requestUpdateAllComplications()")
+                requestUpdateAllComplications(context)
             }
 
             else -> {
-                // Za svaki slučaj: refresh + re-schedule “pozadinski”
-                GoldFetcher.setAggressive(false)
-                GoldFetcher.start(context)
+                // Ostali intenti: samo lagani nudge i re-armaj watchdog
                 requestUpdateAllComplications(context)
-                scheduleComplicationRefresh(context, mins(INTERVAL_SCREEN_OFF_MIN))
+                scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
             }
         }
     }

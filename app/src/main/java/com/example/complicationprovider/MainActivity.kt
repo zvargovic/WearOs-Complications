@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.wear.compose.material.TimeText
+import com.example.complicationprovider.data.GoldFetcher
+import com.example.complicationprovider.net.NetWatch
+import com.example.complicationprovider.ui.AppTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -45,17 +49,32 @@ import java.util.Locale
 private const val TAG = "Main"
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { AppTheme { AppRoot() } }
 
-        // pokreni fetch petlju
-        com.example.complicationprovider.data.GoldFetcher.start(applicationContext)
+        // Pokrenuto iz launchera (Android Studio / korisnik) — ovo NIJE BOOT/ALARM:
+        Log.d(TAG, "Activity launch → starting GoldFetcher loop (not a system intent)")
+        GoldFetcher.start(applicationContext)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        NetWatch.register(applicationContext, reason = "activity", debounceMs = 15_000L)
+        NetWatch.pokeIfAlreadyValidated(applicationContext, reason = "activity-immediate")
+        Log.d("NetWatch", "attached (activity)")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        NetWatch.unregister(applicationContext, reason = "activity")
+        Log.d("NetWatch", "detached (activity)")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        com.example.complicationprovider.data.GoldFetcher.stop()
+        GoldFetcher.stop()
     }
 }
 
@@ -150,7 +169,7 @@ private fun HomeScreen(onOpenSetup: () -> Unit) {
                     fontSize = 12.sp,
                     color = MaterialTheme.colors.onBackground,
 
-                )
+                    )
 
                 Spacer(Modifier.height(12.dp))
 

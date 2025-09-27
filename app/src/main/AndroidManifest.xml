@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Wear uređaj -->
+
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <!-- Mrežne dozvole za fetcher -->
+    <!-- Mreža / alarmi -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- Za BOOT i točne alarme (API 31+) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -20,99 +19,121 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <!-- Glavna aktivnost (aplikacijski ekran) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!-- Complication: Spot cijena (OSTAVLJENO TOČNO KAKO SI DAO) -->
+        <!-- Complication servisi (ne mijenjam) -->
         <service
             android:name=".complications.SpotComplicationService"
             android:label="@string/comp_spot_name"
             android:icon="@drawable/ic_gold_spot"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT" />
-
+                android:value="SHORT_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
 
-        <!-- Complication: RSI (OSTAVLJENO TOČNO KAKO SI DAO) -->
         <service
             android:name=".complications.RsiComplicationService"
             android:label="@string/comp_rsi_name"
             android:icon="@drawable/ic_gold_rsi"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT" />
-
+                android:value="SHORT_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
 
-        <!-- Complication: ROC (OSTAVLJENO TOČNO KAKO SI DAO) -->
         <service
             android:name=".complications.RocComplicationService"
             android:label="@string/comp_roc_name"
             android:icon="@drawable/ic_gold_roc"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT" />
-
+                android:value="SHORT_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
 
-        <!-- RECEIVER: alarm + wake događaji -->
+        <service
+            android:name=".complications.SparklineComplicationService"
+            android:label="@string/comp_spark_name"
+            android:icon="@drawable/ic_gold_spot"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+        </service>
+
+        <service
+            android:name=".complications.RangedPriceComplicationService"
+            android:icon="@drawable/ic_gold_market_closed"
+            android:label="@string/market_status"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="RANGED_VALUE,SHORT_TEXT"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+            <meta-data
+                android:name="android.support.wearable.complications.DATA_SOURCE_ICON"
+                android:resource="@drawable/ic_gold_market"/>
+        </service>
+
+
+        <!-- RECEIVER: BOOT + naš watchdog alarm -->
         <receiver
             android:name="com.example.complicationprovider.ComplicationRefreshReceiver"
             android:exported="true"
             android:directBootAware="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.SCREEN_ON" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="com.example.complicationprovider.ACTION_REFRESH_ALARM" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.example.complicationprovider.ACTION_REFRESH_ALARM"/>
             </intent-filter>
         </receiver>
 
-        <!-- WorkManager (fallback) – standardni initialization preko ContentProvider-a -->
+        <!-- WorkManager (fallback) -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge" />
-
     </application>
-
 </manifest>

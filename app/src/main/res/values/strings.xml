@@ -23,5 +23,8 @@
     <string name="alerts_label">Alerts</string>
     <string name="back_label">Back</string>
     <string name="save_label">Save</string>
+    <string name="comp_spark_name">Eur/h</string>
+    <string name="market_status">Market Status</string>
+
 
 </resources>
