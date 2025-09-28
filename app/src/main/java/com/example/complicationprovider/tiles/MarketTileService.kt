@@ -1,11 +1,12 @@
 package com.example.complicationprovider.tiles
-// Tile service
+
 import android.content.Context
+import android.util.Log
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
-import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import androidx.wear.tiles.ResourceBuilders as TileResBuilders
 
 // ProtoLayout (1.3.0)
@@ -25,6 +26,8 @@ import java.util.Locale
 
 class MarketTileService : TileService() {
 
+    private val TAG = "MarketTile"
+
     private val RADIUS_DP    = 22f
     private val PADDING_DP   = 14f
     private val GAP_V_DP     = 8f
@@ -33,53 +36,71 @@ class MarketTileService : TileService() {
     private fun c(argb: Int) = ColorBuilders.argb(argb)
     private fun dp(v: Float) = DimensionBuilders.dp(v)
     private fun sp(v: Float) = DimensionBuilders.SpProp.Builder().setValue(v).build()
+    private fun expand() = DimensionBuilders.ExpandedDimensionProp.Builder().build()
 
     override fun onTileRequest(
         requestParams: RequestBuilders.TileRequest
     ): ListenableFuture<TileBuilders.Tile> {
-        val repo = SettingsRepo(applicationContext)
+        Log.d(TAG, "onTileRequest()")
+        val tile = runCatching {
+            val repo = SettingsRepo(applicationContext)
 
-        val eurNow: Double
-        val dayMin: Double?
-        val dayMax: Double?
-        val rsiVal: Double
+            var eurNow = 0.0
+            var dayMin: Double? = null
+            var dayMax: Double? = null
+            var rsiVal = 50.0
 
-        // kratko, sigurno blokiranje – isto kao prije
-        runBlocking {
-            val snap = repo.snapshotFlow.first()
-            eurNow = snap.eurConsensus
+            runBlocking {
+                val snap = repo.snapshotFlow.first()
+                eurNow = snap.eurConsensus
 
-            val history = repo.historyFlow.first()
-            val dayStartUtcMs = LocalDate.now(ZoneOffset.UTC)
-                .atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
-            val (mn, mx) = Indicators.dayMinMax(history, dayStartUtcMs) { it.eur }
-            dayMin = mn
-            dayMax = mx
+                val history = repo.historyFlow.first()
+                val dayStartUtcMs = LocalDate.now(ZoneOffset.UTC)
+                    .atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
-            val series = history.map { it.eur }
-            rsiVal = Indicators.rsi(series, 14) ?: 50.0
-        }
+                val (mn, mx) = Indicators.dayMinMax(history, dayStartUtcMs) { it.eur }
+                dayMin = mn
+                dayMax = mx
 
-        val layout = buildTileLayout(
-            spotTxt = "€" + "%,.2f".format(Locale.US, eurNow),
-            minTxt  = dayMin?.let { "€" + "%,.2f".format(Locale.US, it) } ?: "—",
-            maxTxt  = dayMax?.let { "€" + "%,.2f".format(Locale.US, it) } ?: "—",
-            rsiTxt  = "RSI: " + String.format(Locale.US, "%.1f", rsiVal)
-        )
+                val series = history.map { it.eur }
+                rsiVal = Indicators.rsi(series, 14) ?: 50.0
+            }
 
-        val timeline = ProtoTL.Timeline.Builder()
-            .addTimelineEntry(
-                ProtoTL.TimelineEntry.Builder()
-                    .setLayout(layout)
-                    .build()
+            val layout = buildTileLayout(
+                spotTxt = "€" + "%,.2f".format(Locale.US, eurNow),
+                minTxt  = dayMin?.let { "€" + "%,.2f".format(Locale.US, it) } ?: "—",
+                maxTxt  = dayMax?.let { "€" + "%,.2f".format(Locale.US, it) } ?: "—",
+                rsiTxt  = "RSI: " + String.format(Locale.US, "%.1f", rsiVal)
             )
-            .build()
 
-        val tile = TileBuilders.Tile.Builder()
-            .setResourcesVersion("2")                 // bump da srušimo keš
-            .setTileTimeline(timeline)
-            .setFreshnessIntervalMillis(60_000)
-            .build()
+            val timeline = ProtoTL.Timeline.Builder()
+                .addTimelineEntry(
+                    ProtoTL.TimelineEntry.Builder()
+                        .setLayout(layout)
+                        .build()
+                )
+                .build()
+
+            TileBuilders.Tile.Builder()
+                .setResourcesVersion("4")
+                .setTileTimeline(timeline)
+                .setFreshnessIntervalMillis(60_000)
+                .build()
+        }.getOrElse { e ->
+            Log.w(TAG, "onTileRequest failed: ${e.message}", e)
+            val timeline = ProtoTL.Timeline.Builder()
+                .addTimelineEntry(
+                    ProtoTL.TimelineEntry.Builder()
+                        .setLayout(fallbackLayout())
+                        .build()
+                )
+                .build()
+            TileBuilders.Tile.Builder()
+                .setResourcesVersion("4")
+                .setTileTimeline(timeline)
+                .setFreshnessIntervalMillis(60_000)
+                .build()
+        }
 
         return Futures.immediateFuture(tile)
     }
@@ -88,7 +109,7 @@ class MarketTileService : TileService() {
         requestParams: RequestBuilders.ResourcesRequest
     ): ListenableFuture<TileResBuilders.Resources> {
         val res = TileResBuilders.Resources.Builder()
-            .setVersion("2") // upareno s gore
+            .setVersion("4")
             .build()
         return Futures.immediateFuture(res)
     }
@@ -106,7 +127,6 @@ class MarketTileService : TileService() {
         val maxCol   = c(0xFF38D66B.toInt())
         val hintCol  = c(0xFFB0B0B0.toInt())
 
-        // Kartica 1 — Spot + Min/Max
         val card1 = cardBox(
             cardBg,
             LayoutElementBuilders.Column.Builder()
@@ -124,7 +144,6 @@ class MarketTileService : TileService() {
                 .build()
         )
 
-        // Kartica 2 — placeholder
         val card2 = cardBox(
             cardBg,
             LayoutElementBuilders.Column.Builder()
@@ -134,7 +153,6 @@ class MarketTileService : TileService() {
                 .build()
         )
 
-        // Kartica 3 — RSI
         val card3 = cardBox(
             cardBg,
             LayoutElementBuilders.Column.Builder()
@@ -145,6 +163,8 @@ class MarketTileService : TileService() {
         )
 
         val rootCol = LayoutElementBuilders.Column.Builder()
+            .setWidth(expand())              // širina = full bleed
+            // visinu ne postavljamo → wrap (kompatibilno)
             .addContent(card1)
             .addContent(spacer(GAP_V_DP))
             .addContent(card2)
@@ -152,10 +172,54 @@ class MarketTileService : TileService() {
             .addContent(card3)
             .build()
 
+        val rootBox = LayoutElementBuilders.Box.Builder()
+            .setWidth(expand())
+            // visinu ne postavljamo → wrap
+            .setModifiers(
+                ModifiersBuilders.Modifiers.Builder()
+                    .setPadding(
+                        ModifiersBuilders.Padding.Builder()
+                            .setAll(dp(4f))
+                            .build()
+                    )
+                    .build()
+            )
+            .addContent(rootCol)
+            .build()
+
         return LayoutElementBuilders.Layout.Builder()
-            .setRoot(rootCol)
+            .setRoot(rootBox)
             .build()
     }
+
+    private fun fallbackLayout(): LayoutElementBuilders.Layout {
+        val box = LayoutElementBuilders.Box.Builder()
+            .setWidth(expand())
+            .setModifiers(
+                ModifiersBuilders.Modifiers.Builder()
+                    .setBackground(
+                        ModifiersBuilders.Background.Builder()
+                            .setColor(c(0xFF202020.toInt()))
+                            .build()
+                    )
+                    .setPadding(
+                        ModifiersBuilders.Padding.Builder()
+                            .setAll(dp(16f))
+                            .build()
+                    )
+                    .build()
+            )
+            .addContent(text("Gold tile", 16f, c(0xFFFFFFFF.toInt()), true))
+            .addContent(spacer(6f))
+            .addContent(text("Nema podataka", 14f, c(0xFFB0B0B0.toInt()), false))
+            .build()
+
+        return LayoutElementBuilders.Layout.Builder()
+            .setRoot(box)
+            .build()
+    }
+
+    // --- helpers ---
 
     private fun text(
         s: String,
@@ -164,8 +228,10 @@ class MarketTileService : TileService() {
         bold: Boolean
     ): LayoutElementBuilders.Text {
         val weight = LayoutElementBuilders.FontWeightProp.Builder()
-            .setValue(if (bold) LayoutElementBuilders.FONT_WEIGHT_BOLD
-            else LayoutElementBuilders.FONT_WEIGHT_NORMAL)
+            .setValue(
+                if (bold) LayoutElementBuilders.FONT_WEIGHT_BOLD
+                else LayoutElementBuilders.FONT_WEIGHT_NORMAL
+            )
             .build()
         val style = LayoutElementBuilders.FontStyle.Builder()
             .setSize(sp(sizeSp))
@@ -183,6 +249,7 @@ class MarketTileService : TileService() {
         content: LayoutElementBuilders.LayoutElement
     ): LayoutElementBuilders.Box {
         return LayoutElementBuilders.Box.Builder()
+            .setWidth(expand())
             .setModifiers(
                 ModifiersBuilders.Modifiers.Builder()
                     .setBackground(
@@ -207,7 +274,9 @@ class MarketTileService : TileService() {
     }
 
     private fun spacer(hDp: Float) =
-        LayoutElementBuilders.Spacer.Builder().setHeight(dp(hDp)).build()
+        LayoutElementBuilders.Spacer.Builder()
+            .setHeight(dp(hDp))
+            .build()
 
     companion object {
         fun requestUpdate(context: Context) {

@@ -4,8 +4,9 @@ import android.content.Context
 import android.os.PowerManager
 import android.util.Log
 import com.example.complicationprovider.requestUpdateAllComplications
-import com.example.complicationprovider.tiles.MarketTileService
-
+import com.example.complicationprovider.tiles.EmaSmaTileService
+import com.example.complicationprovider.tiles.SpotTileService
+import com.example.complicationprovider.tiles.SparklineTileService
 /**
  * Jednokratni fetch s PARTIAL_WAKE_LOCK-om.
  * - Drži CPU budnim dok traje mrežni dohvat (ekran se smije ugasiti).
@@ -36,7 +37,9 @@ object OneShotFetcher {
                 requestUpdateAllComplications(context)
                 // …i osvježi Tile (MarketTileService)
                 runCatching {
-                    MarketTileService.requestUpdate(context)
+                    SpotTileService.requestUpdate(context)
+                    SparklineTileService.requestUpdate(context)
+                    EmaSmaTileService.requestUpdate(context)
                     Log.d(TAG, "Tile update requested")
                 }.onFailure {
                     Log.w(TAG, "Tile update request failed: ${it.message}")
