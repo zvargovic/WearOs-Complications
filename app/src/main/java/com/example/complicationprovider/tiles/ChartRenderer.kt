@@ -4,18 +4,18 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.round
 
 /**
  * Crta pomoćne PNG-ove u točnim *piksel* dimenzijama.
  */
 object ChartRenderer {
 
-    /**
-     * Minimalni okvir/pravokutnik u centru canvasa.
-     */
+    // ==================== POSTOJEĆE FUNKCIJE (ostavljene) ====================
+
+    /** Osnovni okvir. */
     fun renderRectPng(
         widthPx: Int,
         heightPx: Int,
@@ -47,10 +47,7 @@ object ChartRenderer {
         return toPng(bmp)
     }
 
-    /**
-     * Okvir + horizontalne *grid* trake unutar pravokutnika (broj traka se određuje
-     * s visinom trake i razmakom; crtaju se od vrha prema dnu dok ima mjesta).
-     */
+    /** Okvir + grid trake. */
     fun renderRectWithGridPng(
         widthPx: Int,
         heightPx: Int,
@@ -77,12 +74,11 @@ object ChartRenderer {
             style = Paint.Style.FILL
             color = gridColor
         }
-
         var y = top
-        while (y < bottom) {
-            val bandBottom = min(bottom, y + gridHeightPx)
+        repeat(6) {
+            val bandBottom = (y + gridHeightPx).coerceAtMost(bottom)
             if (bandBottom > y) c.drawRect(left, y, right, bandBottom, fill)
-            y = min(bottom, bandBottom + gridGapPx)
+            y = (bandBottom + gridGapPx).coerceAtMost(bottom)
         }
 
         val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -98,11 +94,8 @@ object ChartRenderer {
     }
 
     /**
-     * Okvir + grid + DONJA SKALA (glavna horizontalna linija, okomite crtice i brojevi).
-     *
-     * [scaleY] je Y unutar pravokutnika (ishodište = GORNJI LIJEVI KUT pravokutnika).
-     * Sve dimenzije/boje su u *px* ARGB i lako podesive.
-    */
+     * Okvir + grid + donja skala s jednom horizont. linijom, 5 kratkih okomitih crtica i oznakama ispod.
+     */
     fun renderRectWithGridAndScalePng(
         widthPx: Int,
         heightPx: Int,
@@ -113,14 +106,18 @@ object ChartRenderer {
         gridHeightPx: Int = 20,
         gridGapPx: Int = 20,
         gridColor: Int = 0x553F2A00.toInt(),
-        // --- skala ---
-        scaleY: Int = 88,
+        // skala
+        scaleYFromRectTopPx: Int = 88,
+        scaleMainStrokePx: Float = 1f,
         scaleColor: Int = 0xFFFF7A00.toInt(),
-        tickCount: Int = 5,
-        tickLenPx: Int = 5,
-        textSizePx: Float = 12f,
-        textColor: Int = 0xFFFFFFFF.toInt(),
-        textGapV: Int = 2
+        scaleTicks: Int = 5,
+        scaleTickLenPx: Int = 5,
+        scaleTickStrokePx: Float = 1f,
+        labels: List<String> = listOf("0", "6", "12", "18", "(h)"),
+        labelTextSizePx: Float = 12f,
+        labelColor: Int = 0xFFFFFFFF.toInt(),
+        labelGapYPx: Int = 2,
+        edgeLabelInsetPx: Int = 6
     ): ByteArray {
         val w = max(1, widthPx)
         val h = max(1, heightPx)
@@ -128,94 +125,225 @@ object ChartRenderer {
         val c = Canvas(bmp)
         c.drawColor(Color.TRANSPARENT)
 
-        // Pravokutnik centriran
         val left   = (w - rectWpx) / 2f
         val top    = (h - rectHpx) / 2f
         val right  = left + rectWpx
         val bottom = top + rectHpx
 
-        // 1) GRID (trake)
-        val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // grid
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL
             color = gridColor
         }
         var y = top
-        while (y < bottom) {
-            val bandBottom = min(bottom, y + gridHeightPx)
-            if (bandBottom > y) c.drawRect(left, y, right, bandBottom, gridPaint)
-            y = min(bottom, bandBottom + gridGapPx)
+        repeat(6) {
+            val bandBottom = (y + gridHeightPx).coerceAtMost(bottom)
+            if (bandBottom > y) c.drawRect(left, y, right, bandBottom, fill)
+            y = (bandBottom + gridGapPx).coerceAtMost(bottom)
         }
 
-        // 2) Okvir
-        val frame = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // glavna linija skale
+        val scaleY = (top + scaleYFromRectTopPx).coerceIn(top, bottom)
+        val main = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = scaleColor
+            strokeWidth = scaleMainStrokePx
+            style = Paint.Style.STROKE
+        }
+        c.drawLine(left, scaleY, right, scaleY, main)
+
+        // crtice
+        val ticks = max(2, scaleTicks)
+        val dx = (rectWpx.toFloat() / (ticks - 1).toFloat())
+        val tickP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = scaleColor
+            strokeWidth = scaleTickStrokePx
+            style = Paint.Style.STROKE
+        }
+        for (i in 0 until ticks) {
+            val x = left + i * dx
+            c.drawLine(x, scaleY, x, (scaleY + scaleTickLenPx), tickP)
+        }
+
+        // labels
+        val textP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = labelColor
+            textSize = labelTextSizePx
+        }
+        val bounds = Rect()
+        for (i in labels.indices) {
+            val lbl = labels[i]
+            textP.getTextBounds(lbl, 0, lbl.length, bounds)
+            val xBase = left + i * dx
+            val x = when (i) {
+                0 -> xBase + edgeLabelInsetPx
+                labels.lastIndex -> xBase - edgeLabelInsetPx - bounds.width()
+                else -> xBase - bounds.width() / 2f
+            }
+            val yLab = scaleY + scaleTickLenPx + labelGapYPx + bounds.height()
+            c.drawText(lbl, x, yLab, textP)
+        }
+
+        // okvir
+        val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeWidth = strokePx
             strokeCap = Paint.Cap.BUTT
             strokeJoin = Paint.Join.MITER
             color = rectColor
         }
-        c.drawRect(left, top, right, bottom, frame)
-
-        // 3) SKALA: glavna linija, crtice, tekst
-        val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE
-            strokeWidth = max(1f, scale(1f))
-            color = scaleColor
-        }
-        val tickPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE
-            strokeWidth = max(1f, scale(1f))
-            color = scaleColor
-        }
-        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.FILL
-            textSize = textSizePx
-            color = textColor
-            textAlign = Paint.Align.CENTER
-        }
-
-        // Y pozicija skale (unutar recta!), poravnata na 0.5 za oštru 1px liniju
-        val yLine = clamp(top, bottom, top + scaleY.toFloat())
-        val crispY = round(yLine) + 0.5f
-
-        // Glavna linija
-        c.drawLine(left, crispY, right, crispY, linePaint)
-
-        // Ticks
-        val n = max(2, tickCount)
-        val dx = (right - left) / (n - 1)
-        val tickTop = crispY - tickLenPx
-        val tickBottom = crispY
-
-        for (i in 0 until n) {
-            val x = left + i * dx
-            c.drawLine(x, tickTop, x, tickBottom, tickPaint)
-        }
-
-        // Tekstualne oznake (default 0,6,12,18,(h) za 5 crtica)
-        val labels: List<String> = when (n) {
-            5 -> listOf("0", "6", "12", "18", "(h)")
-            else -> (0 until n).map { it.toString() }
-        }
-
-        val textBaseline = min(bottom - 1f, crispY + textGapV + textPaint.textSize)
-        for (i in 0 until n) {
-            var x = left + i * dx
-            // malo uvuci prvu i zadnju da ne "bježe" izvan ruba
-            val edgeInset = 6f
-            if (i == 0) x += edgeInset
-            if (i == n - 1) x -= edgeInset
-            val label = labels[i]
-            c.drawText(label, x, textBaseline, textPaint)
-        }
+        c.drawRect(left, top, right, bottom, stroke)
 
         return toPng(bmp)
     }
 
-    private fun clamp(minV: Float, maxV: Float, v: Float): Float =
-        max(minV, min(maxV, v))
+    // ==================== NOVO: BARS ====================
 
-    private fun scale(v: Float) = v // ostavljeno ako zatreba kasnije
+    /**
+     * Okvir + grid + skala + 48 barova (slot = 30 min).
+     */
+    fun renderRectWithGridScaleAndBarsPng(
+        widthPx: Int,
+        heightPx: Int,
+        rectWpx: Int,
+        rectHpx: Int,
+        strokePx: Float = 1f,
+        rectColor: Int = 0xFFFF7A00.toInt(),
+        // grid
+        gridHeightPx: Int = 20,
+        gridGapPx: Int = 20,
+        gridColor: Int = 0x553F2A00.toInt(),
+        // skala
+        scaleYFromRectTopPx: Int = 88,
+        scaleMainStrokePx: Float = 1f,
+        scaleColor: Int = 0xFFFF7A00.toInt(),
+        scaleTicks: Int = 5,
+        scaleTickLenPx: Int = 5,
+        scaleTickStrokePx: Float = 1f,
+        labels: List<String> = listOf("0", "6", "12", "18", "(h)"),
+        labelTextSizePx: Float = 12f,
+        labelColor: Int = 0xFFFFFFFF.toInt(),
+        labelGapYPx: Int = 2,
+        edgeLabelInsetPx: Int = 6,
+        // barovi
+        series: List<Double?> = emptyList(),
+        dayMax: Double? = null,
+        barAlphaFull: Int = 0xFF,
+        barAlphaStub: Int = 0x55,
+        barColorRgb: Int = 0x3F2A00,
+        barMinPx: Int = 2,
+        barStubPx: Int = 2,
+        // razmak između linije skale i dna bara
+        barBaselineGapPx: Float = 1f
+    ): ByteArray {
+        val w = max(1, widthPx)
+        val h = max(1, heightPx)
+        val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        c.drawColor(Color.TRANSPARENT)
+
+        val left   = (w - rectWpx) / 2f
+        val top    = (h - rectHpx) / 2f
+        val right  = left + rectWpx
+        val bottom = top + rectHpx
+
+        // GRID
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.FILL
+            color = gridColor
+        }
+        var y = top
+        repeat(6) {
+            val bandBottom = (y + gridHeightPx).coerceAtMost(bottom)
+            if (bandBottom > y) c.drawRect(left, y, right, bandBottom, fill)
+            y = (bandBottom + gridGapPx).coerceAtMost(bottom)
+        }
+
+        // SKALA
+        val scaleY = (top + scaleYFromRectTopPx).coerceIn(top, bottom)
+        val main = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = scaleColor
+            strokeWidth = scaleMainStrokePx
+            style = Paint.Style.STROKE
+        }
+        c.drawLine(left, scaleY, right, scaleY, main)
+
+        val ticks = max(2, scaleTicks)
+        val dxTick = (rectWpx.toFloat() / (ticks - 1).toFloat())
+        val tickP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = scaleColor
+            strokeWidth = scaleTickStrokePx
+            style = Paint.Style.STROKE
+        }
+        for (i in 0 until ticks) {
+            val xTick = left + i * dxTick
+            c.drawLine(xTick, scaleY, xTick, (scaleY + scaleTickLenPx), tickP)
+        }
+
+        // labels – JEDNA zajednička bazna linija (da sve budu poravnate)
+        val textP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = labelColor
+            textSize = labelTextSizePx
+        }
+        val fm = textP.fontMetrics
+        val baseLine = scaleY + scaleTickLenPx + labelGapYPx - fm.ascent
+
+        val bounds = Rect()
+        for (i in labels.indices) {
+            val lbl = labels[i]
+            textP.getTextBounds(lbl, 0, lbl.length, bounds)
+
+            val xBase = left + i * dxTick
+            val x = when (i) {
+                0 -> xBase + edgeLabelInsetPx
+                labels.lastIndex -> xBase - edgeLabelInsetPx - bounds.width()
+                else -> xBase - bounds.width() / 2f
+            }
+            c.drawText(lbl, x, baseLine, textP)
+        }
+
+        // BAROVI – baza na liniji skale
+        val slotW = rectWpx.toFloat() / 48f
+        val barW = max(1f, slotW * 0.6f)
+        val halfBar = barW / 2f
+        val usableTop = top + 1f
+        val usableBottom = (scaleY - barBaselineGapPx).coerceAtLeast(usableTop + 1f)
+        val usableHeight = (usableBottom - usableTop).coerceAtLeast(1f)
+
+        val maxVal = (dayMax ?: series.filterNotNull().maxOrNull()) ?: 0.0
+        val fullColor = (barAlphaFull shl 24) or barColorRgb
+        val stubColor = (barAlphaStub shl 24) or barColorRgb
+
+        val pBar = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+
+        for (i in 0 until 48) {
+            val v = if (i < series.size) series[i] else null
+            val cx = left + (i + 0.5f) * slotW
+            if (v != null && maxVal > 0.0) {
+                val norm = (v / maxVal).coerceIn(0.0, 1.0).toFloat()
+                val hBar = max(barMinPx.toFloat(), norm * usableHeight)
+                pBar.color = fullColor
+                c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
+            } else {
+                pBar.color = stubColor
+                val hBar = barStubPx.toFloat()
+                c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
+            }
+        }
+
+        // OKVIR
+        val strokeP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = strokePx
+            strokeCap = Paint.Cap.BUTT
+            strokeJoin = Paint.Join.MITER
+            color = rectColor
+        }
+        c.drawRect(left, top, right, bottom, strokeP)
+
+        return toPng(bmp)
+    }
+
+    // =======================================================================
 
     private fun toPng(bmp: Bitmap): ByteArray {
         val bos = java.io.ByteArrayOutputStream()
