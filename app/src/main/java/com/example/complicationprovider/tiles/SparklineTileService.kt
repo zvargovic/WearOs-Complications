@@ -2,222 +2,318 @@ package com.example.complicationprovider.tiles
 
 // Tiles
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.util.Log
+import androidx.core.content.res.ResourcesCompat
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
+import androidx.wear.tiles.ResourceBuilders as TilesRes
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 
-// ProtoLayout 1.3.0 – layout / timeline
+// ProtoLayout (layout/timeline)
 import androidx.wear.protolayout.ColorBuilders
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.TimelineBuilders as ProtoTL
+import androidx.core.graphics.drawable.DrawableCompat
 
-// VAŽNO: resources iz TILES paketa (ne protolayout!)
-import androidx.wear.tiles.ResourceBuilders as TilesRes
+// <-- VAŽNO: app R (radi drawabla ic_gold_market_open)
+import com.example.complicationprovider.R
 
-// App podaci
-import com.example.complicationprovider.data.SettingsRepo
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-
+/**
+ * Tile s 3 zone:
+ *  1) Header: ikona + spot tekst (podesivi dx/dy + razmak ikona↔tekst)
+ *  2) Sredina: PNG pravokutnik točne veličine (px), centriran bez skaliranja
+ *  3) Footer: tekst (podesivi dx/dy)
+ */
 class SparklineTileService : TileService() {
 
-    private val TAG = "SparklineTile"
+    // ---------- PODEŠAVANJE ----------
+    // Pravokutnik (PNG) – veličina u *px*
+    private var RECT_W_PX = 180
+    private var RECT_H_PX = 100
+    private var RECT_STROKE_PX = 1f
+    private var RECT_COLOR = 0xFFFF7A00.toInt()
 
-    private val PNG_W = 280
-    private val PNG_H = 120
-    private val RES_ID = "spark_png"
+    // GRID (unutar pravokutnika) – PODESIVO
+    private var GRID_BAND_H_PX = 8      // visina jedne trake
+    private var GRID_GAP_H_PX  = 8      // razmak između traka
+    private var GRID_COLOR_ARGB = 0xAA3F2A00.toInt() // poluprozirna tamno-narančasta
 
-    // verzija resursa – host invalidira cache kad se promijeni
-    private val RES_VER: String
-        get() = SparklinePngCache.version ?: "1"
+    // Header (ikona + tekst)
+    private var HEADER_ICON_SIZE_DP = 12f
+    private var HEADER_ICON_TEXT_GAP_DP = 10f
+    private var HEADER_TEXT_SP = 12f
+    private var HEADER_DX_DP = -80f   // +desno / -lijevo
+    private var HEADER_DY_DP = 1f     // +dolje  / -gore
 
-    private fun c(argb: Int) = ColorBuilders.argb(argb)
-    private fun dp(v: Float) = DimensionBuilders.dp(v)
-    private fun sp(v: Float) = DimensionBuilders.SpProp.Builder().setValue(v).build()
+    // Razmak između headera i pravokutnika
+    private var HEADER_TO_RECT_SPACING_DP = 8f
 
-    override fun onTileRequest(
-        requestParams: RequestBuilders.TileRequest
-    ): ListenableFuture<TileBuilders.Tile> {
+    // Footer
+    private var FOOTER_TEXT_SP = 12f
+    private var FOOTER_DX_DP = 0f
+    private var FOOTER_DY_DP = 0f
+    private var RECT_TO_FOOTER_SPACING_DP = 10f
 
-        Log.d(TAG, "onTileRequest() — ensurePngCached, current version=${SparklinePngCache.version}, bytes=${SparklinePngCache.bytes?.size ?: 0}")
-        ensurePngCached(applicationContext)
+    // Boje teksta
+    private val COLOR_TEXT = ColorBuilders.argb(0xFFFFFFFF.toInt())
+    private val COLOR_MUTED = ColorBuilders.argb(0xFFB0B0B0.toInt())
 
-        val layout = buildTileLayout()
+    // ID-evi u Resources mapi
+    private val RES_ID_RECT = "rect_png"
+    private val RES_ID_ICON = "icon_png"
+
+    // Verzija resourcesa – kad je promijenimo, host invalidira cache
+    private val resVersion: String
+        get() = ImageCache.version ?: "1"
+
+    // ---------- Tile lifecycle ----------
+    override fun onTileRequest(requestParams: RequestBuilders.TileRequest)
+            : ListenableFuture<TileBuilders.Tile> {
+
+        ensureResources(applicationContext)
+
+        val layout = buildLayout()
 
         val timeline = ProtoTL.Timeline.Builder()
             .addTimelineEntry(
-                ProtoTL.TimelineEntry.Builder()
-                    .setLayout(layout)
-                    .build()
-            )
-            .build()
+                ProtoTL.TimelineEntry.Builder().setLayout(layout).build()
+            ).build()
 
         val tile = TileBuilders.Tile.Builder()
-            .setResourcesVersion(RES_VER)      // MORA biti ista kao u onResourcesRequest
+            .setResourcesVersion(resVersion)
             .setTileTimeline(timeline)
             .setFreshnessIntervalMillis(60_000)
             .build()
 
-        Log.d(TAG, "onTileRequest() — returning tile with resourcesVersion=$RES_VER")
         return Futures.immediateFuture(tile)
     }
 
-    override fun onResourcesRequest(
-        requestParams: RequestBuilders.ResourcesRequest
-    ): ListenableFuture<TilesRes.Resources> {
+    override fun onResourcesRequest(requestParams: RequestBuilders.ResourcesRequest)
+            : ListenableFuture<TilesRes.Resources> {
 
-        Log.d(TAG, "onResourcesRequest() — start, requested version=${requestParams.version}")
-        ensurePngCached(applicationContext)
+        val res = TilesRes.Resources.Builder()
+            .setVersion(resVersion)
+            .apply {
+                // 1) pravokutnik (PNG)
+                ImageCache.rectPng?.let { bytes ->
+                    val inline = TilesRes.InlineImageResource.Builder()
+                        .setData(bytes)
+                        .setWidthPx(RECT_W_PX)
+                        .setHeightPx(RECT_H_PX)
+                        .build()
+                    val img = TilesRes.ImageResource.Builder()
+                        .setInlineResource(inline)
+                        .build()
+                    addIdToImageMapping(RES_ID_RECT, img)
+                }
+                // 2) ikona (PNG raster s poznatom px veličinom)
+                ImageCache.iconPng?.let { bytes ->
+                    val sizePx = dpToPx(applicationContext, HEADER_ICON_SIZE_DP)
+                    val inline = TilesRes.InlineImageResource.Builder()
+                        .setData(bytes)
+                        .setWidthPx(sizePx)
+                        .setHeightPx(sizePx)
+                        .build()
+                    val img = TilesRes.ImageResource.Builder()
+                        .setInlineResource(inline)
+                        .build()
+                    addIdToImageMapping(RES_ID_ICON, img)
+                }
+            }
+            .build()
 
-        val resBuilder = TilesRes.Resources.Builder()
-            .setVersion(RES_VER)               // MORA se poklapati s Tile.resourcesVersion
-
-        val bytes = SparklinePngCache.bytes
-        if (bytes == null) {
-            Log.w(TAG, "onResourcesRequest() — PNG BYTES = null → gost nema što poslužiti")
-        } else {
-            Log.d(TAG, "onResourcesRequest() — PNG BYTES len=${bytes.size}, mapping RES_ID=$RES_ID, version=$RES_VER")
-
-            // Inline PNG -> wrap u ImageResource, pa mapiranje na ID koji layout koristi
-            val inline = TilesRes.InlineImageResource.Builder()
-                .setData(bytes)
-                .setWidthPx(PNG_W)        // ← OVO JE KLJUČNO (bez ovoga host ponekad javi width/height = 0)
-                .setHeightPx(PNG_H)
-                .build()
-
-            val imgRes = TilesRes.ImageResource.Builder()
-                .setInlineResource(inline)
-                .build()
-
-            resBuilder.addIdToImageMapping(RES_ID, imgRes)
-        }
-
-        val res = resBuilder.build()
-        Log.d(TAG, "onResourcesRequest() — returning Resources with version=$RES_VER, hasImage=${bytes != null}")
         return Futures.immediateFuture(res)
     }
 
-    /** Jednostavna kartica s naslovom i inline PNG-om. */
-    private fun buildTileLayout(): LayoutElementBuilders.Layout {
-        val cardBg   = c(0xFF121212.toInt())
-        val titleCol = c(0xFFE0E0E0.toInt())
+    // ---------- Layout (3 zone) ----------
+    private fun buildLayout(): LayoutElementBuilders.Layout {
+        val dp = { v: Float -> DimensionBuilders.dp(v) }
+        val sp = { v: Float -> DimensionBuilders.SpProp.Builder().setValue(v).build() }
+        val wrap = DimensionBuilders.WrappedDimensionProp.Builder().build()
 
-        val title = LayoutElementBuilders.Text.Builder()
-            .setText("Dnevni graf")
-            .setFontStyle(
-                LayoutElementBuilders.FontStyle.Builder()
-                    .setSize(sp(13f))
-                    .setWeight(
-                        LayoutElementBuilders.FontWeightProp.Builder()
-                            .setValue(LayoutElementBuilders.FONT_WEIGHT_BOLD)
-                            .build()
-                    )
-                    .setColor(titleCol)
-                    .build()
-            )
+        // HEADER (Row: [Icon] [gap] [Text]) + DX/DY
+        val headerRow = LayoutElementBuilders.Row.Builder()
+            .apply {
+                if (HEADER_DX_DP > 0f) addContent(spacerW(dp(HEADER_DX_DP)))
+                addContent(
+                    LayoutElementBuilders.Image.Builder()
+                        .setResourceId(RES_ID_ICON)
+                        .setWidth(dp(HEADER_ICON_SIZE_DP))
+                        .setHeight(dp(HEADER_ICON_SIZE_DP))
+                        .build()
+                )
+                addContent(spacerW(dp(HEADER_ICON_TEXT_GAP_DP)))
+                addContent(
+                    LayoutElementBuilders.Text.Builder()
+                        .setText(getSpotText())
+                        .setFontStyle(
+                            LayoutElementBuilders.FontStyle.Builder()
+                                .setSize(sp(HEADER_TEXT_SP))
+                                .setColor(COLOR_TEXT)
+                                .build()
+                        )
+                        .build()
+                )
+                if (HEADER_DX_DP < 0f) addContent(spacerW(dp(-HEADER_DX_DP)))
+            }
             .build()
 
-        val image = LayoutElementBuilders.Image.Builder()
-            .setResourceId(RES_ID)                // → mora imati mapping u onResourcesRequest
-            .setWidth(dp(PNG_W.toFloat()))
-            .setHeight(dp(PNG_H.toFloat()))
-            .setContentScaleMode(LayoutElementBuilders.CONTENT_SCALE_MODE_FIT)
-            .build()
-
-        val column = LayoutElementBuilders.Column.Builder()
-            .addContent(title)
-            .addContent(
-                LayoutElementBuilders.Spacer.Builder().setHeight(dp(6f)).build()
-            )
-            .addContent(image)
-            .build()
-
-        val card = LayoutElementBuilders.Box.Builder()
+        val headerBox = LayoutElementBuilders.Box.Builder()
             .setModifiers(
                 ModifiersBuilders.Modifiers.Builder()
-                    .setBackground(
-                        ModifiersBuilders.Background.Builder()
-                            .setColor(cardBg)
-                            .setCorner(
-                                ModifiersBuilders.Corner.Builder()
-                                    .setRadius(dp(22f))
-                                    .build()
-                            )
-                            .build()
-                    )
                     .setPadding(
                         ModifiersBuilders.Padding.Builder()
-                            .setAll(dp(14f))
+                            .setTop(dp(kotlin.math.max(0f, HEADER_DY_DP)))
+                            .setBottom(dp(kotlin.math.max(0f, -HEADER_DY_DP)))
                             .build()
                     )
                     .build()
             )
-            .addContent(column)
+            .setWidth(wrap)
+            .setHeight(wrap)
+            .addContent(headerRow)
+            .build()
+
+        // SREDINA – PNG pravokutnik, točne dimenzije, centriran
+        val rectImg = LayoutElementBuilders.Image.Builder()
+            .setResourceId(RES_ID_RECT)
+            .setWidth(DimensionBuilders.dp(RECT_W_PX.toFloat()))
+            .setHeight(DimensionBuilders.dp(RECT_H_PX.toFloat()))
+            .build()
+
+        val midBox = LayoutElementBuilders.Box.Builder()
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
+            .addContent(rectImg)
+            .build()
+
+        // FOOTER – tekst s DX/DY pomakom
+        val footerText = LayoutElementBuilders.Text.Builder()
+            .setText(getFooterText())
+            .setFontStyle(
+                LayoutElementBuilders.FontStyle.Builder()
+                    .setSize(sp(FOOTER_TEXT_SP))
+                    .setColor(COLOR_MUTED)
+                    .build()
+            )
+            .build()
+
+        val footerRow = LayoutElementBuilders.Row.Builder()
+            .apply {
+                if (FOOTER_DX_DP > 0f) addContent(spacerW(dp(FOOTER_DX_DP)))
+                addContent(footerText)
+                if (FOOTER_DX_DP < 0f) addContent(spacerW(dp(-FOOTER_DX_DP)))
+            }
+            .build()
+
+        val footerBox = LayoutElementBuilders.Box.Builder()
+            .setModifiers(
+                ModifiersBuilders.Modifiers.Builder()
+                    .setPadding(
+                        ModifiersBuilders.Padding.Builder()
+                            .setTop(dp(kotlin.math.max(0f, FOOTER_DY_DP)))
+                            .setBottom(dp(kotlin.math.max(0f, -FOOTER_DY_DP)))
+                            .build()
+                    )
+                    .build()
+            )
+            .setWidth(wrap)
+            .setHeight(wrap)
+            .addContent(footerRow)
+            .build()
+
+        // ROOT: Column (header, spacer, middle, spacer, footer)
+        val column = LayoutElementBuilders.Column.Builder()
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .addContent(headerBox)
+            .addContent(spacerH(dp(HEADER_TO_RECT_SPACING_DP)))
+            .addContent(midBox)
+            .addContent(spacerH(dp(RECT_TO_FOOTER_SPACING_DP)))
+            .addContent(footerBox)
             .build()
 
         return LayoutElementBuilders.Layout.Builder()
-            .setRoot(card)
+            .setRoot(column)
             .build()
     }
 
-    /** Ako PNG nije u kešu – izgradi ga iz današnjih vrijednosti (EUR). */
-    private fun ensurePngCached(ctx: Context) {
-        if (SparklinePngCache.bytes != null) {
-            Log.d(TAG, "ensurePngCached() — bytes already present len=${SparklinePngCache.bytes?.size} ver=${SparklinePngCache.version}")
-            return
-        }
+    private fun spacerW(w: DimensionBuilders.DpProp) =
+        LayoutElementBuilders.Spacer.Builder().setWidth(w).build()
 
-        Log.d(TAG, "ensurePngCached() — building TODAY series (EUR)")
-        val seriesToday = buildTodaySeries(ctx, maxPoints = 100)
+    private fun spacerH(h: DimensionBuilders.DpProp) =
+        LayoutElementBuilders.Spacer.Builder().setHeight(h).build()
 
-        // fallback ako je prazno
-        val safeSeries = when {
-            seriesToday.size >= 2 -> seriesToday
-            seriesToday.size == 1 -> List(20) { seriesToday.first() }
-            else -> {
-                val lastKnown = runBlocking { SettingsRepo(ctx).historyFlow.first().lastOrNull()?.eur }
-                List(20) { (lastKnown ?: 0.0) }
-            }
-        }
-
-        val png = ChartRenderer.renderSparklinePng(
-            series = safeSeries,
-            widthPx = PNG_W,
-            heightPx = PNG_H
-        )
-
-        SparklinePngCache.bytes = png
-        SparklinePngCache.version = System.currentTimeMillis().toString()
-        Log.d(TAG, "ensurePngCached() — PNG ready len=${png.size} newVersion=${SparklinePngCache.version}")
+    private fun getSpotText(): String {
+        // TODO: zamijeni stvarnim podatkom iz repozitorija
+        return "€0.00"
     }
 
-    /** Izgradi listu današnjih EUR točaka iz SettingsRepo.history, downsample na maxPoints. */
-    private fun buildTodaySeries(ctx: Context, maxPoints: Int): List<Double> {
-        val repo = SettingsRepo(ctx)
-        val all = runBlocking { repo.historyFlow.first() }
+    private fun getFooterText(): String = "Dnevni graf"
 
-        // današnji početak (UTC)
-        val startUtc = java.time.LocalDate.now(java.time.ZoneOffset.UTC)
-            .atStartOfDay().toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
+    // ---------- Rendering i cache ----------
+    private fun ensureResources(ctx: Context) {
+        if (ImageCache.rectPng == null) {
+            // NOVO: okvir + GRID unutar pravokutnika
+            ImageCache.rectPng = ChartRenderer.renderRectWithGridPng(
+                widthPx  = RECT_W_PX,
+                heightPx = RECT_H_PX,
+                rectWpx  = RECT_W_PX,
+                rectHpx  = RECT_H_PX,
+                strokePx = RECT_STROKE_PX,
+                rectColor = RECT_COLOR,
+                gridHeightPx = GRID_BAND_H_PX,
+                gridGapPx    = GRID_GAP_H_PX,
+                gridColor    = GRID_COLOR_ARGB
+            )
+        }
+        if (ImageCache.iconPng == null) {
+            ImageCache.iconPng = rasterizeDrawableToPng(
+                ctx = ctx,
+                resId = R.drawable.ic_gold_market_open,
+                targetPx = dpToPx(ctx, HEADER_ICON_SIZE_DP),
+                tintArgb = 0xFFFF7A00.toInt() // NARANČASTA
+            )
+        }
+        if (ImageCache.version == null) {
+            ImageCache.version = System.currentTimeMillis().toString()
+        }
+        Log.d(
+            "SparklineTile3Zones",
+            "rect PNG ready len=${ImageCache.rectPng?.size ?: 0} ver=${ImageCache.version}"
+        )
+    }
 
-        // filtriraj današnje, pozitivne i konačne vrijednosti
-        val todays = all.asSequence()
-            .filter { it.ts >= startUtc }
-            .map { it.eur }
-            .filter { it > 0.0 && it.isFinite() }
-            .toList()
+    private fun rasterizeDrawableToPng(
+        ctx: Context,
+        resId: Int,
+        targetPx: Int,
+        tintArgb: Int? = null
+    ): ByteArray? {
+        val d: Drawable = ResourcesCompat.getDrawable(ctx.resources, resId, ctx.theme)
+            ?: return null
+        val dr = d.mutate()
+        if (tintArgb != null) {
+            DrawableCompat.setTint(dr, tintArgb)
+        }
+        val bmp = Bitmap.createBitmap(targetPx, targetPx, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        dr.setBounds(0, 0, targetPx, targetPx)
+        dr.draw(c)
+        val bos = java.io.ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, bos)
+        return bos.toByteArray()
+    }
 
-        if (todays.isEmpty()) return emptyList()
-        if (todays.size <= maxPoints) return todays
-
-        // downsample na maxPoints: prosjek po “bucketu”
-        val step = kotlin.math.ceil(todays.size.toDouble() / maxPoints).toInt().coerceAtLeast(1)
-        return todays.chunked(step).map { chunk -> chunk.average() }
+    private fun dpToPx(ctx: Context, dp: Float): Int {
+        val d = ctx.resources.displayMetrics.density
+        return kotlin.math.max(1, (dp * d).toInt())
     }
 
     companion object {
@@ -227,8 +323,9 @@ class SparklineTileService : TileService() {
     }
 }
 
-/** Jednostavan in-memory cache PNG-a i njegove verzije. */
-object SparklinePngCache {
-    @Volatile var bytes: ByteArray? = null
+/** Jednostavni in-memory cache PNG-ova i verzije. */
+private object ImageCache {
+    @Volatile var rectPng: ByteArray? = null
+    @Volatile var iconPng: ByteArray? = null
     @Volatile var version: String? = null
 }

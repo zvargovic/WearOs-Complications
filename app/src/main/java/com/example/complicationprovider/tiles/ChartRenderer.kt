@@ -5,93 +5,98 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import kotlin.math.max
-import kotlin.math.min
 
 /**
- * Renderer koji vraća PNG (byte[]) za Tiles InlineImageResource.
- * - Ako ima serije: crta sparkline s višebojnom linijom (zeleno ↑ / crveno ↓) + grid.
- * - Ako nema serije: nacrta debug dijagonalu i "NO DATA" tako da uvijek vidiš nešto.
+ * Crta pomoćne PNG-ove u točnim *piksel* dimenzijama.
  */
 object ChartRenderer {
 
-    fun renderSparklinePng(
-        series: List<Double>,
+    /**
+     * Postojeća funkcija – ostavljena netaknuta.
+     */
+    fun renderRectPng(
         widthPx: Int,
-        heightPx: Int
+        heightPx: Int,
+        rectWpx: Int,
+        rectHpx: Int,
+        strokePx: Float = 1f,
+        color: Int = 0xFFFF7A00.toInt()
     ): ByteArray {
-        val w = max(10, widthPx)
-        val h = max(10, heightPx)
-
+        val w = max(1, widthPx)
+        val h = max(1, heightPx)
         val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val c = Canvas(bmp)
         c.drawColor(Color.TRANSPARENT)
 
-        // Margine za crtanje
-        val left   = 8f
-        val right  = (w - 8).toFloat()
-        val top    = 6f
-        val bottom = (h - 6).toFloat()
-        val plotW  = right - left
-        val plotH  = bottom - top
+        val left   = (w - rectWpx) / 2f
+        val top    = (h - rectHpx) / 2f
+        val right  = left + rectWpx
+        val bottom = top + rectHpx
 
-        // Paintovi
-        val grid = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb(64, 255, 255, 255)
-            strokeWidth = 1f
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
+            strokeWidth = strokePx
+            strokeCap = Paint.Cap.BUTT
+            strokeJoin = Paint.Join.MITER
+            this.color = color
         }
-        val up = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.rgb(56, 214, 107)
-            strokeWidth = 3f
-            style = Paint.Style.STROKE
-        }
-        val down = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.rgb(240, 84, 84)
-            strokeWidth = 3f
-            style = Paint.Style.STROKE
-        }
-        val debugText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            textSize = max(10f, h * 0.16f)
-        }
+        c.drawRect(left, top, right, bottom, p)
 
-        // Grid (3 horizontalne linije)
-        val midY = top + plotH / 2f
-        c.drawLine(left, top,    right, top,    grid)
-        c.drawLine(left, midY,   right, midY,   grid)
-        c.drawLine(left, bottom, right, bottom, grid)
+        return toPng(bmp)
+    }
 
-        if (series.isEmpty()) {
-            // DEBUG fallback: dijagonala + NO DATA
-            val dbg = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.CYAN
-                strokeWidth = 3f
+    /**
+     * NOVO: okvir + 3 horizontalne grid-trake unutar pravokutnika.
+     * Grid je definiran ciklusom: [gridHeightPx] pa [gridGapPx], ponovljeno 3x.
+     */
+    fun renderRectWithGridPng(
+        widthPx: Int,
+        heightPx: Int,
+        rectWpx: Int,
+        rectHpx: Int,
+        strokePx: Float = 1f,
+        rectColor: Int = 0xFFFF7A00.toInt(),
+        gridHeightPx: Int = 20,
+        gridGapPx: Int = 20,
+        gridColor: Int = 0x553F2A00.toInt() // poluprozirna tamno-narančasta
+    ): ByteArray {
+        val w = max(1, widthPx)
+        val h = max(1, heightPx)
+        val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        c.drawColor(Color.TRANSPARENT)
+
+        // Okvir centriran
+        val left   = (w - rectWpx) / 2f
+        val top    = (h - rectHpx) / 2f
+        val right  = left + rectWpx
+        val bottom = top + rectHpx
+
+        // Grid trake (3x): traka -> razmak -> traka -> razmak -> traka
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.FILL
+            color = gridColor
+        }
+        var y = top
+        repeat(6) {
+            // traka
+            val bandBottom = (y + gridHeightPx).coerceAtMost(bottom)
+            if (bandBottom > y) {
+                c.drawRect(left, y, right, bandBottom, fill)
             }
-            c.drawLine(left, bottom, right, top, dbg)
-            c.drawText("NO DATA", left + 6f, top + debugText.textSize + 4f, debugText)
-            return toPng(bmp)
+            // skok na sljedeći "y" (razmak)
+            y = (bandBottom + gridGapPx).coerceAtMost(bottom)
         }
 
-        // Normalizacija vrijednosti
-        val minV = series.minOrNull() ?: 0.0
-        val maxV = series.maxOrNull() ?: 1.0
-        val span = (maxV - minV).let { if (it <= 0.0) 1.0 else it }
-
-        val n = series.size.coerceAtLeast(2)
-        fun x(i: Int) = left + plotW * (i.toFloat() / (n - 1).toFloat())
-        fun y(v: Double) = bottom - ((v - minV) / span).toFloat() * plotH
-
-        var lastX = x(0)
-        var lastY = y(series.first())
-
-        for (i in 1 until n) {
-            val nx = x(i)
-            val ny = y(series[i.coerceAtMost(series.lastIndex)])
-            val p = if (ny <= lastY) up else down
-            c.drawLine(lastX, lastY, nx, ny, p)
-            lastX = nx
-            lastY = ny
+        // Okvir preko svega, da grid bude "ispod"
+        val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = strokePx
+            strokeCap = Paint.Cap.BUTT
+            strokeJoin = Paint.Join.MITER
+            color = rectColor
         }
+        c.drawRect(left, top, right, bottom, stroke)
 
         return toPng(bmp)
     }
