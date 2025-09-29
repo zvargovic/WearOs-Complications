@@ -4,13 +4,15 @@ package com.example.complicationprovider.tiles
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.wear.tiles.RequestBuilders
+import androidx.wear.tiles.ResourceBuilders as TilesRes
 import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
-import androidx.wear.tiles.ResourceBuilders as TilesRes
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 
@@ -20,7 +22,6 @@ import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.TimelineBuilders as ProtoTL
-import androidx.core.graphics.drawable.DrawableCompat
 
 // <-- VAŽNO: app R (radi drawabla ic_gold_market_open)
 import com.example.complicationprovider.R
@@ -28,31 +29,41 @@ import com.example.complicationprovider.R
 /**
  * Tile s 3 zone:
  *  1) Header: ikona + spot tekst (podesivi dx/dy + razmak ikona↔tekst)
- *  2) Sredina: PNG pravokutnik točne veličine (px), centriran bez skaliranja
+ *  2) Sredina: PNG pravokutnik s gridom i skalom, centriran bez skaliranja
  *  3) Footer: tekst (podesivi dx/dy)
  */
 class SparklineTileService : TileService() {
 
     // ---------- PODEŠAVANJE ----------
-    // Pravokutnik (PNG) – veličina u *px*
+    // Pravokutnik (PNG)
     private var RECT_W_PX = 180
     private var RECT_H_PX = 100
     private var RECT_STROKE_PX = 1f
-    private var RECT_COLOR = 0xFFFF7A00.toInt()
+    private var RECT_COLOR = 0x00FF7A00.toInt()
 
-    // GRID (unutar pravokutnika) – PODESIVO
-    private var GRID_BAND_H_PX = 8      // visina jedne trake
-    private var GRID_GAP_H_PX  = 8      // razmak između traka
-    private var GRID_COLOR_ARGB = 0xAA3F2A00.toInt() // poluprozirna tamno-narančasta
+    // GRID (unutar pravokutnika)
+    private var GRID_BAND_H_PX = 8
+    private var GRID_GAP_H_PX  = 9
+    private var GRID_COLOR_ARGB = 0xAA3F2A00.toInt()
 
-    // Header (ikona + tekst)
+    // SKALA (donja linija s crticama i brojevima)
+    private var SCALE_Y_PX = 88              // visina linije unutar rect-a
+    private var SCALE_MAIN_COLOR = 0xFFFF7A00.toInt()
+    private var SCALE_STROKE_PX = 1f
+    private var SCALE_TICK_LEN_PX = -4        // duljina okomite crtice
+    private var SCALE_TICK_COUNT = 5         // broj podioka
+    private var SCALE_FONT_SIZE_PX = 8f
+    private var SCALE_TEXT_COLOR = 0xFFFFFFFF.toInt()
+    private var SCALE_TEXT_GAP_V = 2         // vertikalni razmak linija↔brojevi
+
+    // Header
     private var HEADER_ICON_SIZE_DP = 12f
     private var HEADER_ICON_TEXT_GAP_DP = 10f
     private var HEADER_TEXT_SP = 12f
-    private var HEADER_DX_DP = -80f   // +desno / -lijevo
-    private var HEADER_DY_DP = 1f     // +dolje  / -gore
+    private var HEADER_DX_DP = -80f
+    private var HEADER_DY_DP = 1f
 
-    // Razmak između headera i pravokutnika
+    // Razmak header↔rect
     private var HEADER_TO_RECT_SPACING_DP = 8f
 
     // Footer
@@ -65,11 +76,10 @@ class SparklineTileService : TileService() {
     private val COLOR_TEXT = ColorBuilders.argb(0xFFFFFFFF.toInt())
     private val COLOR_MUTED = ColorBuilders.argb(0xFFB0B0B0.toInt())
 
-    // ID-evi u Resources mapi
+    // ID-evi resursa
     private val RES_ID_RECT = "rect_png"
     private val RES_ID_ICON = "icon_png"
 
-    // Verzija resourcesa – kad je promijenimo, host invalidira cache
     private val resVersion: String
         get() = ImageCache.version ?: "1"
 
@@ -101,7 +111,7 @@ class SparklineTileService : TileService() {
         val res = TilesRes.Resources.Builder()
             .setVersion(resVersion)
             .apply {
-                // 1) pravokutnik (PNG)
+                // rect
                 ImageCache.rectPng?.let { bytes ->
                     val inline = TilesRes.InlineImageResource.Builder()
                         .setData(bytes)
@@ -113,7 +123,7 @@ class SparklineTileService : TileService() {
                         .build()
                     addIdToImageMapping(RES_ID_RECT, img)
                 }
-                // 2) ikona (PNG raster s poznatom px veličinom)
+                // ikona
                 ImageCache.iconPng?.let { bytes ->
                     val sizePx = dpToPx(applicationContext, HEADER_ICON_SIZE_DP)
                     val inline = TilesRes.InlineImageResource.Builder()
@@ -132,13 +142,13 @@ class SparklineTileService : TileService() {
         return Futures.immediateFuture(res)
     }
 
-    // ---------- Layout (3 zone) ----------
+    // ---------- Layout ----------
     private fun buildLayout(): LayoutElementBuilders.Layout {
         val dp = { v: Float -> DimensionBuilders.dp(v) }
         val sp = { v: Float -> DimensionBuilders.SpProp.Builder().setValue(v).build() }
         val wrap = DimensionBuilders.WrappedDimensionProp.Builder().build()
 
-        // HEADER (Row: [Icon] [gap] [Text]) + DX/DY
+        // HEADER
         val headerRow = LayoutElementBuilders.Row.Builder()
             .apply {
                 if (HEADER_DX_DP > 0f) addContent(spacerW(dp(HEADER_DX_DP)))
@@ -181,7 +191,7 @@ class SparklineTileService : TileService() {
             .addContent(headerRow)
             .build()
 
-        // SREDINA – PNG pravokutnik, točne dimenzije, centriran
+        // RECT s gridom + skalom
         val rectImg = LayoutElementBuilders.Image.Builder()
             .setResourceId(RES_ID_RECT)
             .setWidth(DimensionBuilders.dp(RECT_W_PX.toFloat()))
@@ -194,7 +204,7 @@ class SparklineTileService : TileService() {
             .addContent(rectImg)
             .build()
 
-        // FOOTER – tekst s DX/DY pomakom
+        // FOOTER
         val footerText = LayoutElementBuilders.Text.Builder()
             .setText(getFooterText())
             .setFontStyle(
@@ -229,7 +239,7 @@ class SparklineTileService : TileService() {
             .addContent(footerRow)
             .build()
 
-        // ROOT: Column (header, spacer, middle, spacer, footer)
+        // ROOT
         val column = LayoutElementBuilders.Column.Builder()
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
             .addContent(headerBox)
@@ -250,18 +260,13 @@ class SparklineTileService : TileService() {
     private fun spacerH(h: DimensionBuilders.DpProp) =
         LayoutElementBuilders.Spacer.Builder().setHeight(h).build()
 
-    private fun getSpotText(): String {
-        // TODO: zamijeni stvarnim podatkom iz repozitorija
-        return "€0.00"
-    }
-
+    private fun getSpotText(): String = "€0.00"
     private fun getFooterText(): String = "Dnevni graf"
 
     // ---------- Rendering i cache ----------
     private fun ensureResources(ctx: Context) {
         if (ImageCache.rectPng == null) {
-            // NOVO: okvir + GRID unutar pravokutnika
-            ImageCache.rectPng = ChartRenderer.renderRectWithGridPng(
+            ImageCache.rectPng = ChartRenderer.renderRectWithGridAndScalePng(
                 widthPx  = RECT_W_PX,
                 heightPx = RECT_H_PX,
                 rectWpx  = RECT_W_PX,
@@ -270,7 +275,14 @@ class SparklineTileService : TileService() {
                 rectColor = RECT_COLOR,
                 gridHeightPx = GRID_BAND_H_PX,
                 gridGapPx    = GRID_GAP_H_PX,
-                gridColor    = GRID_COLOR_ARGB
+                gridColor    = GRID_COLOR_ARGB,
+                scaleY       = SCALE_Y_PX,
+                scaleColor   = SCALE_MAIN_COLOR,
+                tickCount    = SCALE_TICK_COUNT,
+                tickLenPx    = SCALE_TICK_LEN_PX,
+                textSizePx   = SCALE_FONT_SIZE_PX,
+                textColor    = SCALE_TEXT_COLOR,
+                textGapV     = SCALE_TEXT_GAP_V
             )
         }
         if (ImageCache.iconPng == null) {
@@ -278,16 +290,12 @@ class SparklineTileService : TileService() {
                 ctx = ctx,
                 resId = R.drawable.ic_gold_market_open,
                 targetPx = dpToPx(ctx, HEADER_ICON_SIZE_DP),
-                tintArgb = 0xFFFF7A00.toInt() // NARANČASTA
+                tintArgb = 0xFFFF7A00.toInt()
             )
         }
         if (ImageCache.version == null) {
             ImageCache.version = System.currentTimeMillis().toString()
         }
-        Log.d(
-            "SparklineTile3Zones",
-            "rect PNG ready len=${ImageCache.rectPng?.size ?: 0} ver=${ImageCache.version}"
-        )
     }
 
     private fun rasterizeDrawableToPng(
