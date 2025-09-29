@@ -278,10 +278,7 @@ class SparklineTileService : TileService() {
     private fun spacerH(h: DimensionBuilders.DpProp) =
         LayoutElementBuilders.Spacer.Builder().setHeight(h).build()
 
-    private fun getSpotText(): String {
-        // TODO: zamijeni stvarnim podatkom iz repozitorija
-        return "€0.00"
-    }
+    private fun getSpotText(): String = "€" + realSpotFormatted
 
     private fun getFooterText(): String = "Dnevni graf"
 
