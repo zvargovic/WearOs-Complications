@@ -199,7 +199,9 @@ object ChartRenderer {
     // ==================== NOVO: BARS ====================
 
     /**
-     * Okvir + grid + skala + 48 barova (slot = 30 min).
+     * Okvir + grid + skala + barovi.
+     * - Barovi se crtaju prema **series.size** (maks. 48). Ako je serija prazna, ništa se ne crta.
+     * - Baza barova je na liniji skale (sa zadanom rupom `barBaselineGapPx`).
      */
     fun renderRectWithGridScaleAndBarsPng(
         widthPx: Int,
@@ -279,7 +281,7 @@ object ChartRenderer {
             c.drawLine(xTick, scaleY, xTick, (scaleY + scaleTickLenPx), tickP)
         }
 
-        // labels – JEDNA zajednička bazna linija (da sve budu poravnate)
+        // Labels – jedna zajednička baseline za poravnanje
         val textP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = labelColor
             textSize = labelTextSizePx
@@ -291,7 +293,6 @@ object ChartRenderer {
         for (i in labels.indices) {
             val lbl = labels[i]
             textP.getTextBounds(lbl, 0, lbl.length, bounds)
-
             val xBase = left + i * dxTick
             val x = when (i) {
                 0 -> xBase + edgeLabelInsetPx
@@ -301,32 +302,39 @@ object ChartRenderer {
             c.drawText(lbl, x, baseLine, textP)
         }
 
-        // BAROVI – baza na liniji skale
-        val slotW = rectWpx.toFloat() / 48f
-        val barW = max(1f, slotW * 0.6f)
-        val halfBar = barW / 2f
-        val usableTop = top + 1f
-        val usableBottom = (scaleY - barBaselineGapPx).coerceAtLeast(usableTop + 1f)
-        val usableHeight = (usableBottom - usableTop).coerceAtLeast(1f)
+        // BAROVI – broj barova = series.size (max 48). Ako je prazno, preskačemo.
+        val slotCount = series.size.coerceIn(0, 48)
+        if (slotCount > 0) {
+            val slotW = rectWpx.toFloat() / slotCount.toFloat()
+            val barW = max(1f, slotW * 0.6f)
+            val halfBar = barW / 2f
+            val usableTop = top + 1f
+            val usableBottom = (scaleY - barBaselineGapPx).coerceAtLeast(usableTop + 1f)
+            val usableHeight = (usableBottom - usableTop).coerceAtLeast(1f)
 
-        val maxVal = (dayMax ?: series.filterNotNull().maxOrNull()) ?: 0.0
-        val fullColor = (barAlphaFull shl 24) or barColorRgb
-        val stubColor = (barAlphaStub shl 24) or barColorRgb
+            // >>> KLJUČ: normalizacija na [min, max], ne na [0, max]
+            val nonNull = series.filterNotNull()
+            val maxVal = (dayMax ?: nonNull.maxOrNull()) ?: 0.0
+            val minVal = nonNull.minOrNull() ?: 0.0
+            val span = (maxVal - minVal).coerceAtLeast(1e-6)
 
-        val pBar = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+            val fullColor = (barAlphaFull shl 24) or barColorRgb
+            val stubColor = (barAlphaStub shl 24) or barColorRgb
+            val pBar = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
 
-        for (i in 0 until 48) {
-            val v = if (i < series.size) series[i] else null
-            val cx = left + (i + 0.5f) * slotW
-            if (v != null && maxVal > 0.0) {
-                val norm = (v / maxVal).coerceIn(0.0, 1.0).toFloat()
-                val hBar = max(barMinPx.toFloat(), norm * usableHeight)
-                pBar.color = fullColor
-                c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
-            } else {
-                pBar.color = stubColor
-                val hBar = barStubPx.toFloat()
-                c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
+            for (i in 0 until slotCount) {
+                val v = series[i]
+                val cx = left + (i + 0.5f) * slotW
+                if (v != null && span > 0.0) {
+                    val norm = ((v - minVal) / span).toFloat().coerceIn(0f, 1f)
+                    val hBar = max(barMinPx.toFloat(), norm * usableHeight)
+                    pBar.color = fullColor
+                    c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
+                } else {
+                    pBar.color = stubColor
+                    val hBar = barStubPx.toFloat()
+                    c.drawRect(cx - halfBar, usableBottom - hBar, cx + halfBar, usableBottom, pBar)
+                }
             }
         }
 

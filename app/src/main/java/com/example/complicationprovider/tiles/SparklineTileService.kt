@@ -22,15 +22,17 @@ import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.TimelineBuilders as ProtoTL
 import androidx.core.graphics.drawable.DrawableCompat
 
-// <-- VAŽNO: app R (radi drawabla ic_gold_market_open)
+// App R (ikona)
 import com.example.complicationprovider.R
 
-// (opcionalno za realne podatke – možeš naknadno povezati)
-// import com.example.complicationprovider.data.SettingsRepo
-// import kotlinx.coroutines.flow.first
-// import kotlinx.coroutines.runBlocking
+// ==== Čitanje history-ja za seriju ====
+import com.example.complicationprovider.data.HistoryRec
+import com.example.complicationprovider.data.SettingsRepo
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
+
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Tile s 3 zone:
@@ -47,12 +49,12 @@ class SparklineTileService : TileService() {
     private var RECT_STROKE_PX = 1f
     private var RECT_COLOR = 0x00FF7A00.toInt()
 
-    // GRID (unutar pravokutnika) – PODESIVO
-    private var GRID_BAND_H_PX = 7     // visina jedne trake
-    private var GRID_GAP_H_PX  = 8     // razmak između traka
-    private var GRID_COLOR_ARGB = 0x557E5400.toInt() // poluprozirna tamno-narančasta
+    // GRID (unutar pravokutnika)
+    private var GRID_BAND_H_PX = 7
+    private var GRID_GAP_H_PX  = 8
+    private var GRID_COLOR_ARGB = 0x557E5400.toInt()
 
-    // SKALA (donja linija + crtice + oznake)
+    // SKALA
     private var SCALE_Y_FROM_TOP_PX = 80
     private var SCALE_MAIN_STROKE_PX = 1f
     private var SCALE_COLOR = 0xFFFF7A00.toInt()
@@ -65,20 +67,20 @@ class SparklineTileService : TileService() {
     private var SCALE_LABEL_GAP_Y_PX = 2
     private var SCALE_EDGE_LABEL_INSET_PX = 2
 
-    // ==== BAROVI – SVE PODESIVO OVDJE ====
-    private var BAR_ALPHA_FULL = 0xFF          // 100% vidljiv
-    private var BAR_ALPHA_STUB = 0x55          // “no data” stub ~33% vidljiv
-    private var BAR_COLOR_RGB  = 0xFFFF7A00.toInt()      // boja barova (RGB bez alfe)
-    private var BAR_MIN_PX     = 2             // min visina kad ima podatak
-    private var BAR_STUB_PX    = 2             // visina kad nema podatka (null)
-    private var BAR_BASELINE_GAP_PX = 1f       // razmak bara od linije skale (da se ne dodiruju)
+    // BAROVI
+    private var BAR_ALPHA_FULL = 0xFF
+    private var BAR_ALPHA_STUB = 0x55
+    private var BAR_COLOR_RGB  = 0xFFFF7A00.toInt()
+    private var BAR_MIN_PX     = 2
+    private var BAR_STUB_PX    = 2
+    private var BAR_BASELINE_GAP_PX = 1f
 
     // Header (ikona + tekst)
     private var HEADER_ICON_SIZE_DP = 12f
     private var HEADER_ICON_TEXT_GAP_DP = 10f
     private var HEADER_TEXT_SP = 12f
-    private var HEADER_DX_DP = -80f   // +desno / -lijevo
-    private var HEADER_DY_DP = 1f     // +dolje  / -gore
+    private var HEADER_DX_DP = -80f
+    private var HEADER_DY_DP = 1f
 
     // Razmak između headera i pravokutnika
     private var HEADER_TO_RECT_SPACING_DP = 8f
@@ -257,7 +259,7 @@ class SparklineTileService : TileService() {
             .addContent(footerRow)
             .build()
 
-        // ROOT: Column (header, spacer, middle, spacer, footer)
+        // ROOT
         val column = LayoutElementBuilders.Column.Builder()
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
             .addContent(headerBox)
@@ -278,86 +280,84 @@ class SparklineTileService : TileService() {
     private fun spacerH(h: DimensionBuilders.DpProp) =
         LayoutElementBuilders.Spacer.Builder().setHeight(h).build()
 
-    private fun getSpotText(): String = "€" + realSpotFormatted
+    private fun getSpotText(): String = "€0.00"
 
     private fun getFooterText(): String = "Dnevni graf"
 
     // ---------- Rendering i cache ----------
     private fun ensureResources(ctx: Context) {
-        if (ImageCache.rectPng == null) {
-            // 1) pripremi 48-slot seriju (placeholder – slobodno ćeš zamijeniti realnim podacima)
-            val (series, dayMax) = build48SeriesPlaceholder()
+        // 1) Učitaj zadnjih ≤48 history zapisa u seriju (Double? lista)
+        val (series, dayMax) = loadSeriesFromHistory(ctx)
 
-            // 2) nacrtaj: okvir + grid + skala + barovi
-            ImageCache.rectPng = ChartRenderer.renderRectWithGridScaleAndBarsPng(
-                widthPx  = RECT_W_PX,
-                heightPx = RECT_H_PX,
-                rectWpx  = RECT_W_PX,
-                rectHpx  = RECT_H_PX,
-                // okvir
-                strokePx = RECT_STROKE_PX,
-                rectColor = RECT_COLOR,
-                // grid
-                gridHeightPx = GRID_BAND_H_PX,
-                gridGapPx    = GRID_GAP_H_PX,
-                gridColor    = GRID_COLOR_ARGB,
-                // skala
-                scaleYFromRectTopPx = SCALE_Y_FROM_TOP_PX,
-                scaleMainStrokePx   = SCALE_MAIN_STROKE_PX,
-                scaleColor          = SCALE_COLOR,
-                scaleTicks          = SCALE_TICKS,
-                scaleTickLenPx      = SCALE_TICK_LEN_PX,
-                scaleTickStrokePx   = SCALE_TICK_STROKE_PX,
-                labels              = SCALE_LABELS,
-                labelTextSizePx     = SCALE_LABEL_SIZE_PX,
-                labelColor          = SCALE_LABEL_COLOR,
-                labelGapYPx         = SCALE_LABEL_GAP_Y_PX,
-                edgeLabelInsetPx    = SCALE_EDGE_LABEL_INSET_PX,
-                // barovi (SVE iz podesivih varijabli!)
-                series              = series,
-                dayMax              = dayMax,
-                barAlphaFull        = BAR_ALPHA_FULL,
-                barAlphaStub        = BAR_ALPHA_STUB,
-                barColorRgb         = BAR_COLOR_RGB,
-                barMinPx            = BAR_MIN_PX,
-                barStubPx           = BAR_STUB_PX,
-                barBaselineGapPx    = BAR_BASELINE_GAP_PX
-            )
-        }
+        // 2) Nacrtaj: okvir + grid + skala + barovi (UVJEK renderiramo nanovo)
+        ImageCache.rectPng = ChartRenderer.renderRectWithGridScaleAndBarsPng(
+            widthPx  = RECT_W_PX,
+            heightPx = RECT_H_PX,
+            rectWpx  = RECT_W_PX,
+            rectHpx  = RECT_H_PX,
+            // okvir
+            strokePx = RECT_STROKE_PX,
+            rectColor = RECT_COLOR,
+            // grid
+            gridHeightPx = GRID_BAND_H_PX,
+            gridGapPx    = GRID_GAP_H_PX,
+            gridColor    = GRID_COLOR_ARGB,
+            // skala
+            scaleYFromRectTopPx = SCALE_Y_FROM_TOP_PX,
+            scaleMainStrokePx   = SCALE_MAIN_STROKE_PX,
+            scaleColor          = SCALE_COLOR,
+            scaleTicks          = SCALE_TICKS,
+            scaleTickLenPx      = SCALE_TICK_LEN_PX,
+            scaleTickStrokePx   = SCALE_TICK_STROKE_PX,
+            labels              = SCALE_LABELS,
+            labelTextSizePx     = SCALE_LABEL_SIZE_PX,
+            labelColor          = SCALE_LABEL_COLOR,
+            labelGapYPx         = SCALE_LABEL_GAP_Y_PX,
+            edgeLabelInsetPx    = SCALE_EDGE_LABEL_INSET_PX,
+            // barovi
+            series              = series,
+            dayMax              = dayMax,
+            barAlphaFull        = BAR_ALPHA_FULL,
+            barAlphaStub        = BAR_ALPHA_STUB,
+            barColorRgb         = BAR_COLOR_RGB,
+            barMinPx            = BAR_MIN_PX,
+            barStubPx           = BAR_STUB_PX,
+            barBaselineGapPx    = BAR_BASELINE_GAP_PX
+        )
+
+        // 3) Ikona ostaje keširana
         if (ImageCache.iconPng == null) {
             ImageCache.iconPng = rasterizeDrawableToPng(
                 ctx = ctx,
                 resId = R.drawable.ic_gold_market_open,
                 targetPx = dpToPx(ctx, HEADER_ICON_SIZE_DP),
-                tintArgb = 0xFFFF7A00.toInt() // NARANČASTA
+                tintArgb = 0xFFFF7A00.toInt()
             )
         }
-        if (ImageCache.version == null) {
-            ImageCache.version = System.currentTimeMillis().toString()
-        }
-        Log.d(
-            "SparklineTile3Zones",
-            "rect PNG ready len=${ImageCache.rectPng?.size ?: 0} ver=${ImageCache.version}"
-        )
+
+        // 4) Invalidiraj resources verziju da host povuče nove slike
+        ImageCache.version = System.currentTimeMillis().toString()
+
+        // Log za debug
+        Log.d("SparklineTileService",
+            "render -> series=${series.size}, dayMax=${dayMax ?: "null"}, ver=${ImageCache.version}")
     }
 
-    /**
-     * Placeholder serija od 48 slotova (30 min) s par praznina (null) da vidiš "stubove".
-     * Zamijeni kasnije stvarnim bucketiranjem na 48 polusatnih prozora.
-     */
-    private fun build48SeriesPlaceholder(): Pair<List<Double?>, Double?> {
-        val out = MutableList<Double?>(48) { null }
-        // neka sinusoidna forma + rupe
-        for (i in 0 until 48) {
-            if (i % 7 == 0) {
-                out[i] = null // “nema fetcha”
-            } else {
-                val v = 100.0 + 20.0 * kotlin.math.sin(i / 48.0 * Math.PI * 4)
-                out[i] = v
-            }
+    // === Čitanje zadnjih ≤48 history zapisa i pretvaranje u seriju ===
+    private fun loadSeriesFromHistory(ctx: Context): Pair<List<Double?>, Double?> {
+        val repo = SettingsRepo(ctx)
+        val history: List<HistoryRec> = runBlocking {
+            withTimeoutOrNull(1200) { repo.historyFlow.first() } ?: emptyList()
         }
-        val maxVal = out.filterNotNull().maxOrNull()
-        return out to maxVal
+
+        val tail = history.takeLast(48)
+        val series: List<Double?> = tail.map { rec -> rec.eur.takeIf { it > 0.0 } }
+
+        Log.d("SparklineTileService", "Series (${series.size}): " +
+                series.joinToString(", ") { v -> v?.toString() ?: "null" })
+
+        val dayMax: Double? = series.filterNotNull().maxOrNull()
+        return series to dayMax
     }
 
     private fun rasterizeDrawableToPng(
