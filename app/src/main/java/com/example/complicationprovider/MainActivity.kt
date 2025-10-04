@@ -1,11 +1,13 @@
 package com.example.complicationprovider
 import com.example.complicationprovider.data.Snapshot
+import com.example.complicationprovider.data.OneShotFetcher   // <— OVO JE KLJUČNO
+import com.example.complicationprovider.data.GoldFetcher   // <— OVO JE KLJUČNO
+
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.wear.compose.material.TimeText
-import com.example.complicationprovider.data.GoldFetcher
 import com.example.complicationprovider.net.NetWatch
 import com.example.complicationprovider.ui.AppTheme
 import androidx.compose.foundation.background
@@ -45,6 +47,7 @@ import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
+import androidx.lifecycle.lifecycleScope
 
 private const val TAG = "Main"
 
@@ -54,9 +57,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent { AppTheme { AppRoot() } }
 
-        // Pokrenuto iz launchera (Android Studio / korisnik) — ovo NIJE BOOT/ALARM:
-        Log.d(TAG, "Activity launch → starting GoldFetcher loop (not a system intent)")
-        GoldFetcher.start(applicationContext)
+        // Activity launch → centralizirani jednokratni fetch (nema loopa)
+        Log.d(TAG, "Activity launch → OneShotFetcher.run(poke-initial)")
+        lifecycleScope.launch {
+            val ok = OneShotFetcher.run(applicationContext, reason = "poke-initial")
+            Log.d(TAG, "Initial one-shot fetch finished (ok=$ok)")
+        }
     }
 
     override fun onStart() {
@@ -72,10 +78,7 @@ class MainActivity : ComponentActivity() {
         Log.d("NetWatch", "detached (activity)")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        GoldFetcher.stop()
-    }
+
 }
 
 private enum class Screen { HOME, SETUP, ALERTS, EDIT_ALERT }

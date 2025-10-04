@@ -2,7 +2,10 @@ package com.example.complicationprovider.data
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -22,14 +25,14 @@ import kotlin.math.abs
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
 
-    // Bazni intervali (min) – postojeći “loop mod”, ostavljamo za fallback
-    private const val AGGR_MIN = 2L
-    private const val BG_MIN   = 6L
-    @Volatile private var fetchMinutesCurrent: Long = BG_MIN
+    // --- HTTP klijent ---
+    private val client by lazy {
+        OkHttpClient.Builder()
+            .callTimeout(java.time.Duration.ofSeconds(20))
+            .build()
+    }
 
-    private const val JITTER_SECONDS: Long = 0L
-    private const val CHECK_WHEN_CLOSED_MINUTES: Long = 30L
-
+    // --- URL-ovi / user agent ---
     private val INVESTING_USD = listOf(
         "https://www.investing.com/currencies/xau-usd",
         "https://www.investing.com/commodities/gold?quote=1",
@@ -50,6 +53,7 @@ object GoldFetcher {
                 "AppleWebKit/537.36 (KHTML, like Gecko) " +
                 "Chrome/124.0 Safari/537.36"
 
+    // Rasponi i tolerancije (za sanity/median)
     private const val MIN_USD = 200.0
     private const val MAX_USD = 15000.0
     private const val MIN_EUR = 200.0
@@ -57,19 +61,15 @@ object GoldFetcher {
     private const val THR_USD = 1.5
     private const val THR_EUR = 1.2
 
-    private var job: Job? = null
-    private var didFirstFetch = false
+    // Održavamo informaciju o “prvom fetchu” zbog politike kad je market zatvoren
+    @Volatile private var didFirstFetch = false
 
-    private val client by lazy {
-        OkHttpClient.Builder()
-            .callTimeout(java.time.Duration.ofSeconds(20))
-            .build()
-    }
-
-    // ---------- NOVO: jednokratni fetch ----------
+    // ---------- JAVNI API: jednokratni fetch ----------
     /**
-     * Jednokratno pokreni dohvat i spremanje (bez loopa).
+     * Jednokratno pokreni dohvat i spremanje (bez ikakvog loopa).
      * Vraća true ako je uspješno spremljeno.
+     *
+     * Pozivati ISKLJUČIVO iz OneShotFetcher-a.
      */
     suspend fun fetchOnce(context: Context): Boolean = withContext(Dispatchers.IO) {
         try {
@@ -81,61 +81,13 @@ object GoldFetcher {
         }
     }
 
-    // ---------- Postojeći “loop” ostavljen (ne koristi se u našem novom toku) ----------
-    fun setAggressive(aggressive: Boolean) {
-        val newVal = if (aggressive) AGGR_MIN else BG_MIN
-        if (fetchMinutesCurrent != newVal) {
-            Log.d(TAG, "Interval -> ${newVal}m (aggressive=$aggressive)")
-            fetchMinutesCurrent = newVal
-        }
-    }
-
-    fun start(context: Context) {
-        if (job?.isActive == true) return
-        job = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            val repo = SettingsRepo(context)
-            didFirstFetch = false
-
-            while (isActive) {
-                val t0 = System.currentTimeMillis()
-                try {
-                    val runNow = !didFirstFetch || isMarketOpenUtc()
-
-                    if (!didFirstFetch && !isMarketOpenUtc()) {
-                        val now = ZonedDateTime.now(ZoneOffset.UTC)
-                        val until = timeUntilMarketOpen(now)
-                        Log.i(TAG, "[MARKET] Closed on first start → initial fetch anyway (warm cache). " +
-                                "UTC ${now.dayOfWeek} ${now.toLocalTime()} — until open: $until")
-                    } else if (!runNow) {
-                        val now = ZonedDateTime.now(ZoneOffset.UTC)
-                        val until = timeUntilMarketOpen(now)
-                        Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — snooze ${CHECK_WHEN_CLOSED_MINUTES}m. Until open: $until")
-                        delay(CHECK_WHEN_CLOSED_MINUTES * 60_000L)
-                        continue
-                    }
-
-                    performFetch(context)
-                    didFirstFetch = true
-                } catch (t: Throwable) {
-                    Log.e(TAG, "Loop error: ${t.message}", t)
-                }
-
-                val elapsed = System.currentTimeMillis() - t0
-                val waitMs = (fetchMinutesCurrent * 60_000L + JITTER_SECONDS * 1000L) - elapsed
-                if (waitMs > 0) delay(waitMs)
-            }
-        }
-    }
-
-    fun stop() {
-        job?.cancel()
-        job = null
-    }
-
-    // ---------- ZAJEDNIČKI FETCH KORACI (koriste i loop i fetchOnce) ----------
+    // ---------- GLAVNI FETCH KORACI (interno) ----------
     private suspend fun performFetch(context: Context) {
         val repo = SettingsRepo(context)
 
+        // Politika otvorenosti tržišta:
+        // - Ako je prvo pokretanje u životnom ciklusu, dozvoli fetch i kad je zatvoreno (warm cache).
+        // - Nakon toga, poštuj “market open”.
         val runNow = isMarketOpenUtc() || !didFirstFetch
         if (!runNow) {
             val now = ZonedDateTime.now(ZoneOffset.UTC)
@@ -209,10 +161,12 @@ object GoldFetcher {
         )
         Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-        // 2) Izračun indikatora (sada povijest uključuje i ovaj zapis)
+        // 2) Log indikatora (sada povijest uključuje i ovaj zapis)
         val history = repo.historyFlow.first()
         logIndicators(history)
-        // (NEMA više scheduleComplicationRefresh ovdje.)
+
+        // označi da smo odradili barem jedan fetch (radi market-closed politike)
+        didFirstFetch = true
     }
 
     // ----------------- INDIKATORI: log -----------------
@@ -272,10 +226,10 @@ object GoldFetcher {
 
     // ----- market status -----
     private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean {
-        return when (now.dayOfWeek) {
-            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
-            else -> true
-        }
+        //return when (now.dayOfWeek) {
+            //DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
+            //else -> true
+        return true
     }
 
     private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String {

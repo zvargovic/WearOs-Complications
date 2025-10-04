@@ -9,7 +9,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.complicationprovider.data.GoldFetcher
+import com.example.complicationprovider.data.OneShotFetcher
 import java.util.concurrent.TimeUnit
 
 private const val TAG_WORK = "WorkFallback"
@@ -25,10 +25,14 @@ class WorkFallback(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result = try {
-        Log.d(TAG_WORK, "Fallback tick → start fetch + requestUpdateAllComplications")
-        GoldFetcher.start(applicationContext)               // pokrene ako već ne radi
-        requestUpdateAllComplications(applicationContext)   // ping za Spot/RSI/ROC
-        Result.success()
+        Log.d(TAG_WORK, "Fallback tick → OneShotFetcher.run + requestUpdateAllComplications")
+
+        val ok = OneShotFetcher.run(applicationContext, reason = "fallback-worker")
+        if (ok) {
+            Result.success()
+        } else {
+            Result.retry()
+        }
     } catch (t: Throwable) {
         Log.w(TAG_WORK, "Fallback work failed: ${t.message}", t)
         Result.retry()
@@ -42,6 +46,8 @@ class WorkFallback(
                 .build()
 
             val req = PeriodicWorkRequestBuilder<WorkFallback>(15, TimeUnit.MINUTES)
+
+
                 .setConstraints(constraints)
                 .build()
 
