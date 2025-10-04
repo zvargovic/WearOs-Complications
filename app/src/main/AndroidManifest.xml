@@ -11,7 +11,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Opcionalno, ako želiš exact alarms bez korisničkog odobrenja i ako to politika dopušta -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -161,6 +163,18 @@
                 <action android:name="com.example.complicationprovider.ACTION_REFRESH_ALARM"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".boot.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".orchestrator.AlignedFetchReceiver"
+            android:exported="false" />
 
         <!-- WorkManager (fallback) -->
         <provider

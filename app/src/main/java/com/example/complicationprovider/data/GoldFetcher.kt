@@ -226,10 +226,11 @@ object GoldFetcher {
 
     // ----- market status -----
     private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean {
-        //return when (now.dayOfWeek) {
-            //DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
-            //else -> true
-        return true
+        return when (now.dayOfWeek) {
+            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
+            else -> true
+        //return true
+    }
     }
 
     private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String {

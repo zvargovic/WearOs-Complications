@@ -57,26 +57,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent { AppTheme { AppRoot() } }
 
-        // Activity launch → centralizirani jednokratni fetch (nema loopa)
-        Log.d(TAG, "Activity launch → OneShotFetcher.run(poke-initial)")
-        lifecycleScope.launch {
-            val ok = OneShotFetcher.run(applicationContext, reason = "poke-initial")
-            Log.d(TAG, "Initial one-shot fetch finished (ok=$ok)")
-        }
+        // Centralizirano: app launch samo osigura da je orkestrator aktivan
+        Log.d(TAG, "Activity launch → ensure AlignedFetchScheduler active")
+
+        // Pokreni (ili replaniraj) aligned raspored fetcha
+        com.example.complicationprovider.orchestrator.AlignedFetchScheduler.scheduleNext(applicationContext)
     }
 
-    override fun onStart() {
-        super.onStart()
-        NetWatch.register(applicationContext, reason = "activity", debounceMs = 15_000L)
-        NetWatch.pokeIfAlreadyValidated(applicationContext, reason = "activity-immediate")
-        Log.d("NetWatch", "attached (activity)")
-    }
 
-    override fun onStop() {
-        super.onStop()
-        NetWatch.unregister(applicationContext, reason = "activity")
-        Log.d("NetWatch", "detached (activity)")
-    }
+
+
 
 
 }
