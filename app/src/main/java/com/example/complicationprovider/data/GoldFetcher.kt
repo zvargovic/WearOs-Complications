@@ -1,5 +1,6 @@
 package com.example.complicationprovider.data
 
+import com.example.complicationprovider.tiles.TilePreRender
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +26,14 @@ import kotlin.math.abs
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
 
-    // --- HTTP klijent ---
+    // HTTP
     private val client by lazy {
         OkHttpClient.Builder()
             .callTimeout(java.time.Duration.ofSeconds(20))
             .build()
     }
 
-    // --- URL-ovi / user agent ---
+    // URL-ovi
     private val INVESTING_USD = listOf(
         "https://www.investing.com/currencies/xau-usd",
         "https://www.investing.com/commodities/gold?quote=1",
@@ -41,19 +42,15 @@ object GoldFetcher {
         "https://www.investing.com/currencies/xau-eur",
         "https://www.investing.com/commodities/gold?quote=1",
     )
-
     private const val GOLDPRICE_USD_URL = "https://data-asg.goldprice.org/dbXRates/USD"
     private const val GOLDPRICE_EUR_URL = "https://data-asg.goldprice.org/dbXRates/EUR"
-
     private const val TD_PRICE_URL = "https://api.twelvedata.com/price"
     private const val TD_FX_URL = "https://api.twelvedata.com/exchange_rate"
 
     private const val UA =
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
-                "AppleWebKit/537.36 (KHTML, like Gecko) " +
-                "Chrome/124.0 Safari/537.36"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
-    // Rasponi i tolerancije (za sanity/median)
+    // Rasponi / tolerancije
     private const val MIN_USD = 200.0
     private const val MAX_USD = 15000.0
     private const val MIN_EUR = 200.0
@@ -61,16 +58,9 @@ object GoldFetcher {
     private const val THR_USD = 1.5
     private const val THR_EUR = 1.2
 
-    // Održavamo informaciju o “prvom fetchu” zbog politike kad je market zatvoren
     @Volatile private var didFirstFetch = false
 
-    // ---------- JAVNI API: jednokratni fetch ----------
-    /**
-     * Jednokratno pokreni dohvat i spremanje (bez ikakvog loopa).
-     * Vraća true ako je uspješno spremljeno.
-     *
-     * Pozivati ISKLJUČIVO iz OneShotFetcher-a.
-     */
+    // ——— Public API ———
     suspend fun fetchOnce(context: Context): Boolean = withContext(Dispatchers.IO) {
         try {
             performFetch(context)
@@ -81,18 +71,15 @@ object GoldFetcher {
         }
     }
 
-    // ---------- GLAVNI FETCH KORACI (interno) ----------
+    // ——— Main fetch ———
     private suspend fun performFetch(context: Context) {
         val repo = SettingsRepo(context)
 
-        // Politika otvorenosti tržišta:
-        // - Ako je prvo pokretanje u životnom ciklusu, dozvoli fetch i kad je zatvoreno (warm cache).
-        // - Nakon toga, poštuj “market open”.
         val runNow = isMarketOpenUtc() || !didFirstFetch
         if (!runNow) {
             val now = ZonedDateTime.now(ZoneOffset.UTC)
             val until = timeUntilMarketOpen(now)
-            Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — skip now, until open: $until")
+            Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — skip, until: $until")
             throw IllegalStateException("Market closed")
         }
 
@@ -100,7 +87,7 @@ object GoldFetcher {
         val apiKey = settings.apiKey.orEmpty()
         logHeader()
 
-        // USD paralelno
+        // paralelno
         val usdDeferred = coroutineScope {
             async {
                 listOf(
@@ -110,9 +97,7 @@ object GoldFetcher {
                 )
             }
         }
-        // FX
         val fxDeferred = coroutineScope { async { fetchTdEurUsdRate(apiKey) } }
-        // EUR bazni (GP + Investing)
         val eurDeferred = coroutineScope {
             async {
                 listOf(
@@ -128,7 +113,7 @@ object GoldFetcher {
 
         logUsdSection(usdQuotes)
 
-        // TD EUR = TD_USD / (EUR/USD)
+        // iz TD USD u TD EUR
         val tdUsd = usdQuotes.find { it.name == "TD" }?.value
         val tdEur = tdUsd?.let { it.divide(eurUsd, 6, RoundingMode.HALF_UP) }
 
@@ -138,10 +123,19 @@ object GoldFetcher {
         }
         logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
 
-        // ---- Snapshot → DataStore ----
+        // Snapshot → DataStore
         val usdCons = consensus(usdQuotes.filter { it.value != null })
         val eurCons = consensus(eurQuotes.filter { it.value != null })
 
+        // OPCIJA B: global last (EUR) – za PragmaticOpen v2
+        runCatching {
+            SnapshotStore.setGlobalLast(context, System.currentTimeMillis(), eurCons.toDouble())
+            Log.d(TAG, "[GLOBAL-LAST] set → EUR=${fmt(eurCons)}")
+        }.onFailure { Log.w(TAG, "[GLOBAL-LAST] set failed: ${it.message}") }
+
+// ➜ NOVO: upiši u 48-slot seriju (slot na :00 / :30 ± tolerance)
+        val ts = System.currentTimeMillis()
+        SnapshotStore.appendIfOnSlot(context, ts, eurCons.toDouble(), toleranceSec = 90)
         val snap = Snapshot(
             usdConsensus = usdCons.toDouble(),
             eurConsensus = eurCons.toDouble(),
@@ -149,7 +143,8 @@ object GoldFetcher {
             updatedEpochMs = System.currentTimeMillis(),
         )
 
-        // 1) spremi snapshot + history (i pričekaj commit)
+        // spremi snapshot + history
+        // spremi snapshot + history (suspend → nema await)
         repo.saveSnapshot(snap)
         repo.appendHistory(
             HistoryRec(
@@ -161,15 +156,16 @@ object GoldFetcher {
         )
         Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
 
-        // 2) Log indikatora (sada povijest uključuje i ovaj zapis)
+        // prerender PNG + zatraži update tile-a
+        TilePreRender.run(context)
+
+        // indikatori
         val history = repo.historyFlow.first()
         logIndicators(history)
 
-        // označi da smo odradili barem jedan fetch (radi market-closed politike)
         didFirstFetch = true
     }
-
-    // ----------------- INDIKATORI: log -----------------
+    // ——— Indikatori (log) ———
     private fun logIndicators(history: List<HistoryRec>) {
         if (history.isEmpty()) {
             Log.i(TAG, "[IND] Nema history zapisa još.")
@@ -183,11 +179,11 @@ object GoldFetcher {
         val pMid = 20
         val pLong = 50
 
-        fun d2(v: Double?) = if (v == null) "n/a" else DecimalFormat("0.00",
-            DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        fun d2(v: Double?) = if (v == null) "n/a" else
+            DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
 
-        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC)
-            .toInstant().toEpochMilli()
+        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate()
+            .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
         val eurRsi = Indicators.rsi(closeEur, pRsi)
         val eurSma20 = Indicators.sma(closeEur, pMid)
@@ -219,26 +215,26 @@ object GoldFetcher {
         val eurSma50 = Indicators.sma(closeEur, pLong)
         val usdSma9 = Indicators.sma(closeUsd, pShort)
         val usdSma50 = Indicators.sma(closeUsd, pLong)
-
         Log.i(TAG, "[IND][EUR] SMA$pShort=${d2(eurSma9)}  SMA$pLong=${d2(eurSma50)}")
         Log.i(TAG, "[IND][USD] SMA$pShort=${d2(usdSma9)}  SMA$pLong=${d2(usdSma50)}")
     }
 
-    // ----- market status -----
+    // ——— market status ———
     private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean {
-        return when (now.dayOfWeek) {
-            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
-            else -> true
-        //return true
-    }
+        // Ako želiš forsirati fetch i kad je zatvoreno, ostavi true
+        return true
+        // Za realno stanje:
+        // return when (now.dayOfWeek) {
+        //     DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
+        //     else -> true
+        // }
     }
 
-    private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String {
-        return when (now.dayOfWeek) {
+    private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String =
+        when (now.dayOfWeek) {
             DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> {
                 val nextOpen = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-                    .toLocalDate()
-                    .atStartOfDay(ZoneOffset.UTC)
+                    .toLocalDate().atStartOfDay(ZoneOffset.UTC)
                 val dur = Duration.between(now, nextOpen)
                 val h = dur.toHours()
                 val m = dur.minusHours(h).toMinutes()
@@ -246,9 +242,8 @@ object GoldFetcher {
             }
             else -> "0h 0m"
         }
-    }
 
-    // ----- modeli/pomagala -----
+    // ——— modeli/pomagala ———
     private data class Quote(
         val name: String,
         val value: BigDecimal?,
@@ -278,8 +273,7 @@ object GoldFetcher {
         }
         return s.toDouble()
     }
-
-    // ----- dohvat -----
+    // ——— dohvat ———
     private fun fetchGoldpriceUsd(): Quote = try {
         client.newCall(req(GOLDPRICE_USD_URL)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
@@ -390,7 +384,7 @@ object GoldFetcher {
         BigDecimal.ONE
     }
 
-    // ----- Investing parser -----
+    // ——— Investing parser ———
     private fun parseInvestingPriceFromHtml(html: String, currency: String): Double? {
         val (lo, hi) = if (currency.equals("USD", true)) MIN_USD to MAX_USD else MIN_EUR to MAX_EUR
         fun ok(v: Double) = v in lo..hi
@@ -423,7 +417,7 @@ object GoldFetcher {
         return null
     }
 
-    // ----- Log sekcije / statistika -----
+    // ——— log helpers ———
     private fun logHeader() {
         Log.i(TAG, "Starting XAU multi (USD → EUR).")
     }
@@ -500,6 +494,7 @@ object GoldFetcher {
         this.subtract(other).setScale(2, RoundingMode.HALF_UP)
 
     private fun fmt(v: BigDecimal?): String =
-        if (v == null) "n/a"
-        else DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
+        if (v == null) "n/a" else DecimalFormat(
+            "0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
+        ).format(v)
 }

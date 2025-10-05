@@ -1,5 +1,7 @@
 package com.example.complicationprovider.data
-
+import com.example.complicationprovider.tiles.ChartRenderer
+import com.example.complicationprovider.tiles.TilePngCache
+import com.example.complicationprovider.data.SnapshotStore
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.LinkProperties
@@ -19,6 +21,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.net.InetAddress
 import kotlin.coroutines.resume
+import androidx.wear.tiles.TileService
 
 /**
  * Jednokratni fetch s PARTIAL_WAKE_LOCK-om i mrežnim sanity-jem.
@@ -138,7 +141,8 @@ object OneShotFetcher {
                     requestUpdateAllComplications(context)
                     runCatching {
                         SpotTileService.requestUpdate(context)
-                        SparklineTileService.requestUpdate(context)
+                        TileService.getUpdater(context)
+                            .requestUpdate(SparklineTileService::class.java)
                         EmaSmaTileService.requestUpdate(context)
                         Log.d(TAG, "Tile update requested")
                     }.onFailure {
@@ -261,4 +265,5 @@ object OneShotFetcher {
         }
         return true
     }
+
 }
