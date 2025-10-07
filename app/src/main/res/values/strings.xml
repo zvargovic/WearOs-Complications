@@ -25,6 +25,6 @@
     <string name="save_label">Save</string>
     <string name="comp_spark_name">Eur/h</string>
     <string name="market_status">Market Status</string>
-
+    <string name="datastore_cleared_warning">⚠️ DataStore has been completely cleared!</string>
 
 </resources>

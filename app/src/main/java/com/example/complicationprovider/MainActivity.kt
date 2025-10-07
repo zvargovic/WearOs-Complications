@@ -2,7 +2,15 @@ package com.example.complicationprovider
 import com.example.complicationprovider.data.Snapshot
 import com.example.complicationprovider.data.OneShotFetcher   // <— OVO JE KLJUČNO
 import com.example.complicationprovider.data.GoldFetcher   // <— OVO JE KLJUČNO
-
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import com.example.complicationprovider.data.SnapshotStore
+import kotlinx.coroutines.launch
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -121,6 +129,7 @@ private fun AppRoot() {
 private fun HomeScreen(onOpenSetup: () -> Unit) {
     val context = LocalContext.current
     val repo = remember { SettingsRepo(context) }
+    val scope = rememberCoroutineScope()
 
     // ⇩ KLJUČNO: ovo sluša DataStore snapshot i automatski recompose-a UI kad GoldFetcher spremi novi snapshot
     val snap by repo.snapshotFlow.collectAsState(
@@ -153,8 +162,21 @@ private fun HomeScreen(onOpenSetup: () -> Unit) {
                     text = stringResource(R.string.app_name),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onBackground
-
+                    color = MaterialTheme.colors.onBackground,
+                    modifier = Modifier.pointerInput(Unit) {
+                        detectTapGestures(
+                            onDoubleTap = {
+                                scope.launch {
+                                    SnapshotStore.clearAll(context)
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.datastore_cleared_warning),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        )
+                    }
                 )
                 Spacer(Modifier.height(6.dp))
                 Text(

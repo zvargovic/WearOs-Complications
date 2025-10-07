@@ -29,7 +29,7 @@
     <string name="comp_roc_name">ROC (1)</string>
     <string name="comp_spark_name">Eur/h</string>
     <string name="market_status">Market Status</string>
-
+    <string name="datastore_cleared_warning">⚠️ DataStore je potpuno obrisan!</string>
 
 
 </resources>

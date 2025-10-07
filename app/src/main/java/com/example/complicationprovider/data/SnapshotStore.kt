@@ -1,5 +1,6 @@
 package com.example.complicationprovider.data
-
+import com.example.complicationprovider.R
+import android.widget.Toast
 import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.doublePreferencesKey
@@ -245,19 +246,34 @@ object SnapshotStore {
             p[KEY_DAY] = day
 
             if (data5.open == null || wasProvisional) {
-                // Prva stvarna današnja točka → postaje PRAVI OPEN, resetiraj min/max, ugasi provisional
-                p[KEY_OPEN] = price
-                p[KEY_MIN] = price
-                p[KEY_MAX] = price
+                // Ako prvi uzorak ispadne 0.0, a prije smo imali valjane min/max, koristi prethodnu nenultu
+                val prevMin = data5.min
+                val prevMax = data5.max
+                val candidate = price
+
+                val fallbackNonZero = when {
+                    (prevMin ?: 0.0) > 0.0 -> prevMin
+                    (prevMax ?: 0.0) > 0.0 -> prevMax
+                    else -> null
+                }
+
+                val openSafe = if (candidate == 0.0 && fallbackNonZero != null) fallbackNonZero else candidate
+
+                p[KEY_OPEN] = openSafe
+                p[KEY_MIN]  = openSafe
+                p[KEY_MAX]  = openSafe
                 p[KEY_OPEN_PROVISIONAL] = 0L
-                Log.d(TAG, "appendIfOnSlot() → FIRST real point today → OPEN=min=max=$price (provisional=OFF)")
+
+                Log.d(TAG, "appendIfOnSlot() → FIRST real point today → OPEN=min=max=$openSafe (rawFirst=$price, fallback=$fallbackNonZero, provisional=OFF)")
             } else {
-                // Normalno ažuriranje min/max
+                // (ovdje ide "normalni" blok iz točke 1)
                 val newMin = listOfNotNull(data5.min, price).minOrNull() ?: price
                 val newMax = listOfNotNull(data5.max, price).maxOrNull() ?: price
-                p[KEY_MIN] = newMin
-                p[KEY_MAX] = newMax
-                Log.d(TAG, "appendIfOnSlot() → min/max updated → min=$newMin max=$newMax")
+                val safeMin = if (newMin == 0.0 && (data5.min ?: 0.0) > 0.0) data5.min else newMin
+                val safeMax = if (newMax == 0.0 && (data5.max ?: 0.0) > 0.0) data5.max else newMax
+                p[KEY_MIN] = safeMin ?: (data5.min ?: price)
+                p[KEY_MAX] = safeMax ?: (data5.max ?: price)
+                Log.d(TAG, "appendIfOnSlot() → min/max updated → min=$safeMin max=$safeMax (rawMin=$newMin rawMax=$newMax)")
             }
 
             p[KEY_SERIES5] = encodeSeries(series5)
@@ -355,12 +371,19 @@ object SnapshotStore {
      * Potpuni dump svih ključ/ vrijednost parova iz DataStore-a.
      * Pozovi npr. iz TileService.onResourcesRequest() unutar runBlocking { … }.
      */
+    // ============ Debug helpers ============
+
+    suspend fun clearAll(context: Context) {
+        context.ds.edit { it.clear() }
+        val msg = context.getString(R.string.datastore_cleared_warning)
+        Log.w(TAG, msg)
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    }
     suspend fun dumpAll(context: Context) {
         val prefs = context.ds.data.first()
         Log.w(TAG, "=== DUMP START ===")
-        prefs.asMap().forEach { (k, v) ->
-            Log.w(TAG, "${k.name} = $v")
-        }
+        prefs.asMap().forEach { (k, v) -> Log.w(TAG, "${k.name} = $v") }
         Log.w(TAG, "=== DUMP END ===")
     }
+
 }

@@ -15,18 +15,23 @@ import com.example.complicationprovider.data.Snapshot
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.flow.first
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.util.Locale
 import kotlin.math.max
+import kotlin.math.round
 
 private const val TAG_SPOT = "SpotComp"
 
 // Pragovi starosti (minute) za boju/ikonicu
-private const val FRESH_MIN = 6L
-private const val WARM_MIN  = 12L
+private const val FRESH_MIN = 5L
+private const val WARM_MIN  = 15L
 
 class SpotComplicationService : ComplicationDataSourceService() {
+
+    /** Kompaktni prikaz za komplikaciju: 3382.88 → "3383" */
+    private fun fmtCompact(value: Double): String {
+        val rounded = round(value).toInt()
+        return String.format(Locale.US, "%d", rounded)
+    }
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
         // Pretpostavi “svježe” u previewu
@@ -35,7 +40,7 @@ class SpotComplicationService : ComplicationDataSourceService() {
         ).build()
 
         return ShortTextComplicationData.Builder(
-            PlainComplicationText.Builder("3149.00").build(), // samo broj
+            PlainComplicationText.Builder("3149").build(), // čisti preview
             PlainComplicationText.Builder(getString(R.string.comp_spot_name)).build()
         ).setMonochromaticImage(dot).build()
     }
@@ -54,21 +59,17 @@ class SpotComplicationService : ComplicationDataSourceService() {
             } ?: repo.snapshotFlow.value
         }
 
-        fun fmt2(v: Double) = DecimalFormat(
-            "0.00",
-            DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }
-        ).format(v)
-
-        val text = if (snap.eurConsensus > 0.0) fmt2(snap.eurConsensus) else "—"
+        // SAMO za komplikaciju koristimo zaokruženi integer
+        val text = if (snap.eurConsensus > 0.0) fmtCompact(snap.eurConsensus) else "—"
 
         // Starost podatka
         val ageMs  = max(0L, System.currentTimeMillis() - snap.updatedEpochMs)
         val ageMin = ageMs / 60_000L
 
         val dotRes = when {
-            ageMin < FRESH_MIN -> R.drawable.ic_dot_fresh  // ≤ 6 min
-            ageMin < WARM_MIN  -> R.drawable.ic_dot_warm   // 6–12 min
-            else               -> R.drawable.ic_dot_stale  // > 12 min
+            ageMin < FRESH_MIN -> R.drawable.ic_dot_fresh  // ≤ 5 min
+            ageMin < WARM_MIN  -> R.drawable.ic_dot_warm   // 5–15 min
+            else               -> R.drawable.ic_dot_stale  // > 15 min
         }
 
         val dot = MonochromaticImage.Builder(
