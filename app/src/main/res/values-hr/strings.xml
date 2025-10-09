@@ -3,7 +3,7 @@
 
     <!-- UI strings -->
     <string name="title">Complication Provider</string>
-    <string name="subtitle">Aplikacija prikazuje komplikacije.</string>
+    <string name="subtitle"> </string>
     <string name="mode_display">Prikaz</string>
     <string name="mode_layout">Raspored</string>
     <string name="button_label">Osvježi</string>

@@ -186,7 +186,7 @@ private fun HomeScreen(onOpenSetup: () -> Unit) {
 
                     )
 
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(6.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),

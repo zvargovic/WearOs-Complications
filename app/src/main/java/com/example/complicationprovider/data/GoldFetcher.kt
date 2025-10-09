@@ -25,13 +25,25 @@ import kotlin.math.abs
 
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
+    // — per-run klijenti koje postavlja OneShotFetcher —
+    @Volatile private var injectedClient: OkHttpClient? = null
+    @Volatile private var injectedShortClient: OkHttpClient? = null
 
-    // HTTP
-    private val client by lazy {
+    fun setHttpClient(client: OkHttpClient?, shortClient: OkHttpClient? = null) {
+        injectedClient = client
+        injectedShortClient = shortClient
+    }
+
+    private val defaultClient by lazy {
+        // fallback (npr. za debug), ali normalno koristimo injected
         OkHttpClient.Builder()
-            .callTimeout(java.time.Duration.ofSeconds(20))
+            .retryOnConnectionFailure(true)
             .build()
     }
+    private val defaultShortClient by lazy { defaultClient }
+
+    private fun http(): OkHttpClient = injectedClient ?: defaultClient
+    private fun httpShort(): OkHttpClient = injectedShortClient ?: defaultShortClient
 
     // URL-ovi
     private val INVESTING_USD = listOf(
@@ -274,8 +286,9 @@ object GoldFetcher {
         return s.toDouble()
     }
     // ——— dohvat ———
+// ——— dohvat ———
     private fun fetchGoldpriceUsd(): Quote = try {
-        client.newCall(req(GOLDPRICE_USD_URL)).execute().use { resp ->
+        httpShort().newCall(req(GOLDPRICE_USD_URL)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
             val body = resp.body?.string().orEmpty()
             val items = JSONObject(body).optJSONArray("items")
@@ -297,7 +310,7 @@ object GoldFetcher {
     }
 
     private fun fetchGoldpriceEur(): Quote = try {
-        client.newCall(req(GOLDPRICE_EUR_URL)).execute().use { resp ->
+        httpShort().newCall(req(GOLDPRICE_EUR_URL)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
             val body = resp.body?.string().orEmpty()
             val items = JSONObject(body).optJSONArray("items")
@@ -325,7 +338,7 @@ object GoldFetcher {
 
     private fun fetchInvestingUsd(): Quote = try {
         val html = INVESTING_USD.firstNotNullOfOrNull { url ->
-            try { client.newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
+            try { http().newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "USD") ?: error("extract fail")
         Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)).also {
@@ -338,7 +351,7 @@ object GoldFetcher {
 
     private fun fetchInvestingEur(): Quote = try {
         val html = INVESTING_EUR.firstNotNullOfOrNull { url ->
-            try { client.newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
+            try { http().newCall(req(url)).execute().use { it.body?.string() } } catch (_: Throwable) { null }
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "EUR") ?: error("extract fail")
         Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR").also {
@@ -352,7 +365,7 @@ object GoldFetcher {
     private fun fetchTdUsd(apiKey: String): Quote = try {
         require(apiKey.isNotBlank()) { "Missing TD API key" }
         val url = "$TD_PRICE_URL?symbol=XAU/USD&apikey=$apiKey"
-        client.newCall(req(url)).execute().use { resp ->
+        httpShort().newCall(req(url)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
             val body = resp.body?.string().orEmpty()
             val price = JSONObject(body).optString("price").takeIf { it.isNotBlank() }?.toDoubleOrNull()
@@ -369,7 +382,7 @@ object GoldFetcher {
     private fun fetchTdEurUsdRate(apiKey: String): BigDecimal = try {
         require(apiKey.isNotBlank()) { "Missing TD API key" }
         val url = "$TD_FX_URL?symbol=EUR/USD&apikey=$apiKey"
-        client.newCall(req(url)).execute().use { resp ->
+        httpShort().newCall(req(url)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
             val body = resp.body?.string().orEmpty()
             val js = JSONObject(body)

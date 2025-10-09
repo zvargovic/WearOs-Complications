@@ -3,7 +3,7 @@
 
     <!-- UI strings (koristit ćemo kasnije) -->
     <string name="title">Complication Provider</string>
-    <string name="subtitle">This app provides complications.</string>
+    <string name="subtitle"> </string>
     <string name="mode_display">Display</string>
     <string name="mode_layout">Layout</string>
     <string name="button_label">Refresh</string>

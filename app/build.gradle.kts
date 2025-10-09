@@ -73,4 +73,6 @@ dependencies {
     implementation("androidx.wear.compose:compose-material:1.2.0")
     // Guava za Futures
     implementation("com.google.guava:guava:32.1.3-android")
+
+    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0")
 }

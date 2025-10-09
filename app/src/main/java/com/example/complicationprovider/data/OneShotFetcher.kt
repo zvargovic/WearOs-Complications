@@ -110,6 +110,12 @@ object OneShotFetcher {
             val prev = cm.getBoundNetworkForProcess()
             val boundOk = cm.bindProcessToNetwork(net)
             Log.d(TAG, "bindProcessToNetwork(${net.hashCode()}) -> $boundOk")
+            // >>> per-run OkHttp klijenti vezani na ovaj 'net'
+            val cm2 = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val shortClient = com.example.complicationprovider.net.LoggedHttp.makeShortClient(cm2, net)
+            val longClient  = com.example.complicationprovider.net.LoggedHttp.makeLongClient(cm2, net)
+            com.example.complicationprovider.data.GoldFetcher.setHttpClient(longClient, shortClient)
+// <<<
 
             try {
                 // 5) DNS preflight – pokušavaj dok ne prođe (ili do max pokušaja ako je >0)
@@ -128,12 +134,13 @@ object OneShotFetcher {
                 }
 
                 // 6) Pokušaji fetcha
+                // 6) Pokušaji fetcha — prekini čim jedan uspije
                 var ok = false
-                repeat(MAX_FETCH_ATTEMPTS) { attempt ->
-                    Log.i(TAG, "Fetch attempt ${attempt + 1}/$MAX_FETCH_ATTEMPTS (boundNetwork=$boundOk)")
+                for (attempt in 1..MAX_FETCH_ATTEMPTS) {
+                    Log.i(TAG, "Fetch attempt $attempt/$MAX_FETCH_ATTEMPTS (boundNetwork=$boundOk)")
                     ok = GoldFetcher.fetchOnce(context)
-                    if (ok) return@repeat
-                    if (attempt < MAX_FETCH_ATTEMPTS - 1) delay(RETRY_SLEEP_MS)
+                    if (ok) break
+                    if (attempt < MAX_FETCH_ATTEMPTS) delay(RETRY_SLEEP_MS)
                 }
 
                 // 7) Ako uspjeh – pingni komplikacije i tileove
@@ -152,6 +159,8 @@ object OneShotFetcher {
                 Log.d(TAG, "Fetch finished (ok=$ok)")
                 return ok
             } finally {
+                // >>> očisti per-run klijente
+                com.example.complicationprovider.data.GoldFetcher.setHttpClient(null, null)
                 // 8) Vrati bind na prijašnje stanje
                 val restored = cm.bindProcessToNetwork(prev)
                 Log.d(TAG, "bindProcessToNetwork(prev=${prev?.hashCode()}) restore -> $restored")
