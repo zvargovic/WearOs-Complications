@@ -1,5 +1,6 @@
 package com.example.complicationprovider.data
 
+import com.example.complicationprovider.util.FileLogger
 import com.example.complicationprovider.tiles.TilePreRender
 import android.content.Context
 import android.util.Log
@@ -78,6 +79,8 @@ object GoldFetcher {
             performFetch(context)
             true
         } catch (t: Throwable) {
+            // u file + logcat
+            FileLogger.writeLine("[GF][ERR] fetchOnce failed: ${t::class.java.simpleName}: ${t.message}")
             Log.w(TAG, "fetchOnce failed: ${t.message}", t)
             false
         }
@@ -86,6 +89,7 @@ object GoldFetcher {
     // ——— Main fetch ———
     private suspend fun performFetch(context: Context) {
         val repo = SettingsRepo(context)
+        FileLogger.writeLine("[GF] start")
 
         val runNow = isMarketOpenUtc() || !didFirstFetch
         if (!runNow) {
@@ -122,6 +126,9 @@ object GoldFetcher {
         val usdQuotes = usdDeferred.await()
         val eurUsd = fxDeferred.await()
         val eurBase = eurDeferred.await()
+        FileLogger.writeLine("[GF] usdQuotes=${usdQuotes.map { it.name to (it.value?.toPlainString() ?: "n/a") }}")
+        FileLogger.writeLine("[GF] eurUsdRate=$eurUsd")
+        FileLogger.writeLine("[GF] eurBase=${eurBase.map { it.name to (it.value?.toPlainString() ?: "n/a") }}")
 
         logUsdSection(usdQuotes)
 
@@ -133,11 +140,12 @@ object GoldFetcher {
             addAll(eurBase)
             add(Quote("TD", tdEur?.setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR"))
         }
+        FileLogger.writeLine("[GF] eurQuotes=${eurQuotes.map { it.name to (it.value?.toPlainString() ?: "n/a") }}")
         logEurSection(eurQuotes, usdRef = pickRef(usdQuotes), eurRate = eurUsd)
-
         // Snapshot → DataStore
         val usdCons = consensus(usdQuotes.filter { it.value != null })
         val eurCons = consensus(eurQuotes.filter { it.value != null })
+        FileLogger.writeLine("[GF] consensus USD=$usdCons EUR=$eurCons")
 
         // OPCIJA B: global last (EUR) – za PragmaticOpen v2
         runCatching {
@@ -145,7 +153,7 @@ object GoldFetcher {
             Log.d(TAG, "[GLOBAL-LAST] set → EUR=${fmt(eurCons)}")
         }.onFailure { Log.w(TAG, "[GLOBAL-LAST] set failed: ${it.message}") }
 
-// ➜ NOVO: upiši u 48-slot seriju (slot na :00 / :30 ± tolerance)
+        // ➜ NOVO: upiši u 48-slot seriju (slot na :00 / :30 ± tolerance)
         val ts = System.currentTimeMillis()
         SnapshotStore.appendIfOnSlot(context, ts, eurCons.toDouble(), toleranceSec = 90)
         val snap = Snapshot(
@@ -155,9 +163,9 @@ object GoldFetcher {
             updatedEpochMs = System.currentTimeMillis(),
         )
 
-        // spremi snapshot + history
-        // spremi snapshot + history (suspend → nema await)
+        // spremi snapshot + history (suspend)
         repo.saveSnapshot(snap)
+        FileLogger.writeLine("[GF] saved snapshot eur=${snap.eurConsensus} usd=${snap.usdConsensus} fx=${snap.eurUsdRate}")
         repo.appendHistory(
             HistoryRec(
                 ts = snap.updatedEpochMs,
@@ -177,6 +185,7 @@ object GoldFetcher {
 
         didFirstFetch = true
     }
+
     // ——— Indikatori (log) ———
     private fun logIndicators(history: List<HistoryRec>) {
         if (history.isEmpty()) {
@@ -286,7 +295,6 @@ object GoldFetcher {
         return s.toDouble()
     }
     // ——— dohvat ———
-// ——— dohvat ———
     private fun fetchGoldpriceUsd(): Quote = try {
         httpShort().newCall(req(GOLDPRICE_USD_URL)).execute().use { resp ->
             if (!resp.isSuccessful) error("HTTP ${resp.code}")
@@ -301,10 +309,12 @@ object GoldFetcher {
             }
             if (price.isNaN()) error("key missing")
             Quote("Goldprice.org", price.toBigDecimal().setScale(2, RoundingMode.HALF_UP)).also {
+                FileLogger.writeLine("[SRC] GP USD=${it.value}")
                 Log.i(TAG, "[OK] Goldprice.org: XAU/USD = ${fmt(it.value)} USD/oz")
             }
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] GP USD fail: ${t.message}")
         Log.w(TAG, "[WARN] Goldprice.org failed: ${t.message}")
         Quote("Goldprice.org", null)
     }
@@ -328,10 +338,12 @@ object GoldFetcher {
                 unit = "EUR/oz",
                 ccy = "EUR",
             ).also {
+                FileLogger.writeLine("[SRC] GP EUR=${it.value}")
                 Log.i(TAG, "[OK] Goldprice.org: XAU/EUR = ${fmt(it.value)} EUR/oz")
             }
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] GP EUR fail: ${t.message}")
         Log.w(TAG, "[WARN] Goldprice.org (EUR) failed: ${t.message}")
         Quote("Goldprice.org", null, unit = "EUR/oz", ccy = "EUR")
     }
@@ -342,9 +354,11 @@ object GoldFetcher {
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "USD") ?: error("extract fail")
         Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)).also {
+            FileLogger.writeLine("[SRC] Investing USD=${it.value}")
             Log.i(TAG, "[OK] Investing: XAU/USD = ${fmt(it.value)} USD/oz")
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] Investing USD fail: ${t.message}")
         Log.w(TAG, "[WARN] Investing failed: ${t.message}")
         Quote("Investing", null)
     }
@@ -355,9 +369,11 @@ object GoldFetcher {
         } ?: error("no page")
         val value = parseInvestingPriceFromHtml(html, "EUR") ?: error("extract fail")
         Quote("Investing", value.toBigDecimal().setScale(2, RoundingMode.HALF_UP), unit = "EUR/oz", ccy = "EUR").also {
+            FileLogger.writeLine("[SRC] Investing EUR=${it.value}")
             Log.i(TAG, "[OK] Investing: XAU/EUR = ${fmt(it.value)} EUR/oz")
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] Investing EUR fail: ${t.message}")
         Log.w(TAG, "[WARN] Investing (EUR) failed: ${t.message}")
         Quote("Investing", null, unit = "EUR/oz", ccy = "EUR")
     }
@@ -371,10 +387,12 @@ object GoldFetcher {
             val price = JSONObject(body).optString("price").takeIf { it.isNotBlank() }?.toDoubleOrNull()
                 ?: error("no price")
             Quote("TD", price.toBigDecimal().setScale(2, RoundingMode.HALF_UP)).also {
+                FileLogger.writeLine("[SRC] TD USD=${it.value}")
                 Log.i(TAG, "[OK] TD: XAU/USD = ${fmt(it.value)} USD/oz")
             }
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] TD USD fail: ${t.message}")
         Log.w(TAG, "[WARN] TD failed: ${t.message}")
         Quote("TD", null)
     }
@@ -389,10 +407,12 @@ object GoldFetcher {
             val rate = js.optDouble("rate", js.optDouble("price", js.optDouble("value", Double.NaN)))
             if (rate.isNaN() || rate <= 0.0) error("invalid rate")
             rate.toBigDecimal().setScale(6, RoundingMode.HALF_UP).also {
+                FileLogger.writeLine("[SRC] FX EUR/USD=$it")
                 Log.i(TAG, "[OK] FX: EUR/USD = $it")
             }
         }
     } catch (t: Throwable) {
+        FileLogger.writeLine("[SRC][WARN] FX fail: ${t.message}")
         Log.w(TAG, "[WARN] FX failed: ${t.message}")
         BigDecimal.ONE
     }
