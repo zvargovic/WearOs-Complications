@@ -1,0 +1,94 @@
+2025-10-09 11:15:01.778  [DNS] lookup data-asg.goldprice.org …
+2025-10-09 11:15:01.784  [DNS] lookup api.twelvedata.com …
+2025-10-09 11:15:01.786  [DNS] lookup www.investing.com …
+2025-10-09 11:15:01.788  [DNS] data-asg.goldprice.org -> 18.171.74.35, 35.179.48.117, 3.10.29.172, 35.178.117.18
+2025-10-09 11:15:01.789  [DNS] api.twelvedata.com -> 104.26.12.157, 172.67.72.168, 104.26.13.157
+2025-10-09 11:15:01.792  [DNS] www.investing.com -> 172.64.155.105, 104.18.32.151
+2025-10-09 11:15:02.046  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:15:02.058  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:15:02.085  [HTTP] 200 (327ms) https://data-asg.goldprice.org/dbXRates/USD
+2025-10-09 11:15:02.092  [HTTP] 200 (329ms) https://www.investing.com/currencies/xau-usd
+2025-10-09 11:15:02.227  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:15:02.231  [HTTP] 200 (469ms) https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:15:02.430  [HTTP] → GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:15:02.432  [HTTP] GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:15:03.064  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:15:03.069  [HTTP] 200 (636ms) https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:15:03.088  [HTTP] → GET https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:15:03.091  [HTTP] GET https://data-asg.goldprice.org/dbXRates/EUR UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:15:03.093  [HTTP] → GET https://www.investing.com/currencies/xau-eur
+2025-10-09 11:15:03.095  [HTTP] GET https://www.investing.com/currencies/xau-eur UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:15:03.157  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:15:03.162  [HTTP] 200 (71ms) https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:15:03.552  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:15:03.559  [HTTP] 200 (464ms) https://www.investing.com/currencies/xau-eur
+2025-10-09 11:15:04.441  NET caps: wifi=true cell=false validated=true captive=false internet=true
+2025-10-09 11:15:04.445  NET dnsServers=[fda2:83fb:c477::1, 192.168.1.254] domains= privateDns=false
+2025-10-09 11:20:01.712  NET caps: wifi=true cell=false validated=true captive=false internet=true
+2025-10-09 11:20:01.723  NET dnsServers=[fda2:83fb:c477::1, 192.168.1.254] domains= privateDns=false
+2025-10-09 11:20:01.769  [HTTP] → GET https://www.investing.com/currencies/xau-usd
+2025-10-09 11:20:01.771  [HTTP] → GET https://data-asg.goldprice.org/dbXRates/USD
+2025-10-09 11:20:01.773  [HTTP] → GET https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:20:01.775  [HTTP] GET https://www.investing.com/currencies/xau-usd UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:01.776  [HTTP] GET https://data-asg.goldprice.org/dbXRates/USD UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:01.779  [HTTP] GET https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:01.786  [DNS] lookup data-asg.goldprice.org …
+2025-10-09 11:20:01.788  [DNS] lookup api.twelvedata.com …
+2025-10-09 11:20:01.791  [DNS] api.twelvedata.com -> 104.26.13.157, 104.26.12.157, 172.67.72.168
+2025-10-09 11:20:01.793  [DNS] data-asg.goldprice.org -> 35.179.48.117, 3.10.29.172, 18.171.74.35, 35.178.117.18
+2025-10-09 11:20:01.794  [DNS] lookup www.investing.com …
+2025-10-09 11:20:01.797  [DNS] www.investing.com -> 104.18.32.151, 172.64.155.105
+2025-10-09 11:20:01.985  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:20:01.991  [HTTP] 200 (219ms) https://www.investing.com/currencies/xau-usd
+2025-10-09 11:20:02.007  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:20:02.011  [HTTP] 200 (237ms) https://data-asg.goldprice.org/dbXRates/USD
+2025-10-09 11:20:02.168  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:20:02.172  [HTTP] 200 (397ms) https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:20:02.197  [HTTP] → GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:20:02.200  [HTTP] GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:02.803  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:20:02.810  [HTTP] 200 (609ms) https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:20:02.831  [HTTP] → GET https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:20:02.833  [HTTP] GET https://data-asg.goldprice.org/dbXRates/EUR UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:02.834  [HTTP] → GET https://www.investing.com/currencies/xau-eur
+2025-10-09 11:20:02.836  [HTTP] GET https://www.investing.com/currencies/xau-eur UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:20:02.896  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:20:02.901  [HTTP] 200 (68ms) https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:20:03.894  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:20:03.901  [HTTP] 200 (1064ms) https://www.investing.com/currencies/xau-eur
+2025-10-09 11:20:04.769  NET caps: wifi=true cell=false validated=true captive=false internet=true
+2025-10-09 11:20:04.774  NET dnsServers=[fda2:83fb:c477::1, 192.168.1.254] domains= privateDns=false
+2025-10-09 11:25:01.692  NET caps: wifi=true cell=false validated=true captive=false internet=true
+2025-10-09 11:25:01.696  NET dnsServers=[fda2:83fb:c477::1, 192.168.1.254] domains= privateDns=false
+2025-10-09 11:25:01.722  [HTTP] → GET https://data-asg.goldprice.org/dbXRates/USD
+2025-10-09 11:25:01.724  [HTTP] → GET https://www.investing.com/currencies/xau-usd
+2025-10-09 11:25:01.726  [HTTP] GET https://www.investing.com/currencies/xau-usd UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:01.729  [HTTP] → GET https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:25:01.731  [HTTP] GET https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:01.732  [HTTP] GET https://data-asg.goldprice.org/dbXRates/USD UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:01.734  [DNS] lookup www.investing.com …
+2025-10-09 11:25:01.736  [DNS] www.investing.com -> 172.64.155.105, 104.18.32.151
+2025-10-09 11:25:01.739  [DNS] lookup api.twelvedata.com …
+2025-10-09 11:25:01.741  [DNS] lookup data-asg.goldprice.org …
+2025-10-09 11:25:01.742  [DNS] api.twelvedata.com -> 172.67.72.168, 104.26.12.157, 104.26.13.157
+2025-10-09 11:25:01.744  [DNS] data-asg.goldprice.org -> 3.10.29.172, 18.171.74.35, 35.179.48.117, 35.178.117.18
+2025-10-09 11:25:01.894  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:25:01.905  [HTTP] 200 (178ms) https://www.investing.com/currencies/xau-usd
+2025-10-09 11:25:01.971  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:25:01.976  [HTTP] 200 (251ms) https://data-asg.goldprice.org/dbXRates/USD
+2025-10-09 11:25:02.057  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:25:02.061  [HTTP] 200 (330ms) https://api.twelvedata.com/price?symbol=XAU/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:25:02.079  [HTTP] → GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:25:02.081  [HTTP] GET https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7 UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:02.397  [HTTP] ← 200  (api.twelvedata.com)
+2025-10-09 11:25:02.402  [HTTP] 200 (320ms) https://api.twelvedata.com/exchange_rate?symbol=EUR/USD&apikey=dc261d3082864c84b3da28cce1f528d7
+2025-10-09 11:25:02.420  [HTTP] → GET https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:25:02.421  [HTTP] → GET https://www.investing.com/currencies/xau-eur
+2025-10-09 11:25:02.423  [HTTP] GET https://www.investing.com/currencies/xau-eur UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:02.425  [HTTP] GET https://data-asg.goldprice.org/dbXRates/EUR UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36
+2025-10-09 11:25:02.487  [HTTP] ← 200  (data-asg.goldprice.org)
+2025-10-09 11:25:02.491  [HTTP] 200 (69ms) https://data-asg.goldprice.org/dbXRates/EUR
+2025-10-09 11:25:02.525  [HTTP] ← 200  (www.investing.com)
+2025-10-09 11:25:02.530  [HTTP] 200 (106ms) https://www.investing.com/currencies/xau-eur
+2025-10-09 11:25:03.445  NET caps: wifi=true cell=false validated=true captive=false internet=true
+2025-10-09 11:25:03.449  NET dnsServers=[fda2:83fb:c477::1, 192.168.1.254] domains= privateDns=false
