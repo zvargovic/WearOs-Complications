@@ -1,0 +1,3516 @@
+BOOT 2025-10-11 00:00:00.221
+00:00:00.221  [OSF] start reason=aligned-minute
+00:00:00.231  [OSF] wl acquire ms=60000
+00:00:00.235  [OSF] net wait validated timeoutMs=15000
+00:00:00.241  [OSF] net=validated → proceed
+00:00:00.243  [OSF] post-validate grace ms=1500
+00:00:01.749  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:00:01.753  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:00:01.758  [OSF] http clients injected (short+long) boundTo=1232
+00:00:01.760  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:00:01.897  [OSF] dns try=1/∞ ok=true
+00:00:01.900  [OSF] fetch attempt 1/2
+00:00:01.904  [GF] start
+00:00:02.198  [SRC] GP USD=4017.18
+00:00:02.808  [SRC] Investing USD=4017.46
+00:00:03.419  [SRC] TD USD=3974.26
+00:00:03.648  [SRC] FX EUR/USD=1.161310
+00:00:03.774  [SRC] GP EUR=3457.59
+00:00:04.562  [SRC] Investing EUR=3458.46
+00:00:04.567  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3974.26)]
+00:00:04.569  [GF] eurUsdRate=1.161310
+00:00:04.571  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:00:04.582  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3422.22)]
+00:00:04.593  [GF] consensus USD=4017.32 EUR=3458.03
+00:00:04.598  [GLAST][OK] price=3458.03 ts=1760133604597
+00:00:04.720  [SNAP][OK] slot5=264 price=3458.03
+00:00:04.823  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:00:05.255  [SNAP][OPEN] set-from-gLast=3458.03 day=2025-10-11
+00:00:05.319  [GF] end ok=true
+00:00:05.324  [OSF] fetch attempt 1 result ok=true
+00:00:05.327  [OSF] post-fetch UI nudge (complications+tiles)
+00:00:05.365  [OSF] end ok=true reason=aligned-minute
+00:00:05.368  [OSF] http clients cleared
+00:00:05.371  [OSF] bind restore ok=true prev=null
+00:00:05.374  [OSF] wl release
+00:00:05.382  [ALIGN] alarm scheduled → in=294s (294621ms) next=00:05:00 every=5m
+00:01:02.661  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+00:01:02.667  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+00:01:02.705  [ALARM] armed • delay=1800000ms triggerAt=21109574 pi=182980723
+00:05:00.087  [OSF] start reason=aligned-minute
+00:05:00.104  [OSF] wl acquire ms=60000
+00:05:00.108  [OSF] net wait validated timeoutMs=15000
+00:05:00.114  [OSF] net=validated → proceed
+00:05:00.117  [OSF] post-validate grace ms=1500
+00:05:01.633  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:05:01.651  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:05:01.670  [OSF] http clients injected (short+long) boundTo=1232
+00:05:01.679  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:05:01.968  [OSF] dns try=1/∞ ok=true
+00:05:01.972  [OSF] fetch attempt 1/2
+00:05:01.978  [GF] start
+00:05:02.365  [SRC] GP USD=4017.18
+00:05:02.908  [SRC] Investing USD=4017.46
+00:05:03.580  [SRC] TD USD=3968.01
+00:05:03.830  [SRC] FX EUR/USD=1.161310
+00:05:03.928  [SRC] GP EUR=3457.59
+00:05:04.279  [SRC] Investing EUR=3458.46
+00:05:04.285  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3968.01)]
+00:05:04.287  [GF] eurUsdRate=1.161310
+00:05:04.289  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:05:04.299  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3416.84)]
+00:05:04.309  [GF] consensus USD=4017.32 EUR=3458.03
+00:05:04.312  [GLAST][OK] price=3458.03 ts=1760133904311
+00:05:04.322  [SNAP][OK] slot5=265 price=3458.03
+00:05:04.420  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:05:04.880  [GF] end ok=true
+00:05:04.883  [OSF] fetch attempt 1 result ok=true
+00:05:04.885  [OSF] post-fetch UI nudge (complications+tiles)
+00:05:04.922  [OSF] end ok=true reason=aligned-minute
+00:05:04.925  [OSF] http clients cleared
+00:05:04.928  [OSF] bind restore ok=true prev=null
+00:05:04.933  [OSF] wl release
+00:05:04.942  [ALIGN] alarm scheduled → in=295s (295061ms) next=00:10:00 every=5m
+00:06:00.188  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+00:06:00.190  [OSF] start reason=fallback-worker
+00:06:00.193  [OSF] wl acquire ms=60000
+00:06:00.197  [OSF] net wait validated timeoutMs=15000
+00:06:00.202  [OSF] net=validated → proceed
+00:06:00.205  [OSF] post-validate grace ms=1500
+00:06:01.716  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:06:01.726  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:06:01.736  [OSF] http clients injected (short+long) boundTo=1232
+00:06:01.740  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:06:01.809  [OSF] dns try=1/∞ ok=true
+00:06:01.812  [OSF] fetch attempt 1/2
+00:06:01.816  [GF] start
+00:06:02.199  [SRC] GP USD=4017.18
+00:06:02.813  [SRC] Investing USD=4017.46
+00:06:03.308  [SRC] TD USD=3972.52
+00:06:03.555  [SRC] FX EUR/USD=1.161310
+00:06:03.665  [SRC] GP EUR=3457.59
+00:06:04.695  [SRC] Investing EUR=3458.46
+00:06:04.700  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3972.52)]
+00:06:04.702  [GF] eurUsdRate=1.161310
+00:06:04.704  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:06:04.717  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3420.72)]
+00:06:04.727  [GF] consensus USD=4017.32 EUR=3458.03
+00:06:04.733  [GLAST][OK] price=3458.03 ts=1760133964729
+00:06:04.862  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:06:05.293  [GF] end ok=true
+00:06:05.296  [OSF] fetch attempt 1 result ok=true
+00:06:05.298  [OSF] post-fetch UI nudge (complications+tiles)
+00:06:05.347  [OSF] end ok=true reason=fallback-worker
+00:06:05.351  [OSF] http clients cleared
+00:06:05.354  [OSF] bind restore ok=true prev=null
+00:06:05.357  [OSF] wl release
+00:06:05.360  [WORK] doWork end → success
+00:10:00.104  [OSF] start reason=aligned-minute
+00:10:00.110  [OSF] wl acquire ms=60000
+00:10:00.126  [OSF] net wait validated timeoutMs=15000
+00:10:00.135  [OSF] net=validated → proceed
+00:10:00.148  [OSF] post-validate grace ms=1500
+00:10:01.675  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:10:01.692  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:10:01.712  [OSF] http clients injected (short+long) boundTo=1232
+00:10:01.719  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:10:01.969  [OSF] dns try=1/∞ ok=true
+00:10:01.975  [OSF] fetch attempt 1/2
+00:10:01.986  [GF] start
+00:10:02.408  [SRC] GP USD=4017.18
+00:10:03.257  [SRC] Investing USD=4017.46
+00:10:04.094  [SRC] TD USD=3955.60
+00:10:04.330  [SRC] FX EUR/USD=1.161310
+00:10:04.436  [SRC] GP EUR=3457.59
+00:10:05.260  [SRC] Investing EUR=3458.46
+00:10:05.264  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3955.60)]
+00:10:05.266  [GF] eurUsdRate=1.161310
+00:10:05.268  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:10:05.278  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3406.15)]
+00:10:05.288  [GF] consensus USD=4017.32 EUR=3458.03
+00:10:05.291  [GLAST][OK] price=3458.03 ts=1760134205290
+00:10:05.307  [SNAP][OK] slot5=266 price=3458.03
+00:10:05.433  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:10:05.856  [GF] end ok=true
+00:10:05.861  [OSF] fetch attempt 1 result ok=true
+00:10:05.863  [OSF] post-fetch UI nudge (complications+tiles)
+00:10:05.909  [OSF] end ok=true reason=aligned-minute
+00:10:05.913  [OSF] http clients cleared
+00:10:05.915  [OSF] bind restore ok=true prev=null
+00:10:05.919  [OSF] wl release
+00:10:05.926  [ALIGN] alarm scheduled → in=294s (294077ms) next=00:15:00 every=5m
+00:15:00.026  [OSF] start reason=aligned-minute
+00:15:00.029  [OSF] wl acquire ms=60000
+00:15:00.037  [OSF] net wait validated timeoutMs=15000
+00:15:00.048  [OSF] net=validated → proceed
+00:15:00.053  [OSF] post-validate grace ms=1500
+00:15:01.568  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:15:01.583  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:15:01.597  [OSF] http clients injected (short+long) boundTo=1232
+00:15:01.604  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:15:01.887  [OSF] dns try=1/∞ ok=true
+00:15:01.894  [OSF] fetch attempt 1/2
+00:15:01.906  [GF] start
+00:15:02.310  [SRC] GP USD=4017.18
+00:15:02.890  [SRC] Investing USD=4017.46
+00:15:03.410  [SRC] TD USD=3959.31
+00:15:03.642  [SRC] FX EUR/USD=1.161310
+00:15:03.749  [SRC] GP EUR=3457.59
+00:15:05.331  [SRC] Investing EUR=3458.46
+00:15:05.336  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3959.31)]
+00:15:05.339  [GF] eurUsdRate=1.161310
+00:15:05.341  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:15:05.353  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3409.35)]
+00:15:05.363  [GF] consensus USD=4017.32 EUR=3458.03
+00:15:05.369  [GLAST][OK] price=3458.03 ts=1760134505367
+00:15:05.396  [SNAP][OK] slot5=267 price=3458.03
+00:15:05.528  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:15:05.956  [GF] end ok=true
+00:15:05.958  [OSF] fetch attempt 1 result ok=true
+00:15:05.960  [OSF] post-fetch UI nudge (complications+tiles)
+00:15:05.998  [OSF] end ok=true reason=aligned-minute
+00:15:06.001  [OSF] http clients cleared
+00:15:06.003  [OSF] bind restore ok=true prev=null
+00:15:06.007  [OSF] wl release
+00:15:06.015  [ALIGN] alarm scheduled → in=293s (293988ms) next=00:20:00 every=5m
+00:20:00.202  [OSF] start reason=aligned-minute
+00:20:00.209  [OSF] wl acquire ms=60000
+00:20:00.214  [OSF] net wait validated timeoutMs=15000
+00:20:00.220  [OSF] net=validated → proceed
+00:20:00.226  [OSF] post-validate grace ms=1500
+00:20:01.737  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:20:01.749  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:20:01.767  [OSF] http clients injected (short+long) boundTo=1232
+00:20:01.773  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:20:02.024  [OSF] dns try=1/∞ ok=true
+00:20:02.029  [OSF] fetch attempt 1/2
+00:20:02.036  [GF] start
+00:20:02.463  [SRC] GP USD=4017.18
+00:20:03.065  [SRC] Investing USD=4017.46
+00:20:03.595  [SRC] TD USD=3967.68
+00:20:03.827  [SRC] FX EUR/USD=1.161310
+00:20:03.961  [SRC] GP EUR=3457.59
+00:20:04.404  [SRC] Investing EUR=3458.46
+00:20:04.409  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3967.68)]
+00:20:04.411  [GF] eurUsdRate=1.161310
+00:20:04.414  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:20:04.423  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3416.56)]
+00:20:04.434  [GF] consensus USD=4017.32 EUR=3458.03
+00:20:04.437  [GLAST][OK] price=3458.03 ts=1760134804436
+00:20:04.455  [SNAP][OK] slot5=268 price=3458.03
+00:20:04.577  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:20:05.004  [GF] end ok=true
+00:20:05.007  [OSF] fetch attempt 1 result ok=true
+00:20:05.009  [OSF] post-fetch UI nudge (complications+tiles)
+00:20:05.040  [OSF] end ok=true reason=aligned-minute
+00:20:05.043  [OSF] http clients cleared
+00:20:05.046  [OSF] bind restore ok=true prev=null
+00:20:05.050  [OSF] wl release
+00:20:05.059  [ALIGN] alarm scheduled → in=294s (294944ms) next=00:25:00 every=5m
+00:22:10.914  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+00:22:10.949  [OSF] start reason=fallback-worker
+00:22:10.952  [OSF] wl acquire ms=60000
+00:22:10.960  [OSF] net wait validated timeoutMs=15000
+00:22:10.970  [OSF] net=validated → proceed
+00:22:10.972  [OSF] post-validate grace ms=1500
+00:22:12.483  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:22:12.490  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:22:12.560  [OSF] http clients injected (short+long) boundTo=1232
+00:22:12.563  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:22:12.673  [OSF] dns try=1/∞ ok=true
+00:22:12.675  [OSF] fetch attempt 1/2
+00:22:12.679  [GF] start
+00:22:13.084  [SRC] GP USD=4017.18
+00:22:13.986  [SRC] Investing USD=4017.46
+00:22:14.525  [SRC] TD USD=3969.62
+00:22:14.717  [SRC] FX EUR/USD=1.161310
+00:22:14.809  [SRC] GP EUR=3457.59
+00:22:15.338  [SRC] Investing EUR=3458.46
+00:22:15.355  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3969.62)]
+00:22:15.361  [GF] eurUsdRate=1.161310
+00:22:15.364  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:22:15.383  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3418.23)]
+00:22:15.413  [GF] consensus USD=4017.32 EUR=3458.03
+00:22:15.424  [GLAST][OK] price=3458.03 ts=1760134935420
+00:22:15.668  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:22:16.412  [GF] end ok=true
+00:22:16.417  [OSF] fetch attempt 1 result ok=true
+00:22:16.420  [OSF] post-fetch UI nudge (complications+tiles)
+00:22:16.466  [OSF] end ok=true reason=fallback-worker
+00:22:16.468  [OSF] http clients cleared
+00:22:16.471  [OSF] bind restore ok=true prev=null
+00:22:16.476  [OSF] wl release
+00:22:16.479  [WORK] doWork end → success
+00:25:00.205  [OSF] start reason=aligned-minute
+00:25:00.223  [OSF] wl acquire ms=60000
+00:25:00.227  [OSF] net wait validated timeoutMs=15000
+00:25:00.236  [OSF] net=validated → proceed
+00:25:00.239  [OSF] post-validate grace ms=1500
+00:25:01.752  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:25:01.774  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:25:01.805  [OSF] http clients injected (short+long) boundTo=1232
+00:25:01.814  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:25:02.077  [OSF] dns try=1/∞ ok=true
+00:25:02.081  [OSF] fetch attempt 1/2
+00:25:02.085  [GF] start
+00:25:02.419  [SRC] GP USD=4017.18
+00:25:02.946  [SRC] Investing USD=4017.46
+00:25:03.521  [SRC] TD USD=3967.50
+00:25:03.740  [SRC] FX EUR/USD=1.161310
+00:25:03.829  [SRC] GP EUR=3457.59
+00:25:04.947  [SRC] Investing EUR=3458.46
+00:25:04.952  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3967.50)]
+00:25:04.954  [GF] eurUsdRate=1.161310
+00:25:04.957  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:25:04.966  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3416.40)]
+00:25:04.976  [GF] consensus USD=4017.32 EUR=3458.03
+00:25:04.980  [GLAST][OK] price=3458.03 ts=1760135104978
+00:25:04.994  [SNAP][OK] slot5=269 price=3458.03
+00:25:05.113  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:25:05.525  [GF] end ok=true
+00:25:05.527  [OSF] fetch attempt 1 result ok=true
+00:25:05.529  [OSF] post-fetch UI nudge (complications+tiles)
+00:25:05.567  [OSF] end ok=true reason=aligned-minute
+00:25:05.569  [OSF] http clients cleared
+00:25:05.572  [OSF] bind restore ok=true prev=null
+00:25:05.576  [OSF] wl release
+00:25:05.585  [ALIGN] alarm scheduled → in=294s (294419ms) next=00:30:00 every=5m
+00:30:00.105  [OSF] start reason=aligned-minute
+00:30:00.142  [OSF] wl acquire ms=60000
+00:30:00.148  [OSF] net wait validated timeoutMs=15000
+00:30:00.165  [OSF] net=validated → proceed
+00:30:00.171  [OSF] post-validate grace ms=1500
+00:30:01.689  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:30:01.700  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:30:01.710  [OSF] http clients injected (short+long) boundTo=1232
+00:30:01.715  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:30:01.921  [OSF] dns try=1/∞ ok=true
+00:30:01.927  [OSF] fetch attempt 1/2
+00:30:01.934  [GF] start
+00:30:02.328  [SRC] GP USD=4017.18
+00:30:02.936  [SRC] Investing USD=4017.46
+00:30:03.504  [SRC] TD USD=3973.07
+00:30:03.966  [SRC] FX EUR/USD=1.161310
+00:30:04.092  [SRC] GP EUR=3457.59
+00:30:04.845  [SRC] Investing EUR=3458.46
+00:30:04.851  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3973.07)]
+00:30:04.853  [GF] eurUsdRate=1.161310
+00:30:04.855  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:30:04.868  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3421.20)]
+00:30:04.878  [GF] consensus USD=4017.32 EUR=3458.03
+00:30:04.883  [GLAST][OK] price=3458.03 ts=1760135404881
+00:30:04.915  [SNAP][OK] slot5=270 price=3458.03
+00:30:05.047  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:30:05.491  [GF] end ok=true
+00:30:05.493  [OSF] fetch attempt 1 result ok=true
+00:30:05.495  [OSF] post-fetch UI nudge (complications+tiles)
+00:30:05.535  [OSF] end ok=true reason=aligned-minute
+00:30:05.538  [OSF] http clients cleared
+00:30:05.543  [OSF] bind restore ok=true prev=null
+00:30:05.547  [OSF] wl release
+00:30:05.558  [ALIGN] alarm scheduled → in=294s (294447ms) next=00:35:00 every=5m
+00:31:02.734  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+00:31:02.742  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+00:31:02.797  [ALARM] armed • delay=1800000ms triggerAt=22909666 pi=175711693
+00:35:00.035  [OSF] start reason=aligned-minute
+00:35:00.045  [OSF] wl acquire ms=60000
+00:35:00.060  [OSF] net wait validated timeoutMs=15000
+00:35:00.067  [OSF] net=validated → proceed
+00:35:00.070  [OSF] post-validate grace ms=1500
+00:35:01.579  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:35:01.588  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:35:01.605  [OSF] http clients injected (short+long) boundTo=1232
+00:35:01.611  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:35:01.806  [OSF] dns try=1/∞ ok=true
+00:35:01.810  [OSF] fetch attempt 1/2
+00:35:01.817  [GF] start
+00:35:02.199  [SRC] GP USD=4017.18
+00:35:02.791  [SRC] Investing USD=4017.46
+00:35:03.358  [SRC] TD USD=3983.26
+00:35:03.603  [SRC] FX EUR/USD=1.161310
+00:35:03.706  [SRC] GP EUR=3457.59
+00:35:04.343  [SRC] Investing EUR=3458.46
+00:35:04.348  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3983.26)]
+00:35:04.350  [GF] eurUsdRate=1.161310
+00:35:04.352  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:35:04.366  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3429.97)]
+00:35:04.377  [GF] consensus USD=4017.32 EUR=3458.03
+00:35:04.382  [GLAST][OK] price=3458.03 ts=1760135704381
+00:35:04.415  [SNAP][OK] slot5=271 price=3458.03
+00:35:04.526  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:35:04.958  [GF] end ok=true
+00:35:04.960  [OSF] fetch attempt 1 result ok=true
+00:35:04.962  [OSF] post-fetch UI nudge (complications+tiles)
+00:35:05.000  [OSF] end ok=true reason=aligned-minute
+00:35:05.002  [OSF] http clients cleared
+00:35:05.005  [OSF] bind restore ok=true prev=null
+00:35:05.009  [OSF] wl release
+00:35:05.017  [ALIGN] alarm scheduled → in=294s (294987ms) next=00:40:00 every=5m
+00:40:00.131  [OSF] start reason=aligned-minute
+00:40:00.142  [OSF] wl acquire ms=60000
+00:40:00.162  [OSF] net wait validated timeoutMs=15000
+00:40:00.169  [OSF] net=validated → proceed
+00:40:00.172  [OSF] post-validate grace ms=1500
+00:40:01.683  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:40:01.690  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:40:01.695  [OSF] http clients injected (short+long) boundTo=1232
+00:40:01.698  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:40:01.905  [OSF] dns try=1/∞ ok=true
+00:40:01.908  [OSF] fetch attempt 1/2
+00:40:01.915  [GF] start
+00:40:02.335  [SRC] GP USD=4017.18
+00:40:02.960  [SRC] Investing USD=4017.46
+00:40:03.549  [SRC] TD USD=3981.18
+00:40:03.801  [SRC] FX EUR/USD=1.161310
+00:40:03.965  [SRC] GP EUR=3457.59
+00:40:04.630  [SRC] Investing EUR=3458.46
+00:40:04.634  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3981.18)]
+00:40:04.637  [GF] eurUsdRate=1.161310
+00:40:04.639  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:40:04.652  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3428.18)]
+00:40:04.662  [GF] consensus USD=4017.32 EUR=3458.03
+00:40:04.668  [GLAST][OK] price=3458.03 ts=1760136004664
+00:40:04.701  [SNAP][OK] slot5=272 price=3458.03
+00:40:04.794  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:40:05.244  [GF] end ok=true
+00:40:05.246  [OSF] fetch attempt 1 result ok=true
+00:40:05.248  [OSF] post-fetch UI nudge (complications+tiles)
+00:40:05.292  [OSF] end ok=true reason=aligned-minute
+00:40:05.295  [OSF] http clients cleared
+00:40:05.298  [OSF] bind restore ok=true prev=null
+00:40:05.302  [OSF] wl release
+00:40:05.310  [ALIGN] alarm scheduled → in=294s (294693ms) next=00:45:00 every=5m
+00:45:00.107  [OSF] start reason=aligned-minute
+00:45:00.111  [OSF] wl acquire ms=60000
+00:45:00.118  [OSF] net wait validated timeoutMs=15000
+00:45:00.126  [OSF] net=validated → proceed
+00:45:00.128  [OSF] post-validate grace ms=1500
+00:45:01.642  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:45:01.657  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:45:01.671  [OSF] http clients injected (short+long) boundTo=1232
+00:45:01.678  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:45:01.879  [OSF] dns try=1/∞ ok=true
+00:45:01.882  [OSF] fetch attempt 1/2
+00:45:01.888  [GF] start
+00:45:02.297  [SRC] GP USD=4017.18
+00:45:02.909  [SRC] Investing USD=4017.46
+00:45:03.398  [SRC] TD USD=3982.24
+00:45:03.844  [SRC] FX EUR/USD=1.161310
+00:45:03.950  [SRC] GP EUR=3457.59
+00:45:04.334  [SRC] Investing EUR=3458.46
+00:45:04.339  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3982.24)]
+00:45:04.341  [GF] eurUsdRate=1.161310
+00:45:04.343  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:45:04.352  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3429.09)]
+00:45:04.363  [GF] consensus USD=4017.32 EUR=3458.03
+00:45:04.366  [GLAST][OK] price=3458.03 ts=1760136304365
+00:45:04.394  [SNAP][OK] slot5=273 price=3458.03
+00:45:04.539  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:45:04.985  [GF] end ok=true
+00:45:04.987  [OSF] fetch attempt 1 result ok=true
+00:45:04.989  [OSF] post-fetch UI nudge (complications+tiles)
+00:45:05.027  [OSF] end ok=true reason=aligned-minute
+00:45:05.030  [OSF] http clients cleared
+00:45:05.032  [OSF] bind restore ok=true prev=null
+00:45:05.036  [OSF] wl release
+00:45:05.046  [ALIGN] alarm scheduled → in=294s (294957ms) next=00:50:00 every=5m
+00:47:24.279  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+00:47:24.282  [OSF] start reason=fallback-worker
+00:47:24.285  [OSF] wl acquire ms=60000
+00:47:24.288  [OSF] net wait validated timeoutMs=15000
+00:47:24.294  [OSF] net=validated → proceed
+00:47:24.297  [OSF] post-validate grace ms=1500
+00:47:25.807  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+00:47:25.818  [OSF] bindProcessToNetwork ok=true netHash=1232 prev=null
+00:47:25.839  [OSF] http clients injected (short+long) boundTo=1232
+00:47:25.848  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:47:26.052  [OSF] dns try=1/∞ ok=true
+00:47:26.056  [OSF] fetch attempt 1/2
+00:47:26.062  [GF] start
+00:47:26.409  [SRC] GP USD=4017.18
+00:47:26.933  [SRC] Investing USD=4017.46
+00:47:27.445  [SRC] TD USD=3985.06
+00:47:27.651  [SRC] FX EUR/USD=1.161310
+00:47:27.742  [SRC] GP EUR=3457.59
+00:47:28.349  [SRC] Investing EUR=3458.46
+00:47:28.354  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3985.06)]
+00:47:28.357  [GF] eurUsdRate=1.161310
+00:47:28.359  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:47:28.374  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3431.52)]
+00:47:28.384  [GF] consensus USD=4017.32 EUR=3458.03
+00:47:28.389  [GLAST][OK] price=3458.03 ts=1760136448386
+00:47:28.500  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:47:28.947  [GF] end ok=true
+00:47:28.950  [OSF] fetch attempt 1 result ok=true
+00:47:28.952  [OSF] post-fetch UI nudge (complications+tiles)
+00:47:28.990  [OSF] end ok=true reason=fallback-worker
+00:47:28.993  [OSF] http clients cleared
+00:47:28.996  [OSF] bind restore ok=true prev=null
+00:47:28.999  [OSF] wl release
+00:47:29.002  [WORK] doWork end → success
+00:50:00.108  [OSF] start reason=aligned-minute
+00:50:00.115  [OSF] wl acquire ms=60000
+00:50:00.119  [OSF] net wait validated timeoutMs=15000
+00:50:00.126  [OSF] net=validated → proceed
+00:50:00.129  [OSF] post-validate grace ms=1500
+00:50:01.641  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+00:50:01.650  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+00:50:01.672  [OSF] http clients injected (short+long) boundTo=1243
+00:50:01.683  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:50:01.907  [OSF] dns try=1/∞ ok=true
+00:50:01.911  [OSF] fetch attempt 1/2
+00:50:01.916  [GF] start
+00:50:02.232  [SRC] GP USD=4017.18
+00:50:03.352  [SRC] Investing USD=4017.46
+00:50:03.760  [SRC] TD USD=3985.46
+00:50:04.001  [SRC] FX EUR/USD=1.161310
+00:50:04.080  [SRC] GP EUR=3457.59
+00:50:07.054  [SRC] Investing EUR=3458.46
+00:50:07.058  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3985.46)]
+00:50:07.060  [GF] eurUsdRate=1.161310
+00:50:07.062  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:50:07.071  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3431.87)]
+00:50:07.080  [GF] consensus USD=4017.32 EUR=3458.03
+00:50:07.084  [GLAST][OK] price=3458.03 ts=1760136607082
+00:50:07.121  [SNAP][OK] slot5=274 price=3458.03
+00:50:07.222  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:50:07.670  [GF] end ok=true
+00:50:07.673  [OSF] fetch attempt 1 result ok=true
+00:50:07.675  [OSF] post-fetch UI nudge (complications+tiles)
+00:50:07.722  [OSF] end ok=true reason=aligned-minute
+00:50:07.729  [OSF] http clients cleared
+00:50:07.738  [OSF] bind restore ok=true prev=null
+00:50:07.747  [OSF] wl release
+00:50:07.764  [ALIGN] alarm scheduled → in=292s (292243ms) next=00:55:00 every=5m
+00:55:00.147  [OSF] start reason=aligned-minute
+00:55:00.151  [OSF] wl acquire ms=60000
+00:55:00.157  [OSF] net wait validated timeoutMs=15000
+00:55:00.163  [OSF] net=validated → proceed
+00:55:00.166  [OSF] post-validate grace ms=1500
+00:55:01.683  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+00:55:01.692  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+00:55:01.705  [OSF] http clients injected (short+long) boundTo=1243
+00:55:01.710  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+00:55:01.898  [OSF] dns try=1/∞ ok=true
+00:55:01.901  [OSF] fetch attempt 1/2
+00:55:01.906  [GF] start
+00:55:02.193  [SRC] GP USD=4017.18
+00:55:02.618  [SRC] Investing USD=4017.46
+00:55:03.025  [SRC] TD USD=3987.04
+00:55:03.223  [SRC] FX EUR/USD=1.161310
+00:55:03.302  [SRC] GP EUR=3457.59
+00:55:03.498  [SRC] Investing EUR=3458.46
+00:55:03.502  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3987.04)]
+00:55:03.504  [GF] eurUsdRate=1.161310
+00:55:03.506  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+00:55:03.523  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3433.23)]
+00:55:03.534  [GF] consensus USD=4017.32 EUR=3458.03
+00:55:03.539  [GLAST][OK] price=3458.03 ts=1760136903538
+00:55:03.577  [SNAP][OK] slot5=275 price=3458.03
+00:55:03.691  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+00:55:04.124  [GF] end ok=true
+00:55:04.126  [OSF] fetch attempt 1 result ok=true
+00:55:04.128  [OSF] post-fetch UI nudge (complications+tiles)
+00:55:04.165  [OSF] end ok=true reason=aligned-minute
+00:55:04.168  [OSF] http clients cleared
+00:55:04.170  [OSF] bind restore ok=true prev=null
+00:55:04.174  [OSF] wl release
+00:55:04.180  [ALIGN] alarm scheduled → in=295s (295822ms) next=01:00:00 every=5m
+01:00:00.168  [OSF] start reason=aligned-minute
+01:00:00.171  [OSF] wl acquire ms=60000
+01:00:00.175  [OSF] net wait validated timeoutMs=15000
+01:00:00.186  [OSF] net=validated → proceed
+01:00:00.193  [OSF] post-validate grace ms=1500
+01:00:01.709  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:00:01.722  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:00:01.738  [OSF] http clients injected (short+long) boundTo=1243
+01:00:01.741  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:00:01.940  [OSF] dns try=1/∞ ok=true
+01:00:01.942  [OSF] fetch attempt 1/2
+01:00:01.945  [GF] start
+01:00:02.167  [SRC] GP USD=4017.18
+01:00:02.502  [SRC] Investing USD=4017.46
+01:00:03.048  [SRC] TD USD=3990.69
+01:00:03.282  [SRC] FX EUR/USD=1.161310
+01:00:03.372  [SRC] GP EUR=3457.59
+01:00:03.589  [SRC] Investing EUR=3458.46
+01:00:03.594  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3990.69)]
+01:00:03.596  [GF] eurUsdRate=1.161310
+01:00:03.597  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.46)]
+01:00:03.606  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.46), (TD, 3436.37)]
+01:00:03.615  [GF] consensus USD=4017.32 EUR=3458.03
+01:00:03.619  [GLAST][OK] price=3458.03 ts=1760137203617
+01:00:03.638  [SNAP][OK] slot5=276 price=3458.03
+01:00:03.758  [GF] saved snapshot eur=3458.03 usd=4017.32 fx=1.16131
+01:00:04.222  [GF] end ok=true
+01:00:04.225  [OSF] fetch attempt 1 result ok=true
+01:00:04.226  [OSF] post-fetch UI nudge (complications+tiles)
+01:00:04.260  [OSF] end ok=true reason=aligned-minute
+01:00:04.262  [OSF] http clients cleared
+01:00:04.265  [OSF] bind restore ok=true prev=null
+01:00:04.269  [OSF] wl release
+01:00:04.277  [ALIGN] alarm scheduled → in=295s (295726ms) next=01:05:00 every=5m
+01:01:03.167  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+01:01:03.169  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+01:01:03.205  [ALARM] armed • delay=1800000ms triggerAt=24710075 pi=218204821
+01:05:00.215  [OSF] start reason=aligned-minute
+01:05:00.218  [OSF] wl acquire ms=60000
+01:05:00.249  [OSF] net wait validated timeoutMs=15000
+01:05:00.267  [OSF] net=validated → proceed
+01:05:00.269  [OSF] post-validate grace ms=1500
+01:05:00.346  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:05:00.349  [OSF] start reason=fallback-worker
+01:05:00.351  [OSF][DEBOUNCE] skip (last=134ms ago, window=20000ms)
+01:05:00.354  [WORK] doWork end → retry (fetch failed)
+01:05:01.788  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:05:01.806  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:05:01.824  [OSF] http clients injected (short+long) boundTo=1243
+01:05:01.831  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:05:02.064  [OSF] dns try=1/∞ ok=true
+01:05:02.071  [OSF] fetch attempt 1/2
+01:05:02.083  [GF] start
+01:05:02.410  [SRC] GP USD=4017.18
+01:05:02.855  [SRC] Investing USD=4018.30
+01:05:03.301  [SRC] TD USD=3991.67
+01:05:03.516  [SRC] FX EUR/USD=1.161310
+01:05:03.627  [SRC] GP EUR=3457.59
+01:05:05.313  [SRC] Investing EUR=3458.26
+01:05:05.318  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3991.67)]
+01:05:05.320  [GF] eurUsdRate=1.161310
+01:05:05.322  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:05:05.330  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3437.21)]
+01:05:05.339  [GF] consensus USD=4017.74 EUR=3457.93
+01:05:05.343  [GLAST][OK] price=3457.93 ts=1760137505341
+01:05:05.384  [SNAP][OK] slot5=277 price=3457.93
+01:05:05.491  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:05:05.938  [GF] end ok=true
+01:05:05.940  [OSF] fetch attempt 1 result ok=true
+01:05:05.942  [OSF] post-fetch UI nudge (complications+tiles)
+01:05:05.978  [OSF] end ok=true reason=aligned-minute
+01:05:05.981  [OSF] http clients cleared
+01:05:05.984  [OSF] bind restore ok=true prev=null
+01:05:05.987  [OSF] wl release
+01:05:05.998  [ALIGN] alarm scheduled → in=294s (294008ms) next=01:10:00 every=5m
+01:10:00.235  [OSF] start reason=aligned-minute
+01:10:00.241  [OSF] wl acquire ms=60000
+01:10:00.245  [OSF] net wait validated timeoutMs=15000
+01:10:00.252  [OSF] net=validated → proceed
+01:10:00.254  [OSF] post-validate grace ms=1500
+01:10:00.310  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:10:00.312  [OSF] start reason=fallback-worker
+01:10:00.314  [OSF][DEBOUNCE] skip (last=77ms ago, window=20000ms)
+01:10:00.316  [WORK] doWork end → retry (fetch failed)
+01:10:01.767  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:10:01.782  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:10:01.800  [OSF] http clients injected (short+long) boundTo=1243
+01:10:01.809  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:10:01.873  [OSF] dns try=1/∞ ok=true
+01:10:01.877  [OSF] fetch attempt 1/2
+01:10:01.881  [GF] start
+01:10:02.212  [SRC] GP USD=4017.18
+01:10:02.984  [SRC] Investing USD=4018.30
+01:10:03.589  [SRC] TD USD=3991.14
+01:10:03.794  [SRC] FX EUR/USD=1.161310
+01:10:03.881  [SRC] GP EUR=3457.59
+01:10:05.550  [SRC] Investing EUR=3458.26
+01:10:05.554  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3991.14)]
+01:10:05.556  [GF] eurUsdRate=1.161310
+01:10:05.558  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:10:05.568  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3436.76)]
+01:10:05.579  [GF] consensus USD=4017.74 EUR=3457.93
+01:10:05.582  [GLAST][OK] price=3457.93 ts=1760137805581
+01:10:05.615  [SNAP][OK] slot5=278 price=3457.93
+01:10:05.779  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:10:06.223  [GF] end ok=true
+01:10:06.226  [OSF] fetch attempt 1 result ok=true
+01:10:06.227  [OSF] post-fetch UI nudge (complications+tiles)
+01:10:06.267  [OSF] end ok=true reason=aligned-minute
+01:10:06.270  [OSF] http clients cleared
+01:10:06.273  [OSF] bind restore ok=true prev=null
+01:10:06.277  [OSF] wl release
+01:10:06.286  [ALIGN] alarm scheduled → in=293s (293718ms) next=01:15:00 every=5m
+01:15:00.360  [OSF] start reason=aligned-minute
+01:15:00.363  [OSF] wl acquire ms=60000
+01:15:00.371  [OSF] net wait validated timeoutMs=15000
+01:15:00.379  [OSF] net=validated → proceed
+01:15:00.382  [OSF] post-validate grace ms=1500
+01:15:00.466  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:15:00.468  [OSF] start reason=fallback-worker
+01:15:00.470  [OSF][DEBOUNCE] skip (last=108ms ago, window=20000ms)
+01:15:00.473  [WORK] doWork end → retry (fetch failed)
+01:15:01.888  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:15:01.894  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:15:01.898  [OSF] http clients injected (short+long) boundTo=1243
+01:15:01.901  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:15:01.954  [OSF] dns try=1/∞ ok=true
+01:15:01.956  [OSF] fetch attempt 1/2
+01:15:01.960  [GF] start
+01:15:02.266  [SRC] GP USD=4017.18
+01:15:02.727  [SRC] Investing USD=4017.46
+01:15:03.351  [SRC] TD USD=3990.26
+01:15:03.549  [SRC] FX EUR/USD=1.161310
+01:15:03.627  [SRC] GP EUR=3457.59
+01:15:04.680  [SRC] Investing EUR=3458.26
+01:15:04.684  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4017.46), (TD, 3990.26)]
+01:15:04.686  [GF] eurUsdRate=1.161310
+01:15:04.688  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:15:04.697  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3436.00)]
+01:15:04.707  [GF] consensus USD=4017.32 EUR=3457.93
+01:15:04.710  [GLAST][OK] price=3457.93 ts=1760138104709
+01:15:04.732  [SNAP][OK] slot5=279 price=3457.93
+01:15:04.875  [GF] saved snapshot eur=3457.93 usd=4017.32 fx=1.16131
+01:15:05.315  [GF] end ok=true
+01:15:05.317  [OSF] fetch attempt 1 result ok=true
+01:15:05.319  [OSF] post-fetch UI nudge (complications+tiles)
+01:15:05.356  [OSF] end ok=true reason=aligned-minute
+01:15:05.358  [OSF] http clients cleared
+01:15:05.361  [OSF] bind restore ok=true prev=null
+01:15:05.364  [OSF] wl release
+01:15:05.371  [ALIGN] alarm scheduled → in=294s (294632ms) next=01:20:00 every=5m
+01:20:00.290  [OSF] start reason=aligned-minute
+01:20:00.294  [OSF] wl acquire ms=60000
+01:20:00.305  [OSF] net wait validated timeoutMs=15000
+01:20:00.322  [OSF] net=validated → proceed
+01:20:00.326  [OSF] post-validate grace ms=1500
+01:20:00.461  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:20:00.463  [OSF] start reason=fallback-worker
+01:20:00.465  [OSF][DEBOUNCE] skip (last=173ms ago, window=20000ms)
+01:20:00.466  [WORK] doWork end → retry (fetch failed)
+01:20:01.842  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:20:01.851  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:20:01.859  [OSF] http clients injected (short+long) boundTo=1243
+01:20:01.862  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:20:02.069  [OSF] dns try=1/∞ ok=true
+01:20:02.071  [OSF] fetch attempt 1/2
+01:20:02.078  [GF] start
+01:20:02.389  [SRC] GP USD=4017.18
+01:20:02.746  [SRC] Investing USD=4018.30
+01:20:03.161  [SRC] TD USD=3990.95
+01:20:03.354  [SRC] FX EUR/USD=1.161310
+01:20:03.438  [SRC] GP EUR=3457.59
+01:20:04.239  [SRC] Investing EUR=3458.26
+01:20:04.244  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3990.95)]
+01:20:04.246  [GF] eurUsdRate=1.161310
+01:20:04.248  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:20:04.257  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3436.59)]
+01:20:04.267  [GF] consensus USD=4017.74 EUR=3457.93
+01:20:04.271  [GLAST][OK] price=3457.93 ts=1760138404269
+01:20:04.294  [SNAP][OK] slot5=280 price=3457.93
+01:20:04.424  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:20:04.887  [GF] end ok=true
+01:20:04.890  [OSF] fetch attempt 1 result ok=true
+01:20:04.891  [OSF] post-fetch UI nudge (complications+tiles)
+01:20:04.927  [OSF] end ok=true reason=aligned-minute
+01:20:04.932  [OSF] http clients cleared
+01:20:04.934  [OSF] bind restore ok=true prev=null
+01:20:04.938  [OSF] wl release
+01:20:04.947  [ALIGN] alarm scheduled → in=295s (295056ms) next=01:25:00 every=5m
+01:24:27.881  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:24:27.884  [OSF] start reason=fallback-worker
+01:24:27.886  [OSF] wl acquire ms=60000
+01:24:27.890  [OSF] net wait validated timeoutMs=15000
+01:24:27.898  [OSF] net=validated → proceed
+01:24:27.901  [OSF] post-validate grace ms=1500
+01:24:29.416  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:24:29.430  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:24:29.444  [OSF] http clients injected (short+long) boundTo=1243
+01:24:29.450  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:24:29.522  [OSF] dns try=1/∞ ok=true
+01:24:29.527  [OSF] fetch attempt 1/2
+01:24:29.533  [GF] start
+01:24:29.860  [SRC] GP USD=4017.18
+01:24:30.294  [SRC] Investing USD=4018.30
+01:24:30.705  [SRC] TD USD=3982.80
+01:24:30.895  [SRC] FX EUR/USD=1.161310
+01:24:30.980  [SRC] GP EUR=3457.59
+01:24:32.122  [SRC] Investing EUR=3458.26
+01:24:32.127  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3982.80)]
+01:24:32.129  [GF] eurUsdRate=1.161310
+01:24:32.130  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:24:32.139  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3429.58)]
+01:24:32.149  [GF] consensus USD=4017.74 EUR=3457.93
+01:24:32.152  [GLAST][OK] price=3457.93 ts=1760138672151
+01:24:32.282  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:24:32.757  [GF] end ok=true
+01:24:32.760  [OSF] fetch attempt 1 result ok=true
+01:24:32.762  [OSF] post-fetch UI nudge (complications+tiles)
+01:24:32.804  [OSF] end ok=true reason=fallback-worker
+01:24:32.808  [OSF] http clients cleared
+01:24:32.810  [OSF] bind restore ok=true prev=null
+01:24:32.814  [OSF] wl release
+01:24:32.817  [WORK] doWork end → success
+01:25:00.317  [OSF] start reason=aligned-minute
+01:25:00.319  [OSF] wl acquire ms=60000
+01:25:00.333  [OSF] net wait validated timeoutMs=15000
+01:25:00.340  [OSF] net=validated → proceed
+01:25:00.343  [OSF] post-validate grace ms=1500
+01:25:01.856  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:25:01.871  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:25:01.891  [OSF] http clients injected (short+long) boundTo=1243
+01:25:01.899  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:25:01.935  [OSF] dns try=1/∞ ok=true
+01:25:01.937  [OSF] fetch attempt 1/2
+01:25:01.942  [GF] start
+01:25:02.237  [SRC] GP USD=4017.18
+01:25:02.622  [SRC] Investing USD=4018.30
+01:25:03.017  [SRC] TD USD=3982.80
+01:25:03.202  [SRC] FX EUR/USD=1.161310
+01:25:03.287  [SRC] GP EUR=3457.59
+01:25:05.186  [SRC] Investing EUR=3458.26
+01:25:05.192  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3982.80)]
+01:25:05.194  [GF] eurUsdRate=1.161310
+01:25:05.196  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:25:05.205  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3429.58)]
+01:25:05.214  [GF] consensus USD=4017.74 EUR=3457.93
+01:25:05.218  [GLAST][OK] price=3457.93 ts=1760138705216
+01:25:05.243  [SNAP][OK] slot5=281 price=3457.93
+01:25:05.389  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:25:05.839  [GF] end ok=true
+01:25:05.842  [OSF] fetch attempt 1 result ok=true
+01:25:05.844  [OSF] post-fetch UI nudge (complications+tiles)
+01:25:05.877  [OSF] end ok=true reason=aligned-minute
+01:25:05.879  [OSF] http clients cleared
+01:25:05.883  [OSF] bind restore ok=true prev=null
+01:25:05.887  [OSF] wl release
+01:25:05.897  [ALIGN] alarm scheduled → in=294s (294108ms) next=01:30:00 every=5m
+01:30:00.357  [OSF] start reason=aligned-minute
+01:30:00.367  [OSF] wl acquire ms=60000
+01:30:00.374  [OSF] net wait validated timeoutMs=15000
+01:30:00.381  [OSF] net=validated → proceed
+01:30:00.383  [OSF] post-validate grace ms=1500
+01:30:01.892  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:30:01.902  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:30:01.914  [OSF] http clients injected (short+long) boundTo=1243
+01:30:01.920  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:30:02.110  [OSF] dns try=1/∞ ok=true
+01:30:02.113  [OSF] fetch attempt 1/2
+01:30:02.119  [GF] start
+01:30:02.431  [SRC] GP USD=4017.18
+01:30:02.829  [SRC] Investing USD=4018.30
+01:30:03.524  [SRC] TD USD=3987.58
+01:30:03.909  [SRC] FX EUR/USD=1.161310
+01:30:03.996  [SRC] GP EUR=3457.59
+01:30:05.538  [SRC] Investing EUR=3458.26
+01:30:05.542  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3987.58)]
+01:30:05.544  [GF] eurUsdRate=1.161310
+01:30:05.546  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:30:05.556  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3433.69)]
+01:30:05.565  [GF] consensus USD=4017.74 EUR=3457.93
+01:30:05.569  [GLAST][OK] price=3457.93 ts=1760139005567
+01:30:05.613  [SNAP][OK] slot5=282 price=3457.93
+01:30:05.707  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:30:06.185  [GF] end ok=true
+01:30:06.188  [OSF] fetch attempt 1 result ok=true
+01:30:06.190  [OSF] post-fetch UI nudge (complications+tiles)
+01:30:06.227  [OSF] end ok=true reason=aligned-minute
+01:30:06.230  [OSF] http clients cleared
+01:30:06.233  [OSF] bind restore ok=true prev=null
+01:30:06.237  [OSF] wl release
+01:30:06.248  [ALIGN] alarm scheduled → in=293s (293758ms) next=01:35:00 every=5m
+01:31:03.342  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+01:31:03.344  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+01:31:03.370  [ALARM] armed • delay=1800000ms triggerAt=26510240 pi=165093367
+01:35:00.376  [OSF] start reason=aligned-minute
+01:35:00.380  [OSF] wl acquire ms=60000
+01:35:00.384  [OSF] net wait validated timeoutMs=15000
+01:35:00.390  [OSF] net=validated → proceed
+01:35:00.393  [OSF] post-validate grace ms=1500
+01:35:01.904  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:35:01.916  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:35:01.928  [OSF] http clients injected (short+long) boundTo=1243
+01:35:01.934  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:35:01.986  [OSF] dns try=1/∞ ok=true
+01:35:01.989  [OSF] fetch attempt 1/2
+01:35:01.991  [GF] start
+01:35:02.286  [SRC] GP USD=4017.18
+01:35:02.777  [SRC] Investing USD=4018.30
+01:35:03.195  [SRC] TD USD=3983.37
+01:35:03.415  [SRC] FX EUR/USD=1.161310
+01:35:03.501  [SRC] GP EUR=3457.59
+01:35:05.643  [SRC] Investing EUR=3458.26
+01:35:05.647  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3983.37)]
+01:35:05.649  [GF] eurUsdRate=1.161310
+01:35:05.651  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:35:05.660  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3430.07)]
+01:35:05.670  [GF] consensus USD=4017.74 EUR=3457.93
+01:35:05.674  [GLAST][OK] price=3457.93 ts=1760139305672
+01:35:05.699  [SNAP][OK] slot5=283 price=3457.93
+01:35:05.832  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:35:06.276  [GF] end ok=true
+01:35:06.278  [OSF] fetch attempt 1 result ok=true
+01:35:06.280  [OSF] post-fetch UI nudge (complications+tiles)
+01:35:06.320  [OSF] end ok=true reason=aligned-minute
+01:35:06.322  [OSF] http clients cleared
+01:35:06.325  [OSF] bind restore ok=true prev=null
+01:35:06.329  [OSF] wl release
+01:35:06.337  [ALIGN] alarm scheduled → in=293s (293667ms) next=01:40:00 every=5m
+01:40:00.029  [OSF] start reason=aligned-minute
+01:40:00.033  [OSF] wl acquire ms=60000
+01:40:00.038  [OSF] net wait validated timeoutMs=15000
+01:40:00.045  [OSF] net=validated → proceed
+01:40:00.048  [OSF] post-validate grace ms=1500
+01:40:01.559  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:40:01.565  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:40:01.578  [OSF] http clients injected (short+long) boundTo=1243
+01:40:01.585  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:40:01.648  [OSF] dns try=1/∞ ok=true
+01:40:01.651  [OSF] fetch attempt 1/2
+01:40:01.655  [GF] start
+01:40:01.934  [SRC] GP USD=4017.18
+01:40:02.295  [SRC] Investing USD=4018.30
+01:40:02.710  [SRC] TD USD=3981.03
+01:40:02.894  [SRC] FX EUR/USD=1.161310
+01:40:02.967  [SRC] GP EUR=3457.59
+01:40:03.170  [SRC] Investing EUR=3458.26
+01:40:03.175  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3981.03)]
+01:40:03.177  [GF] eurUsdRate=1.161310
+01:40:03.179  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:40:03.188  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3428.05)]
+01:40:03.198  [GF] consensus USD=4017.74 EUR=3457.93
+01:40:03.202  [GLAST][OK] price=3457.93 ts=1760139603200
+01:40:03.228  [SNAP][OK] slot5=284 price=3457.93
+01:40:03.386  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:40:03.837  [GF] end ok=true
+01:40:03.840  [OSF] fetch attempt 1 result ok=true
+01:40:03.842  [OSF] post-fetch UI nudge (complications+tiles)
+01:40:03.878  [OSF] end ok=true reason=aligned-minute
+01:40:03.881  [OSF] http clients cleared
+01:40:03.884  [OSF] bind restore ok=true prev=null
+01:40:03.888  [OSF] wl release
+01:40:03.899  [ALIGN] alarm scheduled → in=296s (296106ms) next=01:45:00 every=5m
+01:45:00.434  [OSF] start reason=aligned-minute
+01:45:00.452  [OSF] wl acquire ms=60000
+01:45:00.465  [OSF] net wait validated timeoutMs=15000
+01:45:00.485  [OSF] net=validated → proceed
+01:45:00.487  [OSF] post-validate grace ms=1500
+01:45:00.546  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:45:00.548  [OSF] start reason=fallback-worker
+01:45:00.550  [OSF][DEBOUNCE] skip (last=114ms ago, window=20000ms)
+01:45:00.552  [WORK] doWork end → retry (fetch failed)
+01:45:02.000  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:45:02.008  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:45:02.020  [OSF] http clients injected (short+long) boundTo=1243
+01:45:02.027  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:45:02.246  [OSF] dns try=1/∞ ok=true
+01:45:02.249  [OSF] fetch attempt 1/2
+01:45:02.257  [GF] start
+01:45:02.566  [SRC] GP USD=4017.18
+01:45:02.934  [SRC] Investing USD=4018.30
+01:45:03.602  [SRC] TD USD=3991.29
+01:45:03.773  [SRC] FX EUR/USD=1.161310
+01:45:03.866  [SRC] GP EUR=3457.59
+01:45:04.088  [SRC] Investing EUR=3458.26
+01:45:04.092  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3991.29)]
+01:45:04.094  [GF] eurUsdRate=1.161310
+01:45:04.096  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:45:04.105  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3436.89)]
+01:45:04.114  [GF] consensus USD=4017.74 EUR=3457.93
+01:45:04.118  [GLAST][OK] price=3457.93 ts=1760139904116
+01:45:04.144  [SNAP][OK] slot5=285 price=3457.93
+01:45:04.281  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:45:04.749  [GF] end ok=true
+01:45:04.751  [OSF] fetch attempt 1 result ok=true
+01:45:04.753  [OSF] post-fetch UI nudge (complications+tiles)
+01:45:04.799  [OSF] end ok=true reason=aligned-minute
+01:45:04.804  [OSF] http clients cleared
+01:45:04.807  [OSF] bind restore ok=true prev=null
+01:45:04.811  [OSF] wl release
+01:45:04.816  [ALIGN] alarm scheduled → in=295s (295186ms) next=01:50:00 every=5m
+01:50:00.438  [OSF] start reason=aligned-minute
+01:50:00.441  [OSF] wl acquire ms=60000
+01:50:00.448  [OSF] net wait validated timeoutMs=15000
+01:50:00.455  [OSF] net=validated → proceed
+01:50:00.457  [OSF] post-validate grace ms=1500
+01:50:00.520  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:50:00.525  [OSF] start reason=fallback-worker
+01:50:00.528  [OSF][DEBOUNCE] skip (last=87ms ago, window=20000ms)
+01:50:00.530  [WORK] doWork end → retry (fetch failed)
+01:50:01.970  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:50:01.981  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:50:01.991  [OSF] http clients injected (short+long) boundTo=1243
+01:50:01.996  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:50:02.125  [OSF] dns try=1/∞ ok=true
+01:50:02.129  [OSF] fetch attempt 1/2
+01:50:02.135  [GF] start
+01:50:02.437  [SRC] GP USD=4017.18
+01:50:02.803  [SRC] Investing USD=4018.30
+01:50:03.210  [SRC] TD USD=3984.38
+01:50:03.543  [SRC] FX EUR/USD=1.161310
+01:50:03.605  [SRC] GP EUR=3457.59
+01:50:03.835  [SRC] Investing EUR=3458.26
+01:50:03.840  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3984.38)]
+01:50:03.842  [GF] eurUsdRate=1.161310
+01:50:03.844  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:50:03.854  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3430.94)]
+01:50:03.864  [GF] consensus USD=4017.74 EUR=3457.93
+01:50:03.867  [GLAST][OK] price=3457.93 ts=1760140203866
+01:50:03.895  [SNAP][OK] slot5=286 price=3457.93
+01:50:04.040  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:50:04.493  [GF] end ok=true
+01:50:04.495  [OSF] fetch attempt 1 result ok=true
+01:50:04.497  [OSF] post-fetch UI nudge (complications+tiles)
+01:50:04.533  [OSF] end ok=true reason=aligned-minute
+01:50:04.536  [OSF] http clients cleared
+01:50:04.539  [OSF] bind restore ok=true prev=null
+01:50:04.542  [OSF] wl release
+01:50:04.550  [ALIGN] alarm scheduled → in=295s (295453ms) next=01:55:00 every=5m
+01:55:00.469  [OSF] start reason=aligned-minute
+01:55:00.472  [OSF] wl acquire ms=60000
+01:55:00.490  [OSF] net wait validated timeoutMs=15000
+01:55:00.512  [OSF] net=validated → proceed
+01:55:00.515  [OSF] post-validate grace ms=1500
+01:55:00.591  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+01:55:00.594  [OSF] start reason=fallback-worker
+01:55:00.597  [OSF][DEBOUNCE] skip (last=125ms ago, window=20000ms)
+01:55:00.600  [WORK] doWork end → retry (fetch failed)
+01:55:02.021  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+01:55:02.025  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+01:55:02.032  [OSF] http clients injected (short+long) boundTo=1243
+01:55:02.035  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+01:55:02.217  [OSF] dns try=1/∞ ok=true
+01:55:02.219  [OSF] fetch attempt 1/2
+01:55:02.222  [GF] start
+01:55:02.439  [SRC] GP USD=4017.18
+01:55:02.768  [SRC] Investing USD=4018.30
+01:55:03.157  [SRC] TD USD=3981.37
+01:55:03.322  [SRC] FX EUR/USD=1.161310
+01:55:03.392  [SRC] GP EUR=3457.59
+01:55:04.551  [SRC] Investing EUR=3458.26
+01:55:04.555  [GF] usdQuotes=[(Goldprice.org, 4017.18), (Investing, 4018.30), (TD, 3981.37)]
+01:55:04.557  [GF] eurUsdRate=1.161310
+01:55:04.559  [GF] eurBase=[(Goldprice.org, 3457.59), (Investing, 3458.26)]
+01:55:04.569  [GF] eurQuotes=[(Goldprice.org, 3457.59), (Investing, 3458.26), (TD, 3428.34)]
+01:55:04.579  [GF] consensus USD=4017.74 EUR=3457.93
+01:55:04.582  [GLAST][OK] price=3457.93 ts=1760140504581
+01:55:04.611  [SNAP][OK] slot5=287 price=3457.93
+01:55:04.751  [GF] saved snapshot eur=3457.93 usd=4017.74 fx=1.16131
+01:55:05.198  [GF] end ok=true
+01:55:05.200  [OSF] fetch attempt 1 result ok=true
+01:55:05.202  [OSF] post-fetch UI nudge (complications+tiles)
+01:55:05.237  [OSF] end ok=true reason=aligned-minute
+01:55:05.239  [OSF] http clients cleared
+01:55:05.242  [OSF] bind restore ok=true prev=null
+01:55:05.247  [OSF] wl release
+01:55:05.254  [ALIGN] alarm scheduled → in=294s (294749ms) next=02:00:00 every=5m
+02:00:00.503  [OSF] start reason=aligned-minute
+02:00:00.580  [OSF] wl acquire ms=60000
+02:00:00.601  [OSF] net wait validated timeoutMs=15000
+02:00:00.612  [OSF] net=validated → proceed
+02:00:00.618  [OSF] post-validate grace ms=1500
+02:00:00.630  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+02:00:00.632  [OSF] start reason=fallback-worker
+02:00:00.635  [OSF][DEBOUNCE] skip (last=129ms ago, window=20000ms)
+02:00:00.637  [WORK] doWork end → retry (fetch failed)
+02:00:02.131  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:00:02.141  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:00:02.155  [OSF] http clients injected (short+long) boundTo=1243
+02:00:02.161  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:00:02.305  [OSF] dns try=1/∞ ok=true
+02:00:02.312  [OSF] fetch attempt 1/2
+02:00:02.320  [GF] start
+02:00:02.346  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:00:02.350  [GF] end ok=false
+02:00:02.352  [OSF] fetch attempt 1 result ok=false
+02:00:02.359  [OSF] sleep before retry ms=1200
+02:00:03.568  [OSF] fetch attempt 2/2
+02:00:03.575  [GF] start
+02:00:03.582  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:00:03.590  [GF] end ok=false
+02:00:03.597  [OSF] fetch attempt 2 result ok=false
+02:00:03.602  [OSF] end ok=false reason=aligned-minute
+02:00:03.607  [OSF] http clients cleared
+02:00:03.613  [OSF] bind restore ok=true prev=null
+02:00:03.622  [OSF] wl release
+02:00:03.630  [ALIGN] alarm scheduled → in=296s (296373ms) next=02:05:00 every=5m
+02:01:03.487  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+02:01:03.495  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+02:01:03.518  [ALARM] armed • delay=1800000ms triggerAt=28310388 pi=106922400
+02:05:00.022  [OSF] start reason=aligned-minute
+02:05:00.036  [OSF] wl acquire ms=60000
+02:05:00.048  [OSF] net wait validated timeoutMs=15000
+02:05:00.058  [OSF] net=validated → proceed
+02:05:00.060  [OSF] post-validate grace ms=1500
+02:05:01.569  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:05:01.577  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:05:01.588  [OSF] http clients injected (short+long) boundTo=1243
+02:05:01.593  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:05:01.774  [OSF] dns try=1/∞ ok=true
+02:05:01.777  [OSF] fetch attempt 1/2
+02:05:01.783  [GF] start
+02:05:01.792  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:05:01.800  [GF] end ok=false
+02:05:01.804  [OSF] fetch attempt 1 result ok=false
+02:05:01.808  [OSF] sleep before retry ms=1200
+02:05:03.014  [OSF] fetch attempt 2/2
+02:05:03.019  [GF] start
+02:05:03.024  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:05:03.029  [GF] end ok=false
+02:05:03.033  [OSF] fetch attempt 2 result ok=false
+02:05:03.036  [OSF] end ok=false reason=aligned-minute
+02:05:03.040  [OSF] http clients cleared
+02:05:03.048  [OSF] bind restore ok=true prev=null
+02:05:03.059  [OSF] wl release
+02:05:03.070  [ALIGN] alarm scheduled → in=296s (296933ms) next=02:10:00 every=5m
+02:10:00.534  [OSF] start reason=aligned-minute
+02:10:00.537  [OSF] wl acquire ms=60000
+02:10:00.542  [OSF] net wait validated timeoutMs=15000
+02:10:00.553  [OSF] net=validated → proceed
+02:10:00.569  [OSF] post-validate grace ms=1500
+02:10:00.664  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+02:10:00.666  [OSF] start reason=fallback-worker
+02:10:00.669  [OSF][DEBOUNCE] skip (last=132ms ago, window=20000ms)
+02:10:00.671  [WORK] doWork end → retry (fetch failed)
+02:10:02.081  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:10:02.089  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:10:02.099  [OSF] http clients injected (short+long) boundTo=1243
+02:10:02.103  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:10:02.343  [OSF] dns try=1/∞ ok=true
+02:10:02.347  [OSF] fetch attempt 1/2
+02:10:02.355  [GF] start
+02:10:02.366  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:10:02.375  [GF] end ok=false
+02:10:02.382  [OSF] fetch attempt 1 result ok=false
+02:10:02.387  [OSF] sleep before retry ms=1200
+02:10:03.595  [OSF] fetch attempt 2/2
+02:10:03.604  [GF] start
+02:10:03.613  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:10:03.620  [GF] end ok=false
+02:10:03.627  [OSF] fetch attempt 2 result ok=false
+02:10:03.634  [OSF] end ok=false reason=aligned-minute
+02:10:03.638  [OSF] http clients cleared
+02:10:03.644  [OSF] bind restore ok=true prev=null
+02:10:03.654  [OSF] wl release
+02:10:03.663  [ALIGN] alarm scheduled → in=296s (296340ms) next=02:15:00 every=5m
+02:15:00.471  [OSF] start reason=aligned-minute
+02:15:00.476  [OSF] wl acquire ms=60000
+02:15:00.483  [OSF] net wait validated timeoutMs=15000
+02:15:00.489  [OSF] net=validated → proceed
+02:15:00.492  [OSF] post-validate grace ms=1500
+02:15:02.002  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:15:02.011  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:15:02.020  [OSF] http clients injected (short+long) boundTo=1243
+02:15:02.025  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:15:02.252  [OSF] dns try=1/∞ ok=true
+02:15:02.256  [OSF] fetch attempt 1/2
+02:15:02.260  [GF] start
+02:15:02.265  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:15:02.269  [GF] end ok=false
+02:15:02.271  [OSF] fetch attempt 1 result ok=false
+02:15:02.274  [OSF] sleep before retry ms=1200
+02:15:03.479  [OSF] fetch attempt 2/2
+02:15:03.486  [GF] start
+02:15:03.493  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:15:03.499  [GF] end ok=false
+02:15:03.504  [OSF] fetch attempt 2 result ok=false
+02:15:03.509  [OSF] end ok=false reason=aligned-minute
+02:15:03.512  [OSF] http clients cleared
+02:15:03.517  [OSF] bind restore ok=true prev=null
+02:15:03.524  [OSF] wl release
+02:15:03.533  [ALIGN] alarm scheduled → in=296s (296470ms) next=02:20:00 every=5m
+02:20:00.601  [OSF] start reason=aligned-minute
+02:20:00.604  [OSF] wl acquire ms=60000
+02:20:00.609  [OSF] net wait validated timeoutMs=15000
+02:20:00.615  [OSF] net=validated → proceed
+02:20:00.617  [OSF] post-validate grace ms=1500
+02:20:02.128  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:20:02.137  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:20:02.148  [OSF] http clients injected (short+long) boundTo=1243
+02:20:02.154  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:20:02.265  [OSF] dns try=1/∞ ok=true
+02:20:02.267  [OSF] fetch attempt 1/2
+02:20:02.273  [GF] start
+02:20:02.282  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:20:02.290  [GF] end ok=false
+02:20:02.295  [OSF] fetch attempt 1 result ok=false
+02:20:02.299  [OSF] sleep before retry ms=1200
+02:20:03.506  [OSF] fetch attempt 2/2
+02:20:03.513  [GF] start
+02:20:03.520  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:20:03.527  [GF] end ok=false
+02:20:03.532  [OSF] fetch attempt 2 result ok=false
+02:20:03.536  [OSF] end ok=false reason=aligned-minute
+02:20:03.540  [OSF] http clients cleared
+02:20:03.545  [OSF] bind restore ok=true prev=null
+02:20:03.553  [OSF] wl release
+02:20:03.562  [ALIGN] alarm scheduled → in=296s (296441ms) next=02:25:00 every=5m
+02:25:00.024  [OSF] start reason=aligned-minute
+02:25:00.028  [OSF] wl acquire ms=60000
+02:25:00.034  [OSF] net wait validated timeoutMs=15000
+02:25:00.047  [OSF] net=validated → proceed
+02:25:00.051  [OSF] post-validate grace ms=1500
+02:25:00.156  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+02:25:00.159  [OSF] start reason=fallback-worker
+02:25:00.161  [OSF][DEBOUNCE] skip (last=135ms ago, window=20000ms)
+02:25:00.163  [WORK] doWork end → retry (fetch failed)
+02:25:01.567  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:25:01.579  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:25:01.588  [OSF] http clients injected (short+long) boundTo=1243
+02:25:01.592  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:25:01.760  [OSF] dns try=1/∞ ok=true
+02:25:01.764  [OSF] fetch attempt 1/2
+02:25:01.767  [GF] start
+02:25:01.772  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:25:01.777  [GF] end ok=false
+02:25:01.781  [OSF] fetch attempt 1 result ok=false
+02:25:01.784  [OSF] sleep before retry ms=1200
+02:25:02.990  [OSF] fetch attempt 2/2
+02:25:02.999  [GF] start
+02:25:03.006  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:25:03.012  [GF] end ok=false
+02:25:03.019  [OSF] fetch attempt 2 result ok=false
+02:25:03.025  [OSF] end ok=false reason=aligned-minute
+02:25:03.030  [OSF] http clients cleared
+02:25:03.037  [OSF] bind restore ok=true prev=null
+02:25:03.044  [OSF] wl release
+02:25:03.054  [ALIGN] alarm scheduled → in=296s (296949ms) next=02:30:00 every=5m
+02:30:00.649  [OSF] start reason=aligned-minute
+02:30:00.652  [OSF] wl acquire ms=60000
+02:30:00.659  [OSF] net wait validated timeoutMs=15000
+02:30:00.665  [OSF] net=validated → proceed
+02:30:00.668  [OSF] post-validate grace ms=1500
+02:30:02.178  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:30:02.185  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:30:02.192  [OSF] http clients injected (short+long) boundTo=1243
+02:30:02.196  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:30:02.407  [OSF] dns try=1/∞ ok=true
+02:30:02.415  [OSF] fetch attempt 1/2
+02:30:02.424  [GF] start
+02:30:02.434  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:30:02.445  [GF] end ok=false
+02:30:02.453  [OSF] fetch attempt 1 result ok=false
+02:30:02.458  [OSF] sleep before retry ms=1200
+02:30:03.666  [OSF] fetch attempt 2/2
+02:30:03.674  [GF] start
+02:30:03.682  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:30:03.690  [GF] end ok=false
+02:30:03.697  [OSF] fetch attempt 2 result ok=false
+02:30:03.702  [OSF] end ok=false reason=aligned-minute
+02:30:03.707  [OSF] http clients cleared
+02:30:03.713  [OSF] bind restore ok=true prev=null
+02:30:03.721  [OSF] wl release
+02:30:03.730  [ALIGN] alarm scheduled → in=296s (296273ms) next=02:35:00 every=5m
+02:31:03.654  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+02:31:03.657  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+02:31:03.684  [ALARM] armed • delay=1800000ms triggerAt=30110553 pi=95275280
+02:35:00.480  [OSF] start reason=aligned-minute
+02:35:00.483  [OSF] wl acquire ms=60000
+02:35:00.490  [OSF] net wait validated timeoutMs=15000
+02:35:00.496  [OSF] net=validated → proceed
+02:35:00.498  [OSF] post-validate grace ms=1500
+02:35:02.009  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:35:02.021  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:35:02.033  [OSF] http clients injected (short+long) boundTo=1243
+02:35:02.038  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:35:02.198  [OSF] dns try=1/∞ ok=true
+02:35:02.201  [OSF] fetch attempt 1/2
+02:35:02.208  [GF] start
+02:35:02.219  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:35:02.227  [GF] end ok=false
+02:35:02.233  [OSF] fetch attempt 1 result ok=false
+02:35:02.236  [OSF] sleep before retry ms=1200
+02:35:03.443  [OSF] fetch attempt 2/2
+02:35:03.452  [GF] start
+02:35:03.460  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:35:03.468  [GF] end ok=false
+02:35:03.473  [OSF] fetch attempt 2 result ok=false
+02:35:03.478  [OSF] end ok=false reason=aligned-minute
+02:35:03.482  [OSF] http clients cleared
+02:35:03.487  [OSF] bind restore ok=true prev=null
+02:35:03.496  [OSF] wl release
+02:35:03.505  [ALIGN] alarm scheduled → in=296s (296498ms) next=02:40:00 every=5m
+02:40:00.019  [OSF] start reason=aligned-minute
+02:40:00.022  [OSF] wl acquire ms=60000
+02:40:00.027  [OSF] net wait validated timeoutMs=15000
+02:40:00.033  [OSF] net=validated → proceed
+02:40:00.037  [OSF] post-validate grace ms=1500
+02:40:01.548  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:40:01.555  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:40:01.567  [OSF] http clients injected (short+long) boundTo=1243
+02:40:01.573  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:40:01.630  [OSF] dns try=1/∞ ok=true
+02:40:01.633  [OSF] fetch attempt 1/2
+02:40:01.636  [GF] start
+02:40:01.640  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:40:01.646  [GF] end ok=false
+02:40:01.652  [OSF] fetch attempt 1 result ok=false
+02:40:01.655  [OSF] sleep before retry ms=1200
+02:40:02.862  [OSF] fetch attempt 2/2
+02:40:02.872  [GF] start
+02:40:02.881  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:40:02.888  [GF] end ok=false
+02:40:02.894  [OSF] fetch attempt 2 result ok=false
+02:40:02.900  [OSF] end ok=false reason=aligned-minute
+02:40:02.904  [OSF] http clients cleared
+02:40:02.910  [OSF] bind restore ok=true prev=null
+02:40:02.918  [OSF] wl release
+02:40:02.928  [ALIGN] alarm scheduled → in=297s (297075ms) next=02:45:00 every=5m
+02:45:00.724  [OSF] start reason=aligned-minute
+02:45:00.733  [OSF] wl acquire ms=60000
+02:45:00.737  [OSF] net wait validated timeoutMs=15000
+02:45:00.744  [OSF] net=validated → proceed
+02:45:00.747  [OSF] post-validate grace ms=1500
+02:45:00.897  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+02:45:00.900  [OSF] start reason=fallback-worker
+02:45:00.902  [OSF][DEBOUNCE] skip (last=176ms ago, window=20000ms)
+02:45:00.908  [WORK] doWork end → retry (fetch failed)
+02:45:02.254  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:45:02.259  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:45:02.263  [OSF] http clients injected (short+long) boundTo=1243
+02:45:02.266  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:45:02.365  [OSF] dns try=1/∞ ok=true
+02:45:02.368  [OSF] fetch attempt 1/2
+02:45:02.372  [GF] start
+02:45:02.376  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:45:02.379  [GF] end ok=false
+02:45:02.382  [OSF] fetch attempt 1 result ok=false
+02:45:02.384  [OSF] sleep before retry ms=1200
+02:45:03.592  [OSF] fetch attempt 2/2
+02:45:03.602  [GF] start
+02:45:03.612  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:45:03.620  [GF] end ok=false
+02:45:03.626  [OSF] fetch attempt 2 result ok=false
+02:45:03.630  [OSF] end ok=false reason=aligned-minute
+02:45:03.633  [OSF] http clients cleared
+02:45:03.637  [OSF] bind restore ok=true prev=null
+02:45:03.641  [OSF] wl release
+02:45:03.647  [ALIGN] alarm scheduled → in=296s (296355ms) next=02:50:00 every=5m
+02:50:00.769  [OSF] start reason=aligned-minute
+02:50:00.773  [OSF] wl acquire ms=60000
+02:50:00.778  [OSF] net wait validated timeoutMs=15000
+02:50:00.784  [OSF] net=validated → proceed
+02:50:00.786  [OSF] post-validate grace ms=1500
+02:50:02.292  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:50:02.297  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:50:02.301  [OSF] http clients injected (short+long) boundTo=1243
+02:50:02.305  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:50:02.404  [OSF] dns try=1/∞ ok=true
+02:50:02.410  [OSF] fetch attempt 1/2
+02:50:02.419  [GF] start
+02:50:02.428  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:50:02.435  [GF] end ok=false
+02:50:02.444  [OSF] fetch attempt 1 result ok=false
+02:50:02.449  [OSF] sleep before retry ms=1200
+02:50:03.659  [OSF] fetch attempt 2/2
+02:50:03.668  [GF] start
+02:50:03.677  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:50:03.685  [GF] end ok=false
+02:50:03.690  [OSF] fetch attempt 2 result ok=false
+02:50:03.693  [OSF] end ok=false reason=aligned-minute
+02:50:03.697  [OSF] http clients cleared
+02:50:03.703  [OSF] bind restore ok=true prev=null
+02:50:03.711  [OSF] wl release
+02:50:03.720  [ALIGN] alarm scheduled → in=296s (296283ms) next=02:55:00 every=5m
+02:55:00.021  [OSF] start reason=aligned-minute
+02:55:00.024  [OSF] wl acquire ms=60000
+02:55:00.031  [OSF] net wait validated timeoutMs=15000
+02:55:00.042  [OSF] net=validated → proceed
+02:55:00.046  [OSF] post-validate grace ms=1500
+02:55:01.558  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+02:55:01.565  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+02:55:01.576  [OSF] http clients injected (short+long) boundTo=1243
+02:55:01.582  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+02:55:01.754  [OSF] dns try=1/∞ ok=true
+02:55:01.757  [OSF] fetch attempt 1/2
+02:55:01.763  [GF] start
+02:55:01.771  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:55:01.779  [GF] end ok=false
+02:55:01.785  [OSF] fetch attempt 1 result ok=false
+02:55:01.789  [OSF] sleep before retry ms=1200
+02:55:02.996  [OSF] fetch attempt 2/2
+02:55:03.001  [GF] start
+02:55:03.006  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+02:55:03.011  [GF] end ok=false
+02:55:03.015  [OSF] fetch attempt 2 result ok=false
+02:55:03.018  [OSF] end ok=false reason=aligned-minute
+02:55:03.025  [OSF] http clients cleared
+02:55:03.030  [OSF] bind restore ok=true prev=null
+02:55:03.036  [OSF] wl release
+02:55:03.045  [ALIGN] alarm scheduled → in=296s (296958ms) next=03:00:00 every=5m
+03:00:00.810  [OSF] start reason=aligned-minute
+03:00:00.813  [OSF] wl acquire ms=60000
+03:00:00.833  [OSF] net wait validated timeoutMs=15000
+03:00:00.841  [OSF] net=validated → proceed
+03:00:00.844  [OSF] post-validate grace ms=1500
+03:00:02.356  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:00:02.364  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:00:02.373  [OSF] http clients injected (short+long) boundTo=1243
+03:00:02.378  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:00:02.585  [OSF] dns try=1/∞ ok=true
+03:00:02.590  [OSF] fetch attempt 1/2
+03:00:02.597  [GF] start
+03:00:02.607  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:00:02.611  [GF] end ok=false
+03:00:02.614  [OSF] fetch attempt 1 result ok=false
+03:00:02.616  [OSF] sleep before retry ms=1200
+03:00:03.821  [OSF] fetch attempt 2/2
+03:00:03.828  [GF] start
+03:00:03.834  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:00:03.840  [GF] end ok=false
+03:00:03.845  [OSF] fetch attempt 2 result ok=false
+03:00:03.850  [OSF] end ok=false reason=aligned-minute
+03:00:03.853  [OSF] http clients cleared
+03:00:03.856  [OSF] bind restore ok=true prev=null
+03:00:03.862  [OSF] wl release
+03:00:03.871  [ALIGN] alarm scheduled → in=296s (296132ms) next=03:05:00 every=5m
+03:01:03.805  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+03:01:03.808  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+03:01:03.829  [ALARM] armed • delay=1800000ms triggerAt=31910698 pi=10303782
+03:05:00.836  [OSF] start reason=aligned-minute
+03:05:00.840  [OSF] wl acquire ms=60000
+03:05:00.855  [OSF] net wait validated timeoutMs=15000
+03:05:00.867  [OSF] net=validated → proceed
+03:05:00.879  [OSF] post-validate grace ms=1500
+03:05:02.394  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:05:02.404  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:05:02.408  [OSF] http clients injected (short+long) boundTo=1243
+03:05:02.414  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:05:02.648  [OSF] dns try=1/∞ ok=true
+03:05:02.652  [OSF] fetch attempt 1/2
+03:05:02.659  [GF] start
+03:05:02.670  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:05:02.680  [GF] end ok=false
+03:05:02.688  [OSF] fetch attempt 1 result ok=false
+03:05:02.694  [OSF] sleep before retry ms=1200
+03:05:03.902  [OSF] fetch attempt 2/2
+03:05:03.905  [GF] start
+03:05:03.908  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:05:03.913  [GF] end ok=false
+03:05:03.915  [OSF] fetch attempt 2 result ok=false
+03:05:03.917  [OSF] end ok=false reason=aligned-minute
+03:05:03.919  [OSF] http clients cleared
+03:05:03.922  [OSF] bind restore ok=true prev=null
+03:05:03.925  [OSF] wl release
+03:05:03.931  [ALIGN] alarm scheduled → in=296s (296071ms) next=03:10:00 every=5m
+03:10:00.065  [OSF] start reason=aligned-minute
+03:10:00.071  [OSF] wl acquire ms=60000
+03:10:00.087  [OSF] net wait validated timeoutMs=15000
+03:10:00.099  [OSF] net=validated → proceed
+03:10:00.103  [OSF] post-validate grace ms=1500
+03:10:01.613  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:10:01.621  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:10:01.630  [OSF] http clients injected (short+long) boundTo=1243
+03:10:01.635  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:10:01.711  [OSF] dns try=1/∞ ok=true
+03:10:01.714  [OSF] fetch attempt 1/2
+03:10:01.722  [GF] start
+03:10:01.731  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:10:01.737  [GF] end ok=false
+03:10:01.741  [OSF] fetch attempt 1 result ok=false
+03:10:01.744  [OSF] sleep before retry ms=1200
+03:10:02.951  [OSF] fetch attempt 2/2
+03:10:02.960  [GF] start
+03:10:02.969  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:10:02.976  [GF] end ok=false
+03:10:02.983  [OSF] fetch attempt 2 result ok=false
+03:10:02.988  [OSF] end ok=false reason=aligned-minute
+03:10:02.992  [OSF] http clients cleared
+03:10:02.998  [OSF] bind restore ok=true prev=null
+03:10:03.007  [OSF] wl release
+03:10:03.016  [ALIGN] alarm scheduled → in=296s (296987ms) next=03:15:00 every=5m
+03:15:00.079  [OSF] start reason=aligned-minute
+03:15:00.090  [OSF] wl acquire ms=60000
+03:15:00.094  [OSF] net wait validated timeoutMs=15000
+03:15:00.106  [OSF] net=validated → proceed
+03:15:00.109  [OSF] post-validate grace ms=1500
+03:15:01.621  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:15:01.633  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:15:01.642  [OSF] http clients injected (short+long) boundTo=1243
+03:15:01.646  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:15:01.858  [OSF] dns try=1/∞ ok=true
+03:15:01.863  [OSF] fetch attempt 1/2
+03:15:01.868  [GF] start
+03:15:01.878  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:15:01.887  [GF] end ok=false
+03:15:01.894  [OSF] fetch attempt 1 result ok=false
+03:15:01.898  [OSF] sleep before retry ms=1200
+03:15:03.106  [OSF] fetch attempt 2/2
+03:15:03.112  [GF] start
+03:15:03.119  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:15:03.125  [GF] end ok=false
+03:15:03.131  [OSF] fetch attempt 2 result ok=false
+03:15:03.135  [OSF] end ok=false reason=aligned-minute
+03:15:03.138  [OSF] http clients cleared
+03:15:03.143  [OSF] bind restore ok=true prev=null
+03:15:03.152  [OSF] wl release
+03:15:03.163  [ALIGN] alarm scheduled → in=296s (296840ms) next=03:20:00 every=5m
+03:20:00.905  [OSF] start reason=aligned-minute
+03:20:00.917  [OSF] wl acquire ms=60000
+03:20:00.929  [OSF] net wait validated timeoutMs=15000
+03:20:00.936  [OSF] net=validated → proceed
+03:20:00.942  [OSF] post-validate grace ms=1500
+03:20:01.066  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+03:20:01.068  [OSF] start reason=fallback-worker
+03:20:01.071  [OSF][DEBOUNCE] skip (last=163ms ago, window=20000ms)
+03:20:01.074  [WORK] doWork end → retry (fetch failed)
+03:20:02.477  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:20:02.487  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:20:02.496  [OSF] http clients injected (short+long) boundTo=1243
+03:20:02.501  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:20:02.631  [OSF] dns try=1/∞ ok=true
+03:20:02.638  [OSF] fetch attempt 1/2
+03:20:02.646  [GF] start
+03:20:02.655  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:20:02.662  [GF] end ok=false
+03:20:02.669  [OSF] fetch attempt 1 result ok=false
+03:20:02.674  [OSF] sleep before retry ms=1200
+03:20:03.882  [OSF] fetch attempt 2/2
+03:20:03.892  [GF] start
+03:20:03.901  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:20:03.908  [GF] end ok=false
+03:20:03.915  [OSF] fetch attempt 2 result ok=false
+03:20:03.920  [OSF] end ok=false reason=aligned-minute
+03:20:03.925  [OSF] http clients cleared
+03:20:03.931  [OSF] bind restore ok=true prev=null
+03:20:03.939  [OSF] wl release
+03:20:03.948  [ALIGN] alarm scheduled → in=296s (296055ms) next=03:25:00 every=5m
+03:25:00.016  [OSF] start reason=aligned-minute
+03:25:00.019  [OSF] wl acquire ms=60000
+03:25:00.026  [OSF] net wait validated timeoutMs=15000
+03:25:00.032  [OSF] net=validated → proceed
+03:25:00.034  [OSF] post-validate grace ms=1500
+03:25:01.544  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:25:01.552  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:25:01.563  [OSF] http clients injected (short+long) boundTo=1243
+03:25:01.569  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:25:01.666  [OSF] dns try=1/∞ ok=true
+03:25:01.668  [OSF] fetch attempt 1/2
+03:25:01.671  [GF] start
+03:25:01.675  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:25:01.678  [GF] end ok=false
+03:25:01.681  [OSF] fetch attempt 1 result ok=false
+03:25:01.684  [OSF] sleep before retry ms=1200
+03:25:02.889  [OSF] fetch attempt 2/2
+03:25:02.896  [GF] start
+03:25:02.903  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:25:02.908  [GF] end ok=false
+03:25:02.914  [OSF] fetch attempt 2 result ok=false
+03:25:02.918  [OSF] end ok=false reason=aligned-minute
+03:25:02.921  [OSF] http clients cleared
+03:25:02.926  [OSF] bind restore ok=true prev=null
+03:25:02.933  [OSF] wl release
+03:25:02.941  [ALIGN] alarm scheduled → in=297s (297062ms) next=03:30:00 every=5m
+03:30:00.014  [OSF] start reason=aligned-minute
+03:30:00.018  [OSF] wl acquire ms=60000
+03:30:00.022  [OSF] net wait validated timeoutMs=15000
+03:30:00.030  [OSF] net=validated → proceed
+03:30:00.032  [OSF] post-validate grace ms=1500
+03:30:01.542  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:30:01.551  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:30:01.562  [OSF] http clients injected (short+long) boundTo=1243
+03:30:01.568  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:30:01.811  [OSF] dns try=1/∞ ok=true
+03:30:01.816  [OSF] fetch attempt 1/2
+03:30:01.822  [GF] start
+03:30:01.832  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:30:01.839  [GF] end ok=false
+03:30:01.847  [OSF] fetch attempt 1 result ok=false
+03:30:01.852  [OSF] sleep before retry ms=1200
+03:30:03.061  [OSF] fetch attempt 2/2
+03:30:03.070  [GF] start
+03:30:03.079  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:30:03.086  [GF] end ok=false
+03:30:03.093  [OSF] fetch attempt 2 result ok=false
+03:30:03.099  [OSF] end ok=false reason=aligned-minute
+03:30:03.104  [OSF] http clients cleared
+03:30:03.110  [OSF] bind restore ok=true prev=null
+03:30:03.118  [OSF] wl release
+03:30:03.128  [ALIGN] alarm scheduled → in=296s (296876ms) next=03:35:00 every=5m
+03:31:03.871  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+03:31:03.878  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+03:31:03.908  [ALARM] armed • delay=1800000ms triggerAt=33710777 pi=244906399
+03:35:00.024  [OSF] start reason=aligned-minute
+03:35:00.027  [OSF] wl acquire ms=60000
+03:35:00.033  [OSF] net wait validated timeoutMs=15000
+03:35:00.045  [OSF] net=validated → proceed
+03:35:00.047  [OSF] post-validate grace ms=1500
+03:35:01.559  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:35:01.570  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:35:01.583  [OSF] http clients injected (short+long) boundTo=1243
+03:35:01.590  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:35:01.710  [OSF] dns try=1/∞ ok=true
+03:35:01.715  [OSF] fetch attempt 1/2
+03:35:01.720  [GF] start
+03:35:01.731  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:35:01.739  [GF] end ok=false
+03:35:01.745  [OSF] fetch attempt 1 result ok=false
+03:35:01.750  [OSF] sleep before retry ms=1200
+03:35:02.958  [OSF] fetch attempt 2/2
+03:35:02.966  [GF] start
+03:35:02.975  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:35:02.983  [GF] end ok=false
+03:35:02.989  [OSF] fetch attempt 2 result ok=false
+03:35:02.992  [OSF] end ok=false reason=aligned-minute
+03:35:02.994  [OSF] http clients cleared
+03:35:02.997  [OSF] bind restore ok=true prev=null
+03:35:03.005  [OSF] wl release
+03:35:03.014  [ALIGN] alarm scheduled → in=296s (296990ms) next=03:40:00 every=5m
+03:40:00.010  [OSF] start reason=aligned-minute
+03:40:00.013  [OSF] wl acquire ms=60000
+03:40:00.021  [OSF] net wait validated timeoutMs=15000
+03:40:00.028  [OSF] net=validated → proceed
+03:40:00.030  [OSF] post-validate grace ms=1500
+03:40:01.540  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:40:01.550  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:40:01.557  [OSF] http clients injected (short+long) boundTo=1243
+03:40:01.560  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:40:01.646  [OSF] dns try=1/∞ ok=true
+03:40:01.650  [OSF] fetch attempt 1/2
+03:40:01.654  [GF] start
+03:40:01.664  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:40:01.672  [GF] end ok=false
+03:40:01.678  [OSF] fetch attempt 1 result ok=false
+03:40:01.681  [OSF] sleep before retry ms=1200
+03:40:02.888  [OSF] fetch attempt 2/2
+03:40:02.894  [GF] start
+03:40:02.900  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:40:02.906  [GF] end ok=false
+03:40:02.911  [OSF] fetch attempt 2 result ok=false
+03:40:02.915  [OSF] end ok=false reason=aligned-minute
+03:40:02.920  [OSF] http clients cleared
+03:40:02.926  [OSF] bind restore ok=true prev=null
+03:40:02.933  [OSF] wl release
+03:40:02.940  [ALIGN] alarm scheduled → in=297s (297062ms) next=03:45:00 every=5m
+03:45:00.038  [OSF] start reason=aligned-minute
+03:45:00.042  [OSF] wl acquire ms=60000
+03:45:00.048  [OSF] net wait validated timeoutMs=15000
+03:45:00.055  [OSF] net=validated → proceed
+03:45:00.057  [OSF] post-validate grace ms=1500
+03:45:01.566  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:45:01.574  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:45:01.581  [OSF] http clients injected (short+long) boundTo=1243
+03:45:01.586  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:45:01.790  [OSF] dns try=1/∞ ok=true
+03:45:01.796  [OSF] fetch attempt 1/2
+03:45:01.804  [GF] start
+03:45:01.816  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:45:01.824  [GF] end ok=false
+03:45:01.831  [OSF] fetch attempt 1 result ok=false
+03:45:01.836  [OSF] sleep before retry ms=1200
+03:45:03.045  [OSF] fetch attempt 2/2
+03:45:03.055  [GF] start
+03:45:03.063  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:45:03.071  [GF] end ok=false
+03:45:03.075  [OSF] fetch attempt 2 result ok=false
+03:45:03.083  [OSF] end ok=false reason=aligned-minute
+03:45:03.088  [OSF] http clients cleared
+03:45:03.096  [OSF] bind restore ok=true prev=null
+03:45:03.107  [OSF] wl release
+03:45:03.117  [ALIGN] alarm scheduled → in=296s (296886ms) next=03:50:00 every=5m
+03:50:00.055  [OSF] start reason=aligned-minute
+03:50:00.058  [OSF] wl acquire ms=60000
+03:50:00.070  [OSF] net wait validated timeoutMs=15000
+03:50:00.077  [OSF] net=validated → proceed
+03:50:00.079  [OSF] post-validate grace ms=1500
+03:50:01.590  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:50:01.598  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:50:01.610  [OSF] http clients injected (short+long) boundTo=1243
+03:50:01.616  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:50:01.806  [OSF] dns try=1/∞ ok=true
+03:50:01.810  [OSF] fetch attempt 1/2
+03:50:01.818  [GF] start
+03:50:01.827  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:50:01.835  [GF] end ok=false
+03:50:01.841  [OSF] fetch attempt 1 result ok=false
+03:50:01.845  [OSF] sleep before retry ms=1200
+03:50:03.052  [OSF] fetch attempt 2/2
+03:50:03.061  [GF] start
+03:50:03.070  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:50:03.082  [GF] end ok=false
+03:50:03.090  [OSF] fetch attempt 2 result ok=false
+03:50:03.097  [OSF] end ok=false reason=aligned-minute
+03:50:03.101  [OSF] http clients cleared
+03:50:03.107  [OSF] bind restore ok=true prev=null
+03:50:03.114  [OSF] wl release
+03:50:03.121  [ALIGN] alarm scheduled → in=296s (296882ms) next=03:55:00 every=5m
+03:55:00.101  [OSF] start reason=aligned-minute
+03:55:00.104  [OSF] wl acquire ms=60000
+03:55:00.120  [OSF] net wait validated timeoutMs=15000
+03:55:00.128  [OSF] net=validated → proceed
+03:55:00.131  [OSF] post-validate grace ms=1500
+03:55:01.642  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+03:55:01.650  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+03:55:01.660  [OSF] http clients injected (short+long) boundTo=1243
+03:55:01.665  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+03:55:01.939  [OSF] dns try=1/∞ ok=true
+03:55:01.942  [OSF] fetch attempt 1/2
+03:55:01.948  [GF] start
+03:55:01.956  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:55:01.966  [GF] end ok=false
+03:55:01.973  [OSF] fetch attempt 1 result ok=false
+03:55:01.978  [OSF] sleep before retry ms=1200
+03:55:03.186  [OSF] fetch attempt 2/2
+03:55:03.194  [GF] start
+03:55:03.201  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+03:55:03.207  [GF] end ok=false
+03:55:03.212  [OSF] fetch attempt 2 result ok=false
+03:55:03.216  [OSF] end ok=false reason=aligned-minute
+03:55:03.221  [OSF] http clients cleared
+03:55:03.227  [OSF] bind restore ok=true prev=null
+03:55:03.233  [OSF] wl release
+03:55:03.242  [ALIGN] alarm scheduled → in=296s (296761ms) next=04:00:00 every=5m
+04:00:00.109  [OSF] start reason=aligned-minute
+04:00:00.113  [OSF] wl acquire ms=60000
+04:00:00.124  [OSF] net wait validated timeoutMs=15000
+04:00:00.134  [OSF] net=validated → proceed
+04:00:00.137  [OSF] post-validate grace ms=1500
+04:00:01.649  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:00:01.659  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:00:01.670  [OSF] http clients injected (short+long) boundTo=1243
+04:00:01.676  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:00:01.777  [OSF] dns try=1/∞ ok=true
+04:00:01.784  [OSF] fetch attempt 1/2
+04:00:01.792  [GF] start
+04:00:01.800  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:00:01.808  [GF] end ok=false
+04:00:01.814  [OSF] fetch attempt 1 result ok=false
+04:00:01.819  [OSF] sleep before retry ms=1200
+04:00:03.026  [OSF] fetch attempt 2/2
+04:00:03.033  [GF] start
+04:00:03.040  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:00:03.046  [GF] end ok=false
+04:00:03.051  [OSF] fetch attempt 2 result ok=false
+04:00:03.056  [OSF] end ok=false reason=aligned-minute
+04:00:03.060  [OSF] http clients cleared
+04:00:03.066  [OSF] bind restore ok=true prev=null
+04:00:03.077  [OSF] wl release
+04:00:03.086  [ALIGN] alarm scheduled → in=296s (296918ms) next=04:05:00 every=5m
+04:01:03.927  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+04:01:03.929  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+04:01:03.956  [ALARM] armed • delay=1800000ms triggerAt=35510826 pi=19602421
+04:05:00.020  [OSF] start reason=aligned-minute
+04:05:00.031  [OSF] wl acquire ms=60000
+04:05:00.046  [OSF] net wait validated timeoutMs=15000
+04:05:00.056  [OSF] net=validated → proceed
+04:05:00.060  [OSF] post-validate grace ms=1500
+04:05:01.571  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:05:01.580  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:05:01.591  [OSF] http clients injected (short+long) boundTo=1243
+04:05:01.597  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:05:01.810  [OSF] dns try=1/∞ ok=true
+04:05:01.814  [OSF] fetch attempt 1/2
+04:05:01.818  [GF] start
+04:05:01.821  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:05:01.825  [GF] end ok=false
+04:05:01.828  [OSF] fetch attempt 1 result ok=false
+04:05:01.831  [OSF] sleep before retry ms=1200
+04:05:03.038  [OSF] fetch attempt 2/2
+04:05:03.046  [GF] start
+04:05:03.055  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:05:03.062  [GF] end ok=false
+04:05:03.069  [OSF] fetch attempt 2 result ok=false
+04:05:03.074  [OSF] end ok=false reason=aligned-minute
+04:05:03.078  [OSF] http clients cleared
+04:05:03.085  [OSF] bind restore ok=true prev=null
+04:05:03.093  [OSF] wl release
+04:05:03.104  [ALIGN] alarm scheduled → in=296s (296899ms) next=04:10:00 every=5m
+04:10:00.152  [OSF] start reason=aligned-minute
+04:10:00.161  [OSF] wl acquire ms=60000
+04:10:00.164  [OSF] net wait validated timeoutMs=15000
+04:10:00.171  [OSF] net=validated → proceed
+04:10:00.173  [OSF] post-validate grace ms=1500
+04:10:01.683  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:10:01.691  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:10:01.698  [OSF] http clients injected (short+long) boundTo=1243
+04:10:01.701  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:10:01.907  [OSF] dns try=1/∞ ok=true
+04:10:01.915  [OSF] fetch attempt 1/2
+04:10:01.923  [GF] start
+04:10:01.934  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:10:01.943  [GF] end ok=false
+04:10:01.952  [OSF] fetch attempt 1 result ok=false
+04:10:01.958  [OSF] sleep before retry ms=1200
+04:10:03.167  [OSF] fetch attempt 2/2
+04:10:03.173  [GF] start
+04:10:03.177  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:10:03.184  [GF] end ok=false
+04:10:03.191  [OSF] fetch attempt 2 result ok=false
+04:10:03.196  [OSF] end ok=false reason=aligned-minute
+04:10:03.201  [OSF] http clients cleared
+04:10:03.208  [OSF] bind restore ok=true prev=null
+04:10:03.216  [OSF] wl release
+04:10:03.226  [ALIGN] alarm scheduled → in=296s (296778ms) next=04:15:00 every=5m
+04:15:00.192  [OSF] start reason=aligned-minute
+04:15:00.196  [OSF] wl acquire ms=60000
+04:15:00.215  [OSF] net wait validated timeoutMs=15000
+04:15:00.222  [OSF] net=validated → proceed
+04:15:00.224  [OSF] post-validate grace ms=1500
+04:15:01.735  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:15:01.744  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:15:01.754  [OSF] http clients injected (short+long) boundTo=1243
+04:15:01.759  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:15:02.082  [OSF] dns try=1/∞ ok=true
+04:15:02.086  [OSF] fetch attempt 1/2
+04:15:02.095  [GF] start
+04:15:02.105  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:15:02.113  [GF] end ok=false
+04:15:02.119  [OSF] fetch attempt 1 result ok=false
+04:15:02.123  [OSF] sleep before retry ms=1200
+04:15:03.330  [OSF] fetch attempt 2/2
+04:15:03.340  [GF] start
+04:15:03.348  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:15:03.356  [GF] end ok=false
+04:15:03.363  [OSF] fetch attempt 2 result ok=false
+04:15:03.368  [OSF] end ok=false reason=aligned-minute
+04:15:03.372  [OSF] http clients cleared
+04:15:03.379  [OSF] bind restore ok=true prev=null
+04:15:03.387  [OSF] wl release
+04:15:03.397  [ALIGN] alarm scheduled → in=296s (296606ms) next=04:20:00 every=5m
+04:20:00.217  [OSF] start reason=aligned-minute
+04:20:00.223  [OSF] wl acquire ms=60000
+04:20:00.231  [OSF] net wait validated timeoutMs=15000
+04:20:00.237  [OSF] net=validated → proceed
+04:20:00.240  [OSF] post-validate grace ms=1500
+04:20:01.751  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:20:01.759  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:20:01.766  [OSF] http clients injected (short+long) boundTo=1243
+04:20:01.769  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:20:01.847  [OSF] dns try=1/∞ ok=true
+04:20:01.853  [OSF] fetch attempt 1/2
+04:20:01.859  [GF] start
+04:20:01.868  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:20:01.876  [GF] end ok=false
+04:20:01.881  [OSF] fetch attempt 1 result ok=false
+04:20:01.883  [OSF] sleep before retry ms=1200
+04:20:03.089  [OSF] fetch attempt 2/2
+04:20:03.099  [GF] start
+04:20:03.108  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:20:03.115  [GF] end ok=false
+04:20:03.122  [OSF] fetch attempt 2 result ok=false
+04:20:03.127  [OSF] end ok=false reason=aligned-minute
+04:20:03.130  [OSF] http clients cleared
+04:20:03.134  [OSF] bind restore ok=true prev=null
+04:20:03.144  [OSF] wl release
+04:20:03.154  [ALIGN] alarm scheduled → in=296s (296850ms) next=04:25:00 every=5m
+04:25:00.237  [OSF] start reason=aligned-minute
+04:25:00.240  [OSF] wl acquire ms=60000
+04:25:00.244  [OSF] net wait validated timeoutMs=15000
+04:25:00.255  [OSF] net=validated → proceed
+04:25:00.260  [OSF] post-validate grace ms=1500
+04:25:01.770  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:25:01.778  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:25:01.785  [OSF] http clients injected (short+long) boundTo=1243
+04:25:01.790  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:25:01.938  [OSF] dns try=1/∞ ok=true
+04:25:01.946  [OSF] fetch attempt 1/2
+04:25:01.954  [GF] start
+04:25:01.964  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:25:01.972  [GF] end ok=false
+04:25:01.978  [OSF] fetch attempt 1 result ok=false
+04:25:01.981  [OSF] sleep before retry ms=1200
+04:25:03.189  [OSF] fetch attempt 2/2
+04:25:03.196  [GF] start
+04:25:03.203  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:25:03.208  [GF] end ok=false
+04:25:03.215  [OSF] fetch attempt 2 result ok=false
+04:25:03.220  [OSF] end ok=false reason=aligned-minute
+04:25:03.224  [OSF] http clients cleared
+04:25:03.231  [OSF] bind restore ok=true prev=null
+04:25:03.240  [OSF] wl release
+04:25:03.248  [ALIGN] alarm scheduled → in=296s (296755ms) next=04:30:00 every=5m
+04:30:00.041  [OSF] start reason=aligned-minute
+04:30:00.047  [OSF] wl acquire ms=60000
+04:30:00.058  [OSF] net wait validated timeoutMs=15000
+04:30:00.092  [OSF] net=validated → proceed
+04:30:00.094  [OSF] post-validate grace ms=1500
+04:30:00.208  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+04:30:00.211  [OSF] start reason=fallback-worker
+04:30:00.214  [OSF][DEBOUNCE] skip (last=170ms ago, window=20000ms)
+04:30:00.217  [WORK] doWork end → retry (fetch failed)
+04:30:01.601  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:30:01.605  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:30:01.610  [OSF] http clients injected (short+long) boundTo=1243
+04:30:01.612  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:30:01.690  [OSF] dns try=1/∞ ok=true
+04:30:01.693  [OSF] fetch attempt 1/2
+04:30:01.696  [GF] start
+04:30:01.699  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:30:01.705  [GF] end ok=false
+04:30:01.707  [OSF] fetch attempt 1 result ok=false
+04:30:01.710  [OSF] sleep before retry ms=1200
+04:30:02.915  [OSF] fetch attempt 2/2
+04:30:02.924  [GF] start
+04:30:02.931  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:30:02.937  [GF] end ok=false
+04:30:02.942  [OSF] fetch attempt 2 result ok=false
+04:30:02.947  [OSF] end ok=false reason=aligned-minute
+04:30:02.951  [OSF] http clients cleared
+04:30:02.957  [OSF] bind restore ok=true prev=null
+04:30:02.967  [OSF] wl release
+04:30:02.983  [ALIGN] alarm scheduled → in=297s (297022ms) next=04:35:00 every=5m
+04:31:04.263  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+04:31:04.274  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+04:31:04.321  [ALARM] armed • delay=1800000ms triggerAt=37311190 pi=167694370
+04:35:00.281  [OSF] start reason=aligned-minute
+04:35:00.288  [OSF] wl acquire ms=60000
+04:35:00.297  [OSF] net wait validated timeoutMs=15000
+04:35:00.304  [OSF] net=validated → proceed
+04:35:00.307  [OSF] post-validate grace ms=1500
+04:35:01.818  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:35:01.829  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:35:01.842  [OSF] http clients injected (short+long) boundTo=1243
+04:35:01.849  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:35:01.954  [OSF] dns try=1/∞ ok=true
+04:35:01.959  [OSF] fetch attempt 1/2
+04:35:01.967  [GF] start
+04:35:01.975  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:35:01.983  [GF] end ok=false
+04:35:01.990  [OSF] fetch attempt 1 result ok=false
+04:35:01.994  [OSF] sleep before retry ms=1200
+04:35:03.203  [OSF] fetch attempt 2/2
+04:35:03.212  [GF] start
+04:35:03.221  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:35:03.228  [GF] end ok=false
+04:35:03.237  [OSF] fetch attempt 2 result ok=false
+04:35:03.243  [OSF] end ok=false reason=aligned-minute
+04:35:03.248  [OSF] http clients cleared
+04:35:03.254  [OSF] bind restore ok=true prev=null
+04:35:03.264  [OSF] wl release
+04:35:03.275  [ALIGN] alarm scheduled → in=296s (296728ms) next=04:40:00 every=5m
+04:40:00.322  [OSF] start reason=aligned-minute
+04:40:00.325  [OSF] wl acquire ms=60000
+04:40:00.345  [OSF] net wait validated timeoutMs=15000
+04:40:00.357  [OSF] net=validated → proceed
+04:40:00.360  [OSF] post-validate grace ms=1500
+04:40:01.871  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:40:01.877  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:40:01.888  [OSF] http clients injected (short+long) boundTo=1243
+04:40:01.894  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:40:02.023  [OSF] dns try=1/∞ ok=true
+04:40:02.028  [OSF] fetch attempt 1/2
+04:40:02.036  [GF] start
+04:40:02.045  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:40:02.052  [GF] end ok=false
+04:40:02.060  [OSF] fetch attempt 1 result ok=false
+04:40:02.064  [OSF] sleep before retry ms=1200
+04:40:03.271  [OSF] fetch attempt 2/2
+04:40:03.279  [GF] start
+04:40:03.288  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:40:03.295  [GF] end ok=false
+04:40:03.301  [OSF] fetch attempt 2 result ok=false
+04:40:03.305  [OSF] end ok=false reason=aligned-minute
+04:40:03.308  [OSF] http clients cleared
+04:40:03.313  [OSF] bind restore ok=true prev=null
+04:40:03.319  [OSF] wl release
+04:40:03.329  [ALIGN] alarm scheduled → in=296s (296675ms) next=04:45:00 every=5m
+04:45:00.081  [OSF] start reason=aligned-minute
+04:45:00.089  [OSF] wl acquire ms=60000
+04:45:00.097  [OSF] net wait validated timeoutMs=15000
+04:45:00.122  [OSF] net=validated → proceed
+04:45:00.131  [OSF] post-validate grace ms=1500
+04:45:01.647  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:45:01.652  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:45:01.657  [OSF] http clients injected (short+long) boundTo=1243
+04:45:01.659  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:45:01.872  [OSF] dns try=1/∞ ok=true
+04:45:01.875  [OSF] fetch attempt 1/2
+04:45:01.878  [GF] start
+04:45:01.882  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:45:01.887  [GF] end ok=false
+04:45:01.890  [OSF] fetch attempt 1 result ok=false
+04:45:01.892  [OSF] sleep before retry ms=1200
+04:45:03.097  [OSF] fetch attempt 2/2
+04:45:03.100  [GF] start
+04:45:03.105  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:45:03.109  [GF] end ok=false
+04:45:03.112  [OSF] fetch attempt 2 result ok=false
+04:45:03.114  [OSF] end ok=false reason=aligned-minute
+04:45:03.116  [OSF] http clients cleared
+04:45:03.119  [OSF] bind restore ok=true prev=null
+04:45:03.124  [OSF] wl release
+04:45:03.131  [ALIGN] alarm scheduled → in=296s (296872ms) next=04:50:00 every=5m
+04:50:00.365  [OSF] start reason=aligned-minute
+04:50:00.368  [OSF] wl acquire ms=60000
+04:50:00.377  [OSF] net wait validated timeoutMs=15000
+04:50:00.385  [OSF] net=validated → proceed
+04:50:00.387  [OSF] post-validate grace ms=1500
+04:50:01.897  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:50:01.907  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:50:01.920  [OSF] http clients injected (short+long) boundTo=1243
+04:50:01.925  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:50:02.133  [OSF] dns try=1/∞ ok=true
+04:50:02.140  [OSF] fetch attempt 1/2
+04:50:02.148  [GF] start
+04:50:02.157  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:50:02.163  [GF] end ok=false
+04:50:02.165  [OSF] fetch attempt 1 result ok=false
+04:50:02.167  [OSF] sleep before retry ms=1200
+04:50:03.372  [OSF] fetch attempt 2/2
+04:50:03.378  [GF] start
+04:50:03.384  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:50:03.390  [GF] end ok=false
+04:50:03.396  [OSF] fetch attempt 2 result ok=false
+04:50:03.400  [OSF] end ok=false reason=aligned-minute
+04:50:03.404  [OSF] http clients cleared
+04:50:03.408  [OSF] bind restore ok=true prev=null
+04:50:03.415  [OSF] wl release
+04:50:03.422  [ALIGN] alarm scheduled → in=296s (296580ms) next=04:55:00 every=5m
+04:55:00.404  [OSF] start reason=aligned-minute
+04:55:00.408  [OSF] wl acquire ms=60000
+04:55:00.412  [OSF] net wait validated timeoutMs=15000
+04:55:00.419  [OSF] net=validated → proceed
+04:55:00.421  [OSF] post-validate grace ms=1500
+04:55:01.927  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+04:55:01.931  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+04:55:01.935  [OSF] http clients injected (short+long) boundTo=1243
+04:55:01.937  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+04:55:02.018  [OSF] dns try=1/∞ ok=true
+04:55:02.020  [OSF] fetch attempt 1/2
+04:55:02.023  [GF] start
+04:55:02.026  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:55:02.030  [GF] end ok=false
+04:55:02.033  [OSF] fetch attempt 1 result ok=false
+04:55:02.035  [OSF] sleep before retry ms=1200
+04:55:03.240  [OSF] fetch attempt 2/2
+04:55:03.247  [GF] start
+04:55:03.251  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+04:55:03.257  [GF] end ok=false
+04:55:03.264  [OSF] fetch attempt 2 result ok=false
+04:55:03.270  [OSF] end ok=false reason=aligned-minute
+04:55:03.275  [OSF] http clients cleared
+04:55:03.281  [OSF] bind restore ok=true prev=null
+04:55:03.289  [OSF] wl release
+04:55:03.297  [ALIGN] alarm scheduled → in=296s (296706ms) next=05:00:00 every=5m
+05:00:00.419  [OSF] start reason=aligned-minute
+05:00:00.489  [OSF] wl acquire ms=60000
+05:00:00.495  [OSF] net wait validated timeoutMs=15000
+05:00:00.501  [OSF] net=validated → proceed
+05:00:00.504  [OSF] post-validate grace ms=1500
+05:00:02.014  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:00:02.023  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:00:02.033  [OSF] http clients injected (short+long) boundTo=1243
+05:00:02.039  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:00:02.247  [OSF] dns try=1/∞ ok=true
+05:00:02.254  [OSF] fetch attempt 1/2
+05:00:02.260  [GF] start
+05:00:02.269  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:00:02.277  [GF] end ok=false
+05:00:02.283  [OSF] fetch attempt 1 result ok=false
+05:00:02.288  [OSF] sleep before retry ms=1200
+05:00:03.496  [OSF] fetch attempt 2/2
+05:00:03.505  [GF] start
+05:00:03.515  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:00:03.522  [GF] end ok=false
+05:00:03.528  [OSF] fetch attempt 2 result ok=false
+05:00:03.531  [OSF] end ok=false reason=aligned-minute
+05:00:03.533  [OSF] http clients cleared
+05:00:03.536  [OSF] bind restore ok=true prev=null
+05:00:03.540  [OSF] wl release
+05:00:03.552  [ALIGN] alarm scheduled → in=296s (296455ms) next=05:05:00 every=5m
+05:01:04.351  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+05:01:04.361  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+05:01:04.412  [ALARM] armed • delay=1800000ms triggerAt=39111281 pi=124691898
+05:05:00.438  [OSF] start reason=aligned-minute
+05:05:00.449  [OSF] wl acquire ms=60000
+05:05:00.453  [OSF] net wait validated timeoutMs=15000
+05:05:00.460  [OSF] net=validated → proceed
+05:05:00.467  [OSF] post-validate grace ms=1500
+05:05:01.978  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:05:01.988  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:05:01.995  [OSF] http clients injected (short+long) boundTo=1243
+05:05:01.998  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:05:02.085  [OSF] dns try=1/∞ ok=true
+05:05:02.088  [OSF] fetch attempt 1/2
+05:05:02.092  [GF] start
+05:05:02.097  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:05:02.103  [GF] end ok=false
+05:05:02.108  [OSF] fetch attempt 1 result ok=false
+05:05:02.112  [OSF] sleep before retry ms=1200
+05:05:03.319  [OSF] fetch attempt 2/2
+05:05:03.329  [GF] start
+05:05:03.339  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:05:03.348  [GF] end ok=false
+05:05:03.353  [OSF] fetch attempt 2 result ok=false
+05:05:03.357  [OSF] end ok=false reason=aligned-minute
+05:05:03.360  [OSF] http clients cleared
+05:05:03.363  [OSF] bind restore ok=true prev=null
+05:05:03.368  [OSF] wl release
+05:05:03.376  [ALIGN] alarm scheduled → in=296s (296627ms) next=05:10:00 every=5m
+05:10:00.458  [OSF] start reason=aligned-minute
+05:10:00.461  [OSF] wl acquire ms=60000
+05:10:00.465  [OSF] net wait validated timeoutMs=15000
+05:10:00.474  [OSF] net=validated → proceed
+05:10:00.476  [OSF] post-validate grace ms=1500
+05:10:01.986  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:10:01.992  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:10:01.999  [OSF] http clients injected (short+long) boundTo=1243
+05:10:02.002  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:10:02.123  [OSF] dns try=1/∞ ok=true
+05:10:02.127  [OSF] fetch attempt 1/2
+05:10:02.132  [GF] start
+05:10:02.139  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:10:02.146  [GF] end ok=false
+05:10:02.151  [OSF] fetch attempt 1 result ok=false
+05:10:02.155  [OSF] sleep before retry ms=1200
+05:10:03.362  [OSF] fetch attempt 2/2
+05:10:03.372  [GF] start
+05:10:03.379  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:10:03.386  [GF] end ok=false
+05:10:03.391  [OSF] fetch attempt 2 result ok=false
+05:10:03.396  [OSF] end ok=false reason=aligned-minute
+05:10:03.400  [OSF] http clients cleared
+05:10:03.407  [OSF] bind restore ok=true prev=null
+05:10:03.415  [OSF] wl release
+05:10:03.427  [ALIGN] alarm scheduled → in=296s (296577ms) next=05:15:00 every=5m
+05:15:00.467  [OSF] start reason=aligned-minute
+05:15:00.472  [OSF] wl acquire ms=60000
+05:15:00.475  [OSF] net wait validated timeoutMs=15000
+05:15:00.483  [OSF] net=validated → proceed
+05:15:00.486  [OSF] post-validate grace ms=1500
+05:15:01.998  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:15:02.005  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:15:02.012  [OSF] http clients injected (short+long) boundTo=1243
+05:15:02.017  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:15:02.126  [OSF] dns try=1/∞ ok=true
+05:15:02.130  [OSF] fetch attempt 1/2
+05:15:02.136  [GF] start
+05:15:02.146  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:15:02.154  [GF] end ok=false
+05:15:02.160  [OSF] fetch attempt 1 result ok=false
+05:15:02.165  [OSF] sleep before retry ms=1200
+05:15:03.372  [OSF] fetch attempt 2/2
+05:15:03.378  [GF] start
+05:15:03.385  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:15:03.391  [GF] end ok=false
+05:15:03.397  [OSF] fetch attempt 2 result ok=false
+05:15:03.401  [OSF] end ok=false reason=aligned-minute
+05:15:03.405  [OSF] http clients cleared
+05:15:03.410  [OSF] bind restore ok=true prev=null
+05:15:03.417  [OSF] wl release
+05:15:03.428  [ALIGN] alarm scheduled → in=296s (296575ms) next=05:20:00 every=5m
+05:20:00.535  [OSF] start reason=aligned-minute
+05:20:00.538  [OSF] wl acquire ms=60000
+05:20:00.546  [OSF] net wait validated timeoutMs=15000
+05:20:00.553  [OSF] net=validated → proceed
+05:20:00.555  [OSF] post-validate grace ms=1500
+05:20:02.061  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:20:02.069  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:20:02.080  [OSF] http clients injected (short+long) boundTo=1243
+05:20:02.086  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:20:02.252  [OSF] dns try=1/∞ ok=true
+05:20:02.256  [OSF] fetch attempt 1/2
+05:20:02.263  [GF] start
+05:20:02.272  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:20:02.280  [GF] end ok=false
+05:20:02.287  [OSF] fetch attempt 1 result ok=false
+05:20:02.294  [OSF] sleep before retry ms=1200
+05:20:03.500  [OSF] fetch attempt 2/2
+05:20:03.505  [GF] start
+05:20:03.510  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:20:03.519  [GF] end ok=false
+05:20:03.527  [OSF] fetch attempt 2 result ok=false
+05:20:03.534  [OSF] end ok=false reason=aligned-minute
+05:20:03.539  [OSF] http clients cleared
+05:20:03.545  [OSF] bind restore ok=true prev=null
+05:20:03.553  [OSF] wl release
+05:20:03.563  [ALIGN] alarm scheduled → in=296s (296440ms) next=05:25:00 every=5m
+05:25:00.567  [OSF] start reason=aligned-minute
+05:25:00.570  [OSF] wl acquire ms=60000
+05:25:00.585  [OSF] net wait validated timeoutMs=15000
+05:25:00.602  [OSF] net=validated → proceed
+05:25:00.606  [OSF] post-validate grace ms=1500
+05:25:02.117  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:25:02.122  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:25:02.134  [OSF] http clients injected (short+long) boundTo=1243
+05:25:02.139  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:25:02.279  [OSF] dns try=1/∞ ok=true
+05:25:02.283  [OSF] fetch attempt 1/2
+05:25:02.292  [GF] start
+05:25:02.302  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:25:02.311  [GF] end ok=false
+05:25:02.318  [OSF] fetch attempt 1 result ok=false
+05:25:02.322  [OSF] sleep before retry ms=1200
+05:25:03.530  [OSF] fetch attempt 2/2
+05:25:03.538  [GF] start
+05:25:03.547  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:25:03.554  [GF] end ok=false
+05:25:03.561  [OSF] fetch attempt 2 result ok=false
+05:25:03.565  [OSF] end ok=false reason=aligned-minute
+05:25:03.567  [OSF] http clients cleared
+05:25:03.572  [OSF] bind restore ok=true prev=null
+05:25:03.580  [OSF] wl release
+05:25:03.589  [ALIGN] alarm scheduled → in=296s (296414ms) next=05:30:00 every=5m
+05:30:00.570  [OSF] start reason=aligned-minute
+05:30:00.572  [OSF] wl acquire ms=60000
+05:30:00.588  [OSF] net wait validated timeoutMs=15000
+05:30:00.594  [OSF] net=validated → proceed
+05:30:00.596  [OSF] post-validate grace ms=1500
+05:30:02.107  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:30:02.116  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:30:02.129  [OSF] http clients injected (short+long) boundTo=1243
+05:30:02.135  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:30:02.420  [OSF] dns try=1/∞ ok=true
+05:30:02.426  [OSF] fetch attempt 1/2
+05:30:02.434  [GF] start
+05:30:02.444  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:30:02.454  [GF] end ok=false
+05:30:02.461  [OSF] fetch attempt 1 result ok=false
+05:30:02.466  [OSF] sleep before retry ms=1200
+05:30:03.675  [OSF] fetch attempt 2/2
+05:30:03.682  [GF] start
+05:30:03.689  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:30:03.695  [GF] end ok=false
+05:30:03.700  [OSF] fetch attempt 2 result ok=false
+05:30:03.705  [OSF] end ok=false reason=aligned-minute
+05:30:03.709  [OSF] http clients cleared
+05:30:03.715  [OSF] bind restore ok=true prev=null
+05:30:03.722  [OSF] wl release
+05:30:03.733  [ALIGN] alarm scheduled → in=296s (296272ms) next=05:35:00 every=5m
+05:31:04.433  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+05:31:04.437  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+05:31:04.477  [ALARM] armed • delay=1800000ms triggerAt=40911346 pi=183948325
+05:35:00.025  [OSF] start reason=aligned-minute
+05:35:00.047  [OSF] wl acquire ms=60000
+05:35:00.063  [OSF] net wait validated timeoutMs=15000
+05:35:00.084  [OSF] net=validated → proceed
+05:35:00.087  [OSF] post-validate grace ms=1500
+05:35:01.597  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:35:01.607  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:35:01.619  [OSF] http clients injected (short+long) boundTo=1243
+05:35:01.625  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:35:01.681  [OSF] dns try=1/∞ ok=true
+05:35:01.685  [OSF] fetch attempt 1/2
+05:35:01.689  [GF] start
+05:35:01.693  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:35:01.698  [GF] end ok=false
+05:35:01.702  [OSF] fetch attempt 1 result ok=false
+05:35:01.705  [OSF] sleep before retry ms=1200
+05:35:02.910  [OSF] fetch attempt 2/2
+05:35:02.915  [GF] start
+05:35:02.920  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:35:02.924  [GF] end ok=false
+05:35:02.929  [OSF] fetch attempt 2 result ok=false
+05:35:02.932  [OSF] end ok=false reason=aligned-minute
+05:35:02.935  [OSF] http clients cleared
+05:35:02.939  [OSF] bind restore ok=true prev=null
+05:35:02.946  [OSF] wl release
+05:35:02.957  [ALIGN] alarm scheduled → in=297s (297048ms) next=05:40:00 every=5m
+05:40:00.023  [OSF] start reason=aligned-minute
+05:40:00.029  [OSF] wl acquire ms=60000
+05:40:00.036  [OSF] net wait validated timeoutMs=15000
+05:40:00.042  [OSF] net=validated → proceed
+05:40:00.046  [OSF] post-validate grace ms=1500
+05:40:01.557  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:40:01.566  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:40:01.575  [OSF] http clients injected (short+long) boundTo=1243
+05:40:01.579  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:40:01.701  [OSF] dns try=1/∞ ok=true
+05:40:01.709  [OSF] fetch attempt 1/2
+05:40:01.717  [GF] start
+05:40:01.728  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:40:01.737  [GF] end ok=false
+05:40:01.745  [OSF] fetch attempt 1 result ok=false
+05:40:01.752  [OSF] sleep before retry ms=1200
+05:40:02.961  [OSF] fetch attempt 2/2
+05:40:02.971  [GF] start
+05:40:02.982  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:40:02.992  [GF] end ok=false
+05:40:02.998  [OSF] fetch attempt 2 result ok=false
+05:40:03.001  [OSF] end ok=false reason=aligned-minute
+05:40:03.004  [OSF] http clients cleared
+05:40:03.008  [OSF] bind restore ok=true prev=null
+05:40:03.014  [OSF] wl release
+05:40:03.025  [ALIGN] alarm scheduled → in=296s (296979ms) next=05:45:00 every=5m
+05:45:00.653  [OSF] start reason=aligned-minute
+05:45:00.659  [OSF] wl acquire ms=60000
+05:45:00.663  [OSF] net wait validated timeoutMs=15000
+05:45:00.669  [OSF] net=validated → proceed
+05:45:00.672  [OSF] post-validate grace ms=1500
+05:45:02.182  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:45:02.187  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:45:02.192  [OSF] http clients injected (short+long) boundTo=1243
+05:45:02.195  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:45:02.402  [OSF] dns try=1/∞ ok=true
+05:45:02.407  [OSF] fetch attempt 1/2
+05:45:02.413  [GF] start
+05:45:02.420  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:45:02.425  [GF] end ok=false
+05:45:02.429  [OSF] fetch attempt 1 result ok=false
+05:45:02.435  [OSF] sleep before retry ms=1200
+05:45:03.641  [OSF] fetch attempt 2/2
+05:45:03.647  [GF] start
+05:45:03.650  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:45:03.656  [GF] end ok=false
+05:45:03.661  [OSF] fetch attempt 2 result ok=false
+05:45:03.665  [OSF] end ok=false reason=aligned-minute
+05:45:03.668  [OSF] http clients cleared
+05:45:03.673  [OSF] bind restore ok=true prev=null
+05:45:03.679  [OSF] wl release
+05:45:03.688  [ALIGN] alarm scheduled → in=296s (296315ms) next=05:50:00 every=5m
+05:50:00.691  [OSF] start reason=aligned-minute
+05:50:00.768  [OSF] wl acquire ms=60000
+05:50:00.775  [OSF] net wait validated timeoutMs=15000
+05:50:00.781  [OSF] net=validated → proceed
+05:50:00.783  [OSF] post-validate grace ms=1500
+05:50:02.292  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:50:02.302  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:50:02.313  [OSF] http clients injected (short+long) boundTo=1243
+05:50:02.316  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:50:02.400  [OSF] dns try=1/∞ ok=true
+05:50:02.403  [OSF] fetch attempt 1/2
+05:50:02.407  [GF] start
+05:50:02.411  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:50:02.415  [GF] end ok=false
+05:50:02.417  [OSF] fetch attempt 1 result ok=false
+05:50:02.420  [OSF] sleep before retry ms=1200
+05:50:03.627  [OSF] fetch attempt 2/2
+05:50:03.635  [GF] start
+05:50:03.642  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:50:03.647  [GF] end ok=false
+05:50:03.653  [OSF] fetch attempt 2 result ok=false
+05:50:03.657  [OSF] end ok=false reason=aligned-minute
+05:50:03.661  [OSF] http clients cleared
+05:50:03.667  [OSF] bind restore ok=true prev=null
+05:50:03.674  [OSF] wl release
+05:50:03.683  [ALIGN] alarm scheduled → in=296s (296321ms) next=05:55:00 every=5m
+05:55:00.469  [OSF] start reason=aligned-minute
+05:55:00.472  [OSF] wl acquire ms=60000
+05:55:00.477  [OSF] net wait validated timeoutMs=15000
+05:55:00.488  [OSF] net=validated → proceed
+05:55:00.490  [OSF] post-validate grace ms=1500
+05:55:02.001  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+05:55:02.010  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+05:55:02.021  [OSF] http clients injected (short+long) boundTo=1243
+05:55:02.028  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+05:55:02.286  [OSF] dns try=1/∞ ok=true
+05:55:02.289  [OSF] fetch attempt 1/2
+05:55:02.296  [GF] start
+05:55:02.306  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:55:02.314  [GF] end ok=false
+05:55:02.321  [OSF] fetch attempt 1 result ok=false
+05:55:02.326  [OSF] sleep before retry ms=1200
+05:55:03.533  [OSF] fetch attempt 2/2
+05:55:03.540  [GF] start
+05:55:03.547  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+05:55:03.553  [GF] end ok=false
+05:55:03.558  [OSF] fetch attempt 2 result ok=false
+05:55:03.562  [OSF] end ok=false reason=aligned-minute
+05:55:03.566  [OSF] http clients cleared
+05:55:03.571  [OSF] bind restore ok=true prev=null
+05:55:03.579  [OSF] wl release
+05:55:03.590  [ALIGN] alarm scheduled → in=296s (296414ms) next=06:00:00 every=5m
+06:00:00.772  [OSF] start reason=aligned-minute
+06:00:00.775  [OSF] wl acquire ms=60000
+06:00:00.782  [OSF] net wait validated timeoutMs=15000
+06:00:00.789  [OSF] net=validated → proceed
+06:00:00.791  [OSF] post-validate grace ms=1500
+06:00:02.302  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:00:02.311  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:00:02.321  [OSF] http clients injected (short+long) boundTo=1243
+06:00:02.325  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:00:02.514  [OSF] dns try=1/∞ ok=true
+06:00:02.516  [OSF] fetch attempt 1/2
+06:00:02.523  [GF] start
+06:00:02.531  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:00:02.537  [GF] end ok=false
+06:00:02.542  [OSF] fetch attempt 1 result ok=false
+06:00:02.546  [OSF] sleep before retry ms=1200
+06:00:03.753  [OSF] fetch attempt 2/2
+06:00:03.759  [GF] start
+06:00:03.766  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:00:03.772  [GF] end ok=false
+06:00:03.777  [OSF] fetch attempt 2 result ok=false
+06:00:03.781  [OSF] end ok=false reason=aligned-minute
+06:00:03.784  [OSF] http clients cleared
+06:00:03.790  [OSF] bind restore ok=true prev=null
+06:00:03.797  [OSF] wl release
+06:00:03.807  [ALIGN] alarm scheduled → in=296s (296197ms) next=06:05:00 every=5m
+06:01:04.512  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+06:01:04.519  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+06:01:04.566  [ALARM] armed • delay=1800000ms triggerAt=42711435 pi=175982836
+06:05:00.798  [OSF] start reason=aligned-minute
+06:05:00.810  [OSF] wl acquire ms=60000
+06:05:00.816  [OSF] net wait validated timeoutMs=15000
+06:05:00.825  [OSF] net=validated → proceed
+06:05:00.827  [OSF] post-validate grace ms=1500
+06:05:02.340  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:05:02.350  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:05:02.362  [OSF] http clients injected (short+long) boundTo=1243
+06:05:02.367  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:05:02.570  [OSF] dns try=1/∞ ok=true
+06:05:02.577  [OSF] fetch attempt 1/2
+06:05:02.585  [GF] start
+06:05:02.595  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:05:02.603  [GF] end ok=false
+06:05:02.608  [OSF] fetch attempt 1 result ok=false
+06:05:02.612  [OSF] sleep before retry ms=1200
+06:05:03.820  [OSF] fetch attempt 2/2
+06:05:03.828  [GF] start
+06:05:03.835  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:05:03.841  [GF] end ok=false
+06:05:03.846  [OSF] fetch attempt 2 result ok=false
+06:05:03.851  [OSF] end ok=false reason=aligned-minute
+06:05:03.854  [OSF] http clients cleared
+06:05:03.859  [OSF] bind restore ok=true prev=null
+06:05:03.866  [OSF] wl release
+06:05:03.875  [ALIGN] alarm scheduled → in=296s (296128ms) next=06:10:00 every=5m
+06:10:00.820  [OSF] start reason=aligned-minute
+06:10:00.827  [OSF] wl acquire ms=60000
+06:10:00.841  [OSF] net wait validated timeoutMs=15000
+06:10:00.847  [OSF] net=validated → proceed
+06:10:00.850  [OSF] post-validate grace ms=1500
+06:10:02.361  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:10:02.371  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:10:02.381  [OSF] http clients injected (short+long) boundTo=1243
+06:10:02.386  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:10:02.586  [OSF] dns try=1/∞ ok=true
+06:10:02.591  [OSF] fetch attempt 1/2
+06:10:02.599  [GF] start
+06:10:02.608  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:10:02.618  [GF] end ok=false
+06:10:02.624  [OSF] fetch attempt 1 result ok=false
+06:10:02.628  [OSF] sleep before retry ms=1200
+06:10:03.835  [OSF] fetch attempt 2/2
+06:10:03.842  [GF] start
+06:10:03.848  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:10:03.855  [GF] end ok=false
+06:10:03.860  [OSF] fetch attempt 2 result ok=false
+06:10:03.866  [OSF] end ok=false reason=aligned-minute
+06:10:03.870  [OSF] http clients cleared
+06:10:03.876  [OSF] bind restore ok=true prev=null
+06:10:03.884  [OSF] wl release
+06:10:03.896  [ALIGN] alarm scheduled → in=296s (296108ms) next=06:15:00 every=5m
+06:15:00.461  [OSF] start reason=aligned-minute
+06:15:00.465  [OSF] wl acquire ms=60000
+06:15:00.469  [OSF] net wait validated timeoutMs=15000
+06:15:00.476  [OSF] net=validated → proceed
+06:15:00.478  [OSF] post-validate grace ms=1500
+06:15:01.989  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:15:02.000  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:15:02.013  [OSF] http clients injected (short+long) boundTo=1243
+06:15:02.020  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:15:02.247  [OSF] dns try=1/∞ ok=true
+06:15:02.251  [OSF] fetch attempt 1/2
+06:15:02.260  [GF] start
+06:15:02.271  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:15:02.280  [GF] end ok=false
+06:15:02.288  [OSF] fetch attempt 1 result ok=false
+06:15:02.294  [OSF] sleep before retry ms=1200
+06:15:03.502  [OSF] fetch attempt 2/2
+06:15:03.512  [GF] start
+06:15:03.523  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:15:03.532  [GF] end ok=false
+06:15:03.541  [OSF] fetch attempt 2 result ok=false
+06:15:03.548  [OSF] end ok=false reason=aligned-minute
+06:15:03.554  [OSF] http clients cleared
+06:15:03.561  [OSF] bind restore ok=true prev=null
+06:15:03.571  [OSF] wl release
+06:15:03.580  [ALIGN] alarm scheduled → in=296s (296423ms) next=06:20:00 every=5m
+06:20:00.055  [OSF] start reason=aligned-minute
+06:20:00.059  [OSF] wl acquire ms=60000
+06:20:00.063  [OSF] net wait validated timeoutMs=15000
+06:20:00.074  [OSF] net=validated → proceed
+06:20:00.076  [OSF] post-validate grace ms=1500
+06:20:01.587  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:20:01.595  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:20:01.605  [OSF] http clients injected (short+long) boundTo=1243
+06:20:01.610  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:20:01.731  [OSF] dns try=1/∞ ok=true
+06:20:01.735  [OSF] fetch attempt 1/2
+06:20:01.740  [GF] start
+06:20:01.749  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:20:01.757  [GF] end ok=false
+06:20:01.764  [OSF] fetch attempt 1 result ok=false
+06:20:01.768  [OSF] sleep before retry ms=1200
+06:20:02.975  [OSF] fetch attempt 2/2
+06:20:02.982  [GF] start
+06:20:02.988  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:20:02.993  [GF] end ok=false
+06:20:02.998  [OSF] fetch attempt 2 result ok=false
+06:20:03.002  [OSF] end ok=false reason=aligned-minute
+06:20:03.006  [OSF] http clients cleared
+06:20:03.011  [OSF] bind restore ok=true prev=null
+06:20:03.018  [OSF] wl release
+06:20:03.028  [ALIGN] alarm scheduled → in=296s (296975ms) next=06:25:00 every=5m
+06:25:00.040  [OSF] start reason=aligned-minute
+06:25:00.043  [OSF] wl acquire ms=60000
+06:25:00.048  [OSF] net wait validated timeoutMs=15000
+06:25:00.060  [OSF] net=validated → proceed
+06:25:00.066  [OSF] post-validate grace ms=1500
+06:25:01.581  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:25:01.592  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:25:01.606  [OSF] http clients injected (short+long) boundTo=1243
+06:25:01.612  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:25:01.733  [OSF] dns try=1/∞ ok=true
+06:25:01.739  [OSF] fetch attempt 1/2
+06:25:01.744  [GF] start
+06:25:01.753  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:25:01.760  [GF] end ok=false
+06:25:01.767  [OSF] fetch attempt 1 result ok=false
+06:25:01.772  [OSF] sleep before retry ms=1200
+06:25:02.980  [OSF] fetch attempt 2/2
+06:25:02.986  [GF] start
+06:25:02.993  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:25:02.999  [GF] end ok=false
+06:25:03.005  [OSF] fetch attempt 2 result ok=false
+06:25:03.009  [OSF] end ok=false reason=aligned-minute
+06:25:03.012  [OSF] http clients cleared
+06:25:03.017  [OSF] bind restore ok=true prev=null
+06:25:03.025  [OSF] wl release
+06:25:03.035  [ALIGN] alarm scheduled → in=296s (296968ms) next=06:30:00 every=5m
+06:30:00.011  [OSF] start reason=aligned-minute
+06:30:00.014  [OSF] wl acquire ms=60000
+06:30:00.021  [OSF] net wait validated timeoutMs=15000
+06:30:00.028  [OSF] net=validated → proceed
+06:30:00.030  [OSF] post-validate grace ms=1500
+06:30:01.542  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:30:01.553  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:30:01.566  [OSF] http clients injected (short+long) boundTo=1243
+06:30:01.571  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:30:01.859  [OSF] dns try=1/∞ ok=true
+06:30:01.867  [OSF] fetch attempt 1/2
+06:30:01.875  [GF] start
+06:30:01.885  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:30:01.894  [GF] end ok=false
+06:30:01.901  [OSF] fetch attempt 1 result ok=false
+06:30:01.906  [OSF] sleep before retry ms=1200
+06:30:03.114  [OSF] fetch attempt 2/2
+06:30:03.124  [GF] start
+06:30:03.133  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:30:03.140  [GF] end ok=false
+06:30:03.147  [OSF] fetch attempt 2 result ok=false
+06:30:03.153  [OSF] end ok=false reason=aligned-minute
+06:30:03.157  [OSF] http clients cleared
+06:30:03.160  [OSF] bind restore ok=true prev=null
+06:30:03.164  [OSF] wl release
+06:30:03.170  [ALIGN] alarm scheduled → in=296s (296832ms) next=06:35:00 every=5m
+06:31:04.583  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+06:31:04.586  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+06:31:04.624  [ALARM] armed • delay=1800000ms triggerAt=44511493 pi=13809362
+06:35:00.015  [OSF] start reason=aligned-minute
+06:35:00.018  [OSF] wl acquire ms=60000
+06:35:00.025  [OSF] net wait validated timeoutMs=15000
+06:35:00.032  [OSF] net=validated → proceed
+06:35:00.034  [OSF] post-validate grace ms=1500
+06:35:01.545  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:35:01.555  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:35:01.570  [OSF] http clients injected (short+long) boundTo=1243
+06:35:01.577  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:35:01.801  [OSF] dns try=1/∞ ok=true
+06:35:01.806  [OSF] fetch attempt 1/2
+06:35:01.814  [GF] start
+06:35:01.825  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:35:01.832  [GF] end ok=false
+06:35:01.838  [OSF] fetch attempt 1 result ok=false
+06:35:01.842  [OSF] sleep before retry ms=1200
+06:35:03.050  [OSF] fetch attempt 2/2
+06:35:03.057  [GF] start
+06:35:03.064  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:35:03.070  [GF] end ok=false
+06:35:03.074  [OSF] fetch attempt 2 result ok=false
+06:35:03.078  [OSF] end ok=false reason=aligned-minute
+06:35:03.081  [OSF] http clients cleared
+06:35:03.084  [OSF] bind restore ok=true prev=null
+06:35:03.089  [OSF] wl release
+06:35:03.098  [ALIGN] alarm scheduled → in=296s (296906ms) next=06:40:00 every=5m
+06:40:00.027  [OSF] start reason=aligned-minute
+06:40:00.031  [OSF] wl acquire ms=60000
+06:40:00.036  [OSF] net wait validated timeoutMs=15000
+06:40:00.045  [OSF] net=validated → proceed
+06:40:00.048  [OSF] post-validate grace ms=1500
+06:40:01.559  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:40:01.564  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:40:01.572  [OSF] http clients injected (short+long) boundTo=1243
+06:40:01.575  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:40:01.758  [OSF] dns try=1/∞ ok=true
+06:40:01.765  [OSF] fetch attempt 1/2
+06:40:01.772  [GF] start
+06:40:01.776  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:40:01.782  [GF] end ok=false
+06:40:01.787  [OSF] fetch attempt 1 result ok=false
+06:40:01.791  [OSF] sleep before retry ms=1200
+06:40:02.998  [OSF] fetch attempt 2/2
+06:40:03.008  [GF] start
+06:40:03.016  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:40:03.025  [GF] end ok=false
+06:40:03.034  [OSF] fetch attempt 2 result ok=false
+06:40:03.039  [OSF] end ok=false reason=aligned-minute
+06:40:03.044  [OSF] http clients cleared
+06:40:03.050  [OSF] bind restore ok=true prev=null
+06:40:03.058  [OSF] wl release
+06:40:03.066  [ALIGN] alarm scheduled → in=296s (296937ms) next=06:45:00 every=5m
+06:45:00.055  [OSF] start reason=aligned-minute
+06:45:00.058  [OSF] wl acquire ms=60000
+06:45:00.064  [OSF] net wait validated timeoutMs=15000
+06:45:00.088  [OSF] net=validated → proceed
+06:45:00.102  [OSF] post-validate grace ms=1500
+06:45:00.521  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+06:45:00.530  [OSF] start reason=fallback-worker
+06:45:00.536  [OSF][DEBOUNCE] skip (last=475ms ago, window=20000ms)
+06:45:00.539  [WORK] doWork end → retry (fetch failed)
+06:45:01.608  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:45:01.613  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:45:01.618  [OSF] http clients injected (short+long) boundTo=1243
+06:45:01.620  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:45:01.816  [OSF] dns try=1/∞ ok=true
+06:45:01.818  [OSF] fetch attempt 1/2
+06:45:01.822  [GF] start
+06:45:01.827  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:45:01.835  [GF] end ok=false
+06:45:01.839  [OSF] fetch attempt 1 result ok=false
+06:45:01.842  [OSF] sleep before retry ms=1200
+06:45:03.045  [OSF] fetch attempt 2/2
+06:45:03.049  [GF] start
+06:45:03.052  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:45:03.057  [GF] end ok=false
+06:45:03.060  [OSF] fetch attempt 2 result ok=false
+06:45:03.062  [OSF] end ok=false reason=aligned-minute
+06:45:03.064  [OSF] http clients cleared
+06:45:03.066  [OSF] bind restore ok=true prev=null
+06:45:03.070  [OSF] wl release
+06:45:03.076  [ALIGN] alarm scheduled → in=296s (296926ms) next=06:50:00 every=5m
+06:50:00.032  [OSF] start reason=aligned-minute
+06:50:00.044  [OSF] wl acquire ms=60000
+06:50:00.051  [OSF] net wait validated timeoutMs=15000
+06:50:00.061  [OSF] net=validated → proceed
+06:50:00.066  [OSF] post-validate grace ms=1500
+06:50:01.577  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:50:01.586  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:50:01.598  [OSF] http clients injected (short+long) boundTo=1243
+06:50:01.604  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:50:01.805  [OSF] dns try=1/∞ ok=true
+06:50:01.810  [OSF] fetch attempt 1/2
+06:50:01.818  [GF] start
+06:50:01.828  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:50:01.836  [GF] end ok=false
+06:50:01.842  [OSF] fetch attempt 1 result ok=false
+06:50:01.846  [OSF] sleep before retry ms=1200
+06:50:03.053  [OSF] fetch attempt 2/2
+06:50:03.064  [GF] start
+06:50:03.072  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:50:03.079  [GF] end ok=false
+06:50:03.087  [OSF] fetch attempt 2 result ok=false
+06:50:03.092  [OSF] end ok=false reason=aligned-minute
+06:50:03.096  [OSF] http clients cleared
+06:50:03.103  [OSF] bind restore ok=true prev=null
+06:50:03.111  [OSF] wl release
+06:50:03.120  [ALIGN] alarm scheduled → in=296s (296883ms) next=06:55:00 every=5m
+06:55:00.101  [OSF] start reason=aligned-minute
+06:55:00.112  [OSF] wl acquire ms=60000
+06:55:00.119  [OSF] net wait validated timeoutMs=15000
+06:55:00.126  [OSF] net=validated → proceed
+06:55:00.129  [OSF] post-validate grace ms=1500
+06:55:01.638  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+06:55:01.648  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+06:55:01.658  [OSF] http clients injected (short+long) boundTo=1243
+06:55:01.664  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+06:55:01.873  [OSF] dns try=1/∞ ok=true
+06:55:01.875  [OSF] fetch attempt 1/2
+06:55:01.882  [GF] start
+06:55:01.889  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:55:01.897  [GF] end ok=false
+06:55:01.902  [OSF] fetch attempt 1 result ok=false
+06:55:01.905  [OSF] sleep before retry ms=1200
+06:55:03.110  [OSF] fetch attempt 2/2
+06:55:03.117  [GF] start
+06:55:03.123  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+06:55:03.129  [GF] end ok=false
+06:55:03.133  [OSF] fetch attempt 2 result ok=false
+06:55:03.136  [OSF] end ok=false reason=aligned-minute
+06:55:03.139  [OSF] http clients cleared
+06:55:03.143  [OSF] bind restore ok=true prev=null
+06:55:03.149  [OSF] wl release
+06:55:03.160  [ALIGN] alarm scheduled → in=296s (296844ms) next=07:00:00 every=5m
+07:00:00.132  [OSF] start reason=aligned-minute
+07:00:00.136  [OSF] wl acquire ms=60000
+07:00:00.142  [OSF] net wait validated timeoutMs=15000
+07:00:00.148  [OSF] net=validated → proceed
+07:00:00.151  [OSF] post-validate grace ms=1500
+07:00:01.661  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:00:01.667  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:00:01.674  [OSF] http clients injected (short+long) boundTo=1243
+07:00:01.677  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:00:01.883  [OSF] dns try=1/∞ ok=true
+07:00:01.888  [OSF] fetch attempt 1/2
+07:00:01.896  [GF] start
+07:00:01.905  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:00:01.911  [GF] end ok=false
+07:00:01.914  [OSF] fetch attempt 1 result ok=false
+07:00:01.916  [OSF] sleep before retry ms=1200
+07:00:03.121  [OSF] fetch attempt 2/2
+07:00:03.129  [GF] start
+07:00:03.137  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:00:03.144  [GF] end ok=false
+07:00:03.149  [OSF] fetch attempt 2 result ok=false
+07:00:03.153  [OSF] end ok=false reason=aligned-minute
+07:00:03.157  [OSF] http clients cleared
+07:00:03.165  [OSF] bind restore ok=true prev=null
+07:00:03.176  [OSF] wl release
+07:00:03.187  [ALIGN] alarm scheduled → in=296s (296816ms) next=07:05:00 every=5m
+07:01:04.643  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+07:01:04.648  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+07:01:04.680  [ALARM] armed • delay=1800000ms triggerAt=46311549 pi=239070736
+07:05:00.161  [OSF] start reason=aligned-minute
+07:05:00.163  [OSF] wl acquire ms=60000
+07:05:00.173  [OSF] net wait validated timeoutMs=15000
+07:05:00.179  [OSF] net=validated → proceed
+07:05:00.181  [OSF] post-validate grace ms=1500
+07:05:01.692  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:05:01.702  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:05:01.714  [OSF] http clients injected (short+long) boundTo=1243
+07:05:01.720  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:05:01.835  [OSF] dns try=1/∞ ok=true
+07:05:01.839  [OSF] fetch attempt 1/2
+07:05:01.846  [GF] start
+07:05:01.855  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:05:01.863  [GF] end ok=false
+07:05:01.870  [OSF] fetch attempt 1 result ok=false
+07:05:01.874  [OSF] sleep before retry ms=1200
+07:05:03.082  [OSF] fetch attempt 2/2
+07:05:03.093  [GF] start
+07:05:03.101  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:05:03.108  [GF] end ok=false
+07:05:03.114  [OSF] fetch attempt 2 result ok=false
+07:05:03.118  [OSF] end ok=false reason=aligned-minute
+07:05:03.122  [OSF] http clients cleared
+07:05:03.127  [OSF] bind restore ok=true prev=null
+07:05:03.135  [OSF] wl release
+07:05:03.143  [ALIGN] alarm scheduled → in=296s (296860ms) next=07:10:00 every=5m
+07:10:00.027  [OSF] start reason=aligned-minute
+07:10:00.033  [OSF] wl acquire ms=60000
+07:10:00.044  [OSF] net wait validated timeoutMs=15000
+07:10:00.055  [OSF] net=validated → proceed
+07:10:00.058  [OSF] post-validate grace ms=1500
+07:10:01.569  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:10:01.575  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:10:01.585  [OSF] http clients injected (short+long) boundTo=1243
+07:10:01.593  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:10:01.823  [OSF] dns try=1/∞ ok=true
+07:10:01.827  [OSF] fetch attempt 1/2
+07:10:01.833  [GF] start
+07:10:01.842  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:10:01.851  [GF] end ok=false
+07:10:01.857  [OSF] fetch attempt 1 result ok=false
+07:10:01.862  [OSF] sleep before retry ms=1200
+07:10:03.069  [OSF] fetch attempt 2/2
+07:10:03.079  [GF] start
+07:10:03.087  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:10:03.095  [GF] end ok=false
+07:10:03.104  [OSF] fetch attempt 2 result ok=false
+07:10:03.110  [OSF] end ok=false reason=aligned-minute
+07:10:03.116  [OSF] http clients cleared
+07:10:03.124  [OSF] bind restore ok=true prev=null
+07:10:03.135  [OSF] wl release
+07:10:03.145  [ALIGN] alarm scheduled → in=296s (296858ms) next=07:15:00 every=5m
+07:15:00.231  [OSF] start reason=aligned-minute
+07:15:00.244  [OSF] wl acquire ms=60000
+07:15:00.248  [OSF] net wait validated timeoutMs=15000
+07:15:00.255  [OSF] net=validated → proceed
+07:15:00.257  [OSF] post-validate grace ms=1500
+07:15:01.768  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:15:01.778  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:15:01.791  [OSF] http clients injected (short+long) boundTo=1243
+07:15:01.799  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:15:01.988  [OSF] dns try=1/∞ ok=true
+07:15:01.993  [OSF] fetch attempt 1/2
+07:15:01.998  [GF] start
+07:15:02.004  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:15:02.011  [GF] end ok=false
+07:15:02.018  [OSF] fetch attempt 1 result ok=false
+07:15:02.023  [OSF] sleep before retry ms=1200
+07:15:03.231  [OSF] fetch attempt 2/2
+07:15:03.239  [GF] start
+07:15:03.247  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:15:03.254  [GF] end ok=false
+07:15:03.263  [OSF] fetch attempt 2 result ok=false
+07:15:03.268  [OSF] end ok=false reason=aligned-minute
+07:15:03.273  [OSF] http clients cleared
+07:15:03.279  [OSF] bind restore ok=true prev=null
+07:15:03.289  [OSF] wl release
+07:15:03.298  [ALIGN] alarm scheduled → in=296s (296705ms) next=07:20:00 every=5m
+07:20:00.231  [OSF] start reason=aligned-minute
+07:20:00.237  [OSF] wl acquire ms=60000
+07:20:00.244  [OSF] net wait validated timeoutMs=15000
+07:20:00.250  [OSF] net=validated → proceed
+07:20:00.252  [OSF] post-validate grace ms=1500
+07:20:01.763  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:20:01.773  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:20:01.784  [OSF] http clients injected (short+long) boundTo=1243
+07:20:01.790  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:20:01.988  [OSF] dns try=1/∞ ok=true
+07:20:01.994  [OSF] fetch attempt 1/2
+07:20:02.002  [GF] start
+07:20:02.013  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:20:02.022  [GF] end ok=false
+07:20:02.030  [OSF] fetch attempt 1 result ok=false
+07:20:02.036  [OSF] sleep before retry ms=1200
+07:20:03.245  [OSF] fetch attempt 2/2
+07:20:03.255  [GF] start
+07:20:03.265  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:20:03.274  [GF] end ok=false
+07:20:03.283  [OSF] fetch attempt 2 result ok=false
+07:20:03.289  [OSF] end ok=false reason=aligned-minute
+07:20:03.295  [OSF] http clients cleared
+07:20:03.302  [OSF] bind restore ok=true prev=null
+07:20:03.314  [OSF] wl release
+07:20:03.322  [ALIGN] alarm scheduled → in=296s (296681ms) next=07:25:00 every=5m
+07:25:00.284  [OSF] start reason=aligned-minute
+07:25:00.297  [OSF] wl acquire ms=60000
+07:25:00.306  [OSF] net wait validated timeoutMs=15000
+07:25:00.312  [OSF] net=validated → proceed
+07:25:00.315  [OSF] post-validate grace ms=1500
+07:25:01.827  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:25:01.838  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:25:01.849  [OSF] http clients injected (short+long) boundTo=1243
+07:25:01.854  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:25:02.134  [OSF] dns try=1/∞ ok=true
+07:25:02.140  [OSF] fetch attempt 1/2
+07:25:02.149  [GF] start
+07:25:02.159  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:25:02.167  [GF] end ok=false
+07:25:02.173  [OSF] fetch attempt 1 result ok=false
+07:25:02.178  [OSF] sleep before retry ms=1200
+07:25:03.385  [OSF] fetch attempt 2/2
+07:25:03.392  [GF] start
+07:25:03.398  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:25:03.404  [GF] end ok=false
+07:25:03.409  [OSF] fetch attempt 2 result ok=false
+07:25:03.413  [OSF] end ok=false reason=aligned-minute
+07:25:03.417  [OSF] http clients cleared
+07:25:03.422  [OSF] bind restore ok=true prev=null
+07:25:03.429  [OSF] wl release
+07:25:03.440  [ALIGN] alarm scheduled → in=296s (296565ms) next=07:30:00 every=5m
+07:30:00.302  [OSF] start reason=aligned-minute
+07:30:00.305  [OSF] wl acquire ms=60000
+07:30:00.315  [OSF] net wait validated timeoutMs=15000
+07:30:00.321  [OSF] net=validated → proceed
+07:30:00.324  [OSF] post-validate grace ms=1500
+07:30:01.834  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:30:01.845  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:30:01.858  [OSF] http clients injected (short+long) boundTo=1243
+07:30:01.865  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:30:02.112  [OSF] dns try=1/∞ ok=true
+07:30:02.117  [OSF] fetch attempt 1/2
+07:30:02.123  [GF] start
+07:30:02.129  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:30:02.137  [GF] end ok=false
+07:30:02.144  [OSF] fetch attempt 1 result ok=false
+07:30:02.149  [OSF] sleep before retry ms=1200
+07:30:03.356  [OSF] fetch attempt 2/2
+07:30:03.363  [GF] start
+07:30:03.370  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:30:03.376  [GF] end ok=false
+07:30:03.381  [OSF] fetch attempt 2 result ok=false
+07:30:03.386  [OSF] end ok=false reason=aligned-minute
+07:30:03.392  [OSF] http clients cleared
+07:30:03.397  [OSF] bind restore ok=true prev=null
+07:30:03.405  [OSF] wl release
+07:30:03.414  [ALIGN] alarm scheduled → in=296s (296589ms) next=07:35:00 every=5m
+07:31:04.701  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+07:31:04.705  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+07:31:04.742  [ALARM] armed • delay=1800000ms triggerAt=48111611 pi=3300954
+07:35:00.335  [OSF] start reason=aligned-minute
+07:35:00.339  [OSF] wl acquire ms=60000
+07:35:00.342  [OSF] net wait validated timeoutMs=15000
+07:35:00.360  [OSF] net=validated → proceed
+07:35:00.363  [OSF] post-validate grace ms=1500
+07:35:01.875  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:35:01.886  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:35:01.899  [OSF] http clients injected (short+long) boundTo=1243
+07:35:01.906  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:35:02.175  [OSF] dns try=1/∞ ok=true
+07:35:02.181  [OSF] fetch attempt 1/2
+07:35:02.189  [GF] start
+07:35:02.199  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:35:02.207  [GF] end ok=false
+07:35:02.214  [OSF] fetch attempt 1 result ok=false
+07:35:02.219  [OSF] sleep before retry ms=1200
+07:35:03.426  [OSF] fetch attempt 2/2
+07:35:03.435  [GF] start
+07:35:03.445  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:35:03.452  [GF] end ok=false
+07:35:03.459  [OSF] fetch attempt 2 result ok=false
+07:35:03.464  [OSF] end ok=false reason=aligned-minute
+07:35:03.469  [OSF] http clients cleared
+07:35:03.476  [OSF] bind restore ok=true prev=null
+07:35:03.484  [OSF] wl release
+07:35:03.494  [ALIGN] alarm scheduled → in=296s (296509ms) next=07:40:00 every=5m
+07:40:00.375  [OSF] start reason=aligned-minute
+07:40:00.380  [OSF] wl acquire ms=60000
+07:40:00.383  [OSF] net wait validated timeoutMs=15000
+07:40:00.389  [OSF] net=validated → proceed
+07:40:00.392  [OSF] post-validate grace ms=1500
+07:40:01.902  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+07:40:01.912  [OSF] bindProcessToNetwork ok=true netHash=1243 prev=null
+07:40:01.922  [OSF] http clients injected (short+long) boundTo=1243
+07:40:01.928  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:40:02.001  [OSF] dns try=1/∞ ok=true
+07:40:02.004  [OSF] fetch attempt 1/2
+07:40:02.008  [GF] start
+07:40:02.016  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:40:02.022  [GF] end ok=false
+07:40:02.026  [OSF] fetch attempt 1 result ok=false
+07:40:02.029  [OSF] sleep before retry ms=1200
+07:40:03.235  [OSF] fetch attempt 2/2
+07:40:03.241  [GF] start
+07:40:03.247  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:40:03.253  [GF] end ok=false
+07:40:03.259  [OSF] fetch attempt 2 result ok=false
+07:40:03.263  [OSF] end ok=false reason=aligned-minute
+07:40:03.266  [OSF] http clients cleared
+07:40:03.271  [OSF] bind restore ok=true prev=null
+07:40:03.277  [OSF] wl release
+07:40:03.287  [ALIGN] alarm scheduled → in=296s (296716ms) next=07:45:00 every=5m
+07:45:00.387  [OSF] start reason=aligned-minute
+07:45:00.454  [OSF] wl acquire ms=60000
+07:45:00.466  [OSF] net wait validated timeoutMs=15000
+07:45:00.476  [OSF] net=validated → proceed
+07:45:00.478  [OSF] post-validate grace ms=1500
+07:45:01.987  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+07:45:01.997  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+07:45:02.015  [OSF] http clients injected (short+long) boundTo=1254
+07:45:02.022  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:45:02.316  [OSF] dns try=1/∞ ok=true
+07:45:02.322  [OSF] fetch attempt 1/2
+07:45:02.331  [GF] start
+07:45:02.342  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:45:02.349  [GF] end ok=false
+07:45:02.355  [OSF] fetch attempt 1 result ok=false
+07:45:02.359  [OSF] sleep before retry ms=1200
+07:45:03.567  [OSF] fetch attempt 2/2
+07:45:03.575  [GF] start
+07:45:03.582  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:45:03.589  [GF] end ok=false
+07:45:03.598  [OSF] fetch attempt 2 result ok=false
+07:45:03.603  [OSF] end ok=false reason=aligned-minute
+07:45:03.606  [OSF] http clients cleared
+07:45:03.612  [OSF] bind restore ok=true prev=null
+07:45:03.619  [OSF] wl release
+07:45:03.628  [ALIGN] alarm scheduled → in=296s (296375ms) next=07:50:00 every=5m
+07:50:00.382  [OSF] start reason=aligned-minute
+07:50:00.385  [OSF] wl acquire ms=60000
+07:50:00.391  [OSF] net wait validated timeoutMs=15000
+07:50:00.398  [OSF] net=validated → proceed
+07:50:00.401  [OSF] post-validate grace ms=1500
+07:50:01.907  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+07:50:01.911  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+07:50:01.915  [OSF] http clients injected (short+long) boundTo=1254
+07:50:01.918  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:50:02.172  [OSF] dns try=1/∞ ok=true
+07:50:02.179  [OSF] fetch attempt 1/2
+07:50:02.186  [GF] start
+07:50:02.190  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:50:02.193  [GF] end ok=false
+07:50:02.196  [OSF] fetch attempt 1 result ok=false
+07:50:02.198  [OSF] sleep before retry ms=1200
+07:50:03.405  [OSF] fetch attempt 2/2
+07:50:03.411  [GF] start
+07:50:03.417  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:50:03.422  [GF] end ok=false
+07:50:03.426  [OSF] fetch attempt 2 result ok=false
+07:50:03.430  [OSF] end ok=false reason=aligned-minute
+07:50:03.434  [OSF] http clients cleared
+07:50:03.439  [OSF] bind restore ok=true prev=null
+07:50:03.445  [OSF] wl release
+07:50:03.455  [ALIGN] alarm scheduled → in=296s (296549ms) next=07:55:00 every=5m
+07:55:00.413  [OSF] start reason=aligned-minute
+07:55:00.417  [OSF] wl acquire ms=60000
+07:55:00.426  [OSF] net wait validated timeoutMs=15000
+07:55:00.433  [OSF] net=validated → proceed
+07:55:00.436  [OSF] post-validate grace ms=1500
+07:55:01.947  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+07:55:01.957  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+07:55:01.967  [OSF] http clients injected (short+long) boundTo=1254
+07:55:01.974  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+07:55:02.267  [OSF] dns try=1/∞ ok=true
+07:55:02.271  [OSF] fetch attempt 1/2
+07:55:02.278  [GF] start
+07:55:02.286  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:55:02.293  [GF] end ok=false
+07:55:02.299  [OSF] fetch attempt 1 result ok=false
+07:55:02.303  [OSF] sleep before retry ms=1200
+07:55:03.511  [OSF] fetch attempt 2/2
+07:55:03.517  [GF] start
+07:55:03.523  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+07:55:03.532  [GF] end ok=false
+07:55:03.537  [OSF] fetch attempt 2 result ok=false
+07:55:03.541  [OSF] end ok=false reason=aligned-minute
+07:55:03.544  [OSF] http clients cleared
+07:55:03.549  [OSF] bind restore ok=true prev=null
+07:55:03.557  [OSF] wl release
+07:55:03.570  [ALIGN] alarm scheduled → in=296s (296434ms) next=08:00:00 every=5m
+08:00:00.392  [OSF] start reason=aligned-minute
+08:00:00.400  [OSF] wl acquire ms=60000
+08:00:00.412  [OSF] net wait validated timeoutMs=15000
+08:00:00.419  [OSF] net=validated → proceed
+08:00:00.422  [OSF] post-validate grace ms=1500
+08:00:01.939  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:00:01.949  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:00:01.960  [OSF] http clients injected (short+long) boundTo=1254
+08:00:01.966  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:00:02.246  [OSF] dns try=1/∞ ok=true
+08:00:02.251  [OSF] fetch attempt 1/2
+08:00:02.260  [GF] start
+08:00:02.269  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:00:02.275  [GF] end ok=false
+08:00:02.281  [OSF] fetch attempt 1 result ok=false
+08:00:02.285  [OSF] sleep before retry ms=1200
+08:00:03.494  [OSF] fetch attempt 2/2
+08:00:03.508  [GF] start
+08:00:03.515  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:00:03.522  [GF] end ok=false
+08:00:03.528  [OSF] fetch attempt 2 result ok=false
+08:00:03.534  [OSF] end ok=false reason=aligned-minute
+08:00:03.540  [OSF] http clients cleared
+08:00:03.546  [OSF] bind restore ok=true prev=null
+08:00:03.554  [OSF] wl release
+08:00:03.566  [ALIGN] alarm scheduled → in=296s (296439ms) next=08:05:00 every=5m
+08:01:05.391  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+08:01:05.395  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+08:01:05.451  [ALARM] armed • delay=1800000ms triggerAt=49912321 pi=173630887
+08:05:00.398  [OSF] start reason=aligned-minute
+08:05:00.489  [OSF] wl acquire ms=60000
+08:05:00.495  [OSF] net wait validated timeoutMs=15000
+08:05:00.506  [OSF] net=validated → proceed
+08:05:00.510  [OSF] post-validate grace ms=1500
+08:05:02.020  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:05:02.033  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:05:02.053  [OSF] http clients injected (short+long) boundTo=1254
+08:05:02.061  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:05:02.305  [OSF] dns try=1/∞ ok=true
+08:05:02.307  [OSF] fetch attempt 1/2
+08:05:02.312  [GF] start
+08:05:02.319  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:05:02.325  [GF] end ok=false
+08:05:02.331  [OSF] fetch attempt 1 result ok=false
+08:05:02.335  [OSF] sleep before retry ms=1200
+08:05:03.543  [OSF] fetch attempt 2/2
+08:05:03.550  [GF] start
+08:05:03.557  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:05:03.567  [GF] end ok=false
+08:05:03.574  [OSF] fetch attempt 2 result ok=false
+08:05:03.580  [OSF] end ok=false reason=aligned-minute
+08:05:03.586  [OSF] http clients cleared
+08:05:03.593  [OSF] bind restore ok=true prev=null
+08:05:03.604  [OSF] wl release
+08:05:03.613  [ALIGN] alarm scheduled → in=296s (296390ms) next=08:10:00 every=5m
+08:10:00.420  [OSF] start reason=aligned-minute
+08:10:00.423  [OSF] wl acquire ms=60000
+08:10:00.431  [OSF] net wait validated timeoutMs=15000
+08:10:00.436  [OSF] net=validated → proceed
+08:10:00.438  [OSF] post-validate grace ms=1500
+08:10:01.947  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:10:01.960  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:10:01.976  [OSF] http clients injected (short+long) boundTo=1254
+08:10:01.984  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:10:02.277  [OSF] dns try=1/∞ ok=true
+08:10:02.282  [OSF] fetch attempt 1/2
+08:10:02.287  [GF] start
+08:10:02.294  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:10:02.300  [GF] end ok=false
+08:10:02.305  [OSF] fetch attempt 1 result ok=false
+08:10:02.309  [OSF] sleep before retry ms=1200
+08:10:03.516  [OSF] fetch attempt 2/2
+08:10:03.523  [GF] start
+08:10:03.529  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:10:03.534  [GF] end ok=false
+08:10:03.539  [OSF] fetch attempt 2 result ok=false
+08:10:03.544  [OSF] end ok=false reason=aligned-minute
+08:10:03.547  [OSF] http clients cleared
+08:10:03.553  [OSF] bind restore ok=true prev=null
+08:10:03.560  [OSF] wl release
+08:10:03.569  [ALIGN] alarm scheduled → in=296s (296434ms) next=08:15:00 every=5m
+08:15:00.028  [OSF] start reason=aligned-minute
+08:15:00.031  [OSF] wl acquire ms=60000
+08:15:00.043  [OSF] net wait validated timeoutMs=15000
+08:15:00.055  [OSF] net=validated → proceed
+08:15:00.059  [OSF] post-validate grace ms=1500
+08:15:01.570  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:15:01.583  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:15:01.599  [OSF] http clients injected (short+long) boundTo=1254
+08:15:01.605  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:15:01.830  [OSF] dns try=1/∞ ok=true
+08:15:01.832  [OSF] fetch attempt 1/2
+08:15:01.835  [GF] start
+08:15:01.838  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:15:01.841  [GF] end ok=false
+08:15:01.846  [OSF] fetch attempt 1 result ok=false
+08:15:01.850  [OSF] sleep before retry ms=1200
+08:15:03.057  [OSF] fetch attempt 2/2
+08:15:03.064  [GF] start
+08:15:03.071  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:15:03.078  [GF] end ok=false
+08:15:03.084  [OSF] fetch attempt 2 result ok=false
+08:15:03.089  [OSF] end ok=false reason=aligned-minute
+08:15:03.093  [OSF] http clients cleared
+08:15:03.098  [OSF] bind restore ok=true prev=null
+08:15:03.107  [OSF] wl release
+08:15:03.116  [ALIGN] alarm scheduled → in=296s (296887ms) next=08:20:00 every=5m
+08:20:00.406  [OSF] start reason=aligned-minute
+08:20:00.490  [OSF] wl acquire ms=60000
+08:20:00.494  [OSF] net wait validated timeoutMs=15000
+08:20:00.501  [OSF] net=validated → proceed
+08:20:00.503  [OSF] post-validate grace ms=1500
+08:20:02.012  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:20:02.024  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:20:02.038  [OSF] http clients injected (short+long) boundTo=1254
+08:20:02.044  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:20:02.347  [OSF] dns try=1/∞ ok=true
+08:20:02.352  [OSF] fetch attempt 1/2
+08:20:02.358  [GF] start
+08:20:02.368  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:20:02.376  [GF] end ok=false
+08:20:02.381  [OSF] fetch attempt 1 result ok=false
+08:20:02.386  [OSF] sleep before retry ms=1200
+08:20:03.593  [OSF] fetch attempt 2/2
+08:20:03.599  [GF] start
+08:20:03.606  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:20:03.613  [GF] end ok=false
+08:20:03.619  [OSF] fetch attempt 2 result ok=false
+08:20:03.624  [OSF] end ok=false reason=aligned-minute
+08:20:03.627  [OSF] http clients cleared
+08:20:03.633  [OSF] bind restore ok=true prev=null
+08:20:03.641  [OSF] wl release
+08:20:03.650  [ALIGN] alarm scheduled → in=296s (296353ms) next=08:25:00 every=5m
+08:25:00.417  [OSF] start reason=aligned-minute
+08:25:00.430  [OSF] wl acquire ms=60000
+08:25:00.436  [OSF] net wait validated timeoutMs=15000
+08:25:00.451  [OSF] net=validated → proceed
+08:25:00.453  [OSF] post-validate grace ms=1500
+08:25:01.965  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:25:01.977  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:25:01.993  [OSF] http clients injected (short+long) boundTo=1254
+08:25:02.000  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:25:02.305  [OSF] dns try=1/∞ ok=true
+08:25:02.314  [OSF] fetch attempt 1/2
+08:25:02.323  [GF] start
+08:25:02.332  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:25:02.340  [GF] end ok=false
+08:25:02.348  [OSF] fetch attempt 1 result ok=false
+08:25:02.354  [OSF] sleep before retry ms=1200
+08:25:03.566  [OSF] fetch attempt 2/2
+08:25:03.578  [GF] start
+08:25:03.587  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:25:03.595  [GF] end ok=false
+08:25:03.602  [OSF] fetch attempt 2 result ok=false
+08:25:03.609  [OSF] end ok=false reason=aligned-minute
+08:25:03.613  [OSF] http clients cleared
+08:25:03.619  [OSF] bind restore ok=true prev=null
+08:25:03.627  [OSF] wl release
+08:25:03.637  [ALIGN] alarm scheduled → in=296s (296367ms) next=08:30:00 every=5m
+08:30:00.429  [OSF] start reason=aligned-minute
+08:30:00.492  [OSF] wl acquire ms=60000
+08:30:00.498  [OSF] net wait validated timeoutMs=15000
+08:30:00.504  [OSF] net=validated → proceed
+08:30:00.506  [OSF] post-validate grace ms=1500
+08:30:02.014  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:30:02.024  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:30:02.030  [OSF] http clients injected (short+long) boundTo=1254
+08:30:02.033  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:30:02.149  [OSF] dns try=1/∞ ok=true
+08:30:02.152  [OSF] fetch attempt 1/2
+08:30:02.154  [GF] start
+08:30:02.157  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:30:02.162  [GF] end ok=false
+08:30:02.164  [OSF] fetch attempt 1 result ok=false
+08:30:02.166  [OSF] sleep before retry ms=1200
+08:30:03.372  [OSF] fetch attempt 2/2
+08:30:03.378  [GF] start
+08:30:03.384  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:30:03.389  [GF] end ok=false
+08:30:03.394  [OSF] fetch attempt 2 result ok=false
+08:30:03.399  [OSF] end ok=false reason=aligned-minute
+08:30:03.404  [OSF] http clients cleared
+08:30:03.409  [OSF] bind restore ok=true prev=null
+08:30:03.417  [OSF] wl release
+08:30:03.426  [ALIGN] alarm scheduled → in=296s (296577ms) next=08:35:00 every=5m
+08:31:05.464  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+08:31:05.468  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+08:31:05.501  [ALARM] armed • delay=1800000ms triggerAt=51712370 pi=85006906
+08:35:00.421  [OSF] start reason=aligned-minute
+08:35:00.496  [OSF] wl acquire ms=60000
+08:35:00.501  [OSF] net wait validated timeoutMs=15000
+08:35:00.508  [OSF] net=validated → proceed
+08:35:00.511  [OSF] post-validate grace ms=1500
+08:35:02.023  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:35:02.035  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:35:02.049  [OSF] http clients injected (short+long) boundTo=1254
+08:35:02.056  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:35:02.342  [OSF] dns try=1/∞ ok=true
+08:35:02.345  [OSF] fetch attempt 1/2
+08:35:02.347  [GF] start
+08:35:02.351  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:35:02.354  [GF] end ok=false
+08:35:02.357  [OSF] fetch attempt 1 result ok=false
+08:35:02.359  [OSF] sleep before retry ms=1200
+08:35:03.565  [OSF] fetch attempt 2/2
+08:35:03.570  [GF] start
+08:35:03.576  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:35:03.581  [GF] end ok=false
+08:35:03.586  [OSF] fetch attempt 2 result ok=false
+08:35:03.589  [OSF] end ok=false reason=aligned-minute
+08:35:03.592  [OSF] http clients cleared
+08:35:03.595  [OSF] bind restore ok=true prev=null
+08:35:03.600  [OSF] wl release
+08:35:03.611  [ALIGN] alarm scheduled → in=296s (296394ms) next=08:40:00 every=5m
+08:40:00.418  [OSF] start reason=aligned-minute
+08:40:00.426  [OSF] wl acquire ms=60000
+08:40:00.430  [OSF] net wait validated timeoutMs=15000
+08:40:00.436  [OSF] net=validated → proceed
+08:40:00.439  [OSF] post-validate grace ms=1500
+08:40:01.954  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:40:01.963  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:40:01.971  [OSF] http clients injected (short+long) boundTo=1254
+08:40:01.974  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:40:02.234  [OSF] dns try=1/∞ ok=true
+08:40:02.238  [OSF] fetch attempt 1/2
+08:40:02.242  [GF] start
+08:40:02.249  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:40:02.255  [GF] end ok=false
+08:40:02.259  [OSF] fetch attempt 1 result ok=false
+08:40:02.262  [OSF] sleep before retry ms=1200
+08:40:03.466  [OSF] fetch attempt 2/2
+08:40:03.469  [GF] start
+08:40:03.476  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:40:03.481  [GF] end ok=false
+08:40:03.485  [OSF] fetch attempt 2 result ok=false
+08:40:03.488  [OSF] end ok=false reason=aligned-minute
+08:40:03.489  [OSF] http clients cleared
+08:40:03.492  [OSF] bind restore ok=true prev=null
+08:40:03.496  [OSF] wl release
+08:40:03.506  [ALIGN] alarm scheduled → in=296s (296497ms) next=08:45:00 every=5m
+08:45:00.427  [OSF] start reason=aligned-minute
+08:45:00.436  [OSF] wl acquire ms=60000
+08:45:00.440  [OSF] net wait validated timeoutMs=15000
+08:45:00.452  [OSF] net=validated → proceed
+08:45:00.456  [OSF] post-validate grace ms=1500
+08:45:01.964  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:45:01.970  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:45:01.981  [OSF] http clients injected (short+long) boundTo=1254
+08:45:01.986  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:45:02.227  [OSF] dns try=1/∞ ok=true
+08:45:02.232  [OSF] fetch attempt 1/2
+08:45:02.237  [GF] start
+08:45:02.244  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:45:02.250  [GF] end ok=false
+08:45:02.255  [OSF] fetch attempt 1 result ok=false
+08:45:02.258  [OSF] sleep before retry ms=1200
+08:45:03.465  [OSF] fetch attempt 2/2
+08:45:03.472  [GF] start
+08:45:03.478  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:45:03.483  [GF] end ok=false
+08:45:03.488  [OSF] fetch attempt 2 result ok=false
+08:45:03.492  [OSF] end ok=false reason=aligned-minute
+08:45:03.496  [OSF] http clients cleared
+08:45:03.501  [OSF] bind restore ok=true prev=null
+08:45:03.508  [OSF] wl release
+08:45:03.517  [ALIGN] alarm scheduled → in=296s (296486ms) next=08:50:00 every=5m
+08:50:00.429  [OSF] start reason=aligned-minute
+08:50:00.433  [OSF] wl acquire ms=60000
+08:50:00.442  [OSF] net wait validated timeoutMs=15000
+08:50:00.447  [OSF] net=validated → proceed
+08:50:00.449  [OSF] post-validate grace ms=1500
+08:50:01.958  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:50:01.968  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:50:01.978  [OSF] http clients injected (short+long) boundTo=1254
+08:50:01.983  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:50:02.229  [OSF] dns try=1/∞ ok=true
+08:50:02.233  [OSF] fetch attempt 1/2
+08:50:02.241  [GF] start
+08:50:02.248  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:50:02.255  [GF] end ok=false
+08:50:02.260  [OSF] fetch attempt 1 result ok=false
+08:50:02.264  [OSF] sleep before retry ms=1200
+08:50:03.468  [OSF] fetch attempt 2/2
+08:50:03.472  [GF] start
+08:50:03.476  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:50:03.480  [GF] end ok=false
+08:50:03.484  [OSF] fetch attempt 2 result ok=false
+08:50:03.487  [OSF] end ok=false reason=aligned-minute
+08:50:03.490  [OSF] http clients cleared
+08:50:03.492  [OSF] bind restore ok=true prev=null
+08:50:03.498  [OSF] wl release
+08:50:03.507  [ALIGN] alarm scheduled → in=296s (296496ms) next=08:55:00 every=5m
+08:55:00.446  [OSF] start reason=aligned-minute
+08:55:00.459  [OSF] wl acquire ms=60000
+08:55:00.476  [OSF] net wait validated timeoutMs=15000
+08:55:00.484  [OSF] net=validated → proceed
+08:55:00.496  [OSF] post-validate grace ms=1500
+08:55:02.013  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+08:55:02.022  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+08:55:02.031  [OSF] http clients injected (short+long) boundTo=1254
+08:55:02.036  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+08:55:02.290  [OSF] dns try=1/∞ ok=true
+08:55:02.298  [OSF] fetch attempt 1/2
+08:55:02.307  [GF] start
+08:55:02.316  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:55:02.324  [GF] end ok=false
+08:55:02.331  [OSF] fetch attempt 1 result ok=false
+08:55:02.335  [OSF] sleep before retry ms=1200
+08:55:03.544  [OSF] fetch attempt 2/2
+08:55:03.551  [GF] start
+08:55:03.558  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+08:55:03.564  [GF] end ok=false
+08:55:03.570  [OSF] fetch attempt 2 result ok=false
+08:55:03.577  [OSF] end ok=false reason=aligned-minute
+08:55:03.582  [OSF] http clients cleared
+08:55:03.589  [OSF] bind restore ok=true prev=null
+08:55:03.599  [OSF] wl release
+08:55:03.609  [ALIGN] alarm scheduled → in=296s (296395ms) next=09:00:00 every=5m
+09:00:00.440  [OSF] start reason=aligned-minute
+09:00:00.446  [OSF] wl acquire ms=60000
+09:00:00.452  [OSF] net wait validated timeoutMs=15000
+09:00:00.457  [OSF] net=validated → proceed
+09:00:00.459  [OSF] post-validate grace ms=1500
+09:00:01.971  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:00:01.984  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:00:02.003  [OSF] http clients injected (short+long) boundTo=1254
+09:00:02.005  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:00:07.173  [OSF] dns try=1/∞ ok=false
+09:00:08.081  [OSF] dns try=2/∞ ok=true
+09:00:08.088  [OSF] fetch attempt 1/2
+09:00:08.097  [GF] start
+09:00:08.106  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:00:08.114  [GF] end ok=false
+09:00:08.121  [OSF] fetch attempt 1 result ok=false
+09:00:08.125  [OSF] sleep before retry ms=1200
+09:00:09.332  [OSF] fetch attempt 2/2
+09:00:09.340  [GF] start
+09:00:09.346  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:00:09.352  [GF] end ok=false
+09:00:09.357  [OSF] fetch attempt 2 result ok=false
+09:00:09.362  [OSF] end ok=false reason=aligned-minute
+09:00:09.366  [OSF] http clients cleared
+09:00:09.372  [OSF] bind restore ok=true prev=null
+09:00:09.380  [OSF] wl release
+09:00:09.390  [ALIGN] alarm scheduled → in=290s (290616ms) next=09:05:00 every=5m
+09:01:05.509  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+09:01:05.512  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+09:01:05.532  [ALARM] armed • delay=1800000ms triggerAt=53512402 pi=106659717
+09:05:00.455  [OSF] start reason=aligned-minute
+09:05:00.459  [OSF] wl acquire ms=60000
+09:05:00.473  [OSF] net wait validated timeoutMs=15000
+09:05:00.492  [OSF] net=validated → proceed
+09:05:00.495  [OSF] post-validate grace ms=1500
+09:05:02.006  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:05:02.019  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:05:02.031  [OSF] http clients injected (short+long) boundTo=1254
+09:05:02.037  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:05:02.253  [OSF] dns try=1/∞ ok=true
+09:05:02.257  [OSF] fetch attempt 1/2
+09:05:02.264  [GF] start
+09:05:02.271  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:05:02.276  [GF] end ok=false
+09:05:02.278  [OSF] fetch attempt 1 result ok=false
+09:05:02.280  [OSF] sleep before retry ms=1200
+09:05:03.485  [OSF] fetch attempt 2/2
+09:05:03.491  [GF] start
+09:05:03.497  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:05:03.505  [GF] end ok=false
+09:05:03.511  [OSF] fetch attempt 2 result ok=false
+09:05:03.516  [OSF] end ok=false reason=aligned-minute
+09:05:03.519  [OSF] http clients cleared
+09:05:03.524  [OSF] bind restore ok=true prev=null
+09:05:03.533  [OSF] wl release
+09:05:03.542  [ALIGN] alarm scheduled → in=296s (296461ms) next=09:10:00 every=5m
+09:10:00.041  [OSF] start reason=aligned-minute
+09:10:00.048  [OSF] wl acquire ms=60000
+09:10:00.056  [OSF] net wait validated timeoutMs=15000
+09:10:00.066  [OSF] net=validated → proceed
+09:10:00.070  [OSF] post-validate grace ms=1500
+09:10:01.583  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:10:01.591  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:10:01.608  [OSF] http clients injected (short+long) boundTo=1254
+09:10:01.616  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:10:01.919  [OSF] dns try=1/∞ ok=true
+09:10:01.927  [OSF] fetch attempt 1/2
+09:10:01.937  [GF] start
+09:10:01.946  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:10:01.953  [GF] end ok=false
+09:10:01.960  [OSF] fetch attempt 1 result ok=false
+09:10:01.966  [OSF] sleep before retry ms=1200
+09:10:03.175  [OSF] fetch attempt 2/2
+09:10:03.181  [GF] start
+09:10:03.189  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:10:03.198  [GF] end ok=false
+09:10:03.207  [OSF] fetch attempt 2 result ok=false
+09:10:03.214  [OSF] end ok=false reason=aligned-minute
+09:10:03.219  [OSF] http clients cleared
+09:10:03.225  [OSF] bind restore ok=true prev=null
+09:10:03.233  [OSF] wl release
+09:10:03.242  [ALIGN] alarm scheduled → in=296s (296761ms) next=09:15:00 every=5m
+09:15:00.017  [OSF] start reason=aligned-minute
+09:15:00.020  [OSF] wl acquire ms=60000
+09:15:00.030  [OSF] net wait validated timeoutMs=15000
+09:15:00.037  [OSF] net=validated → proceed
+09:15:00.039  [OSF] post-validate grace ms=1500
+09:15:01.544  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:15:01.548  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:15:01.552  [OSF] http clients injected (short+long) boundTo=1254
+09:15:01.555  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:15:01.778  [OSF] dns try=1/∞ ok=true
+09:15:01.781  [OSF] fetch attempt 1/2
+09:15:01.785  [GF] start
+09:15:01.790  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:15:01.794  [GF] end ok=false
+09:15:01.797  [OSF] fetch attempt 1 result ok=false
+09:15:01.800  [OSF] sleep before retry ms=1200
+09:15:03.007  [OSF] fetch attempt 2/2
+09:15:03.012  [GF] start
+09:15:03.018  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:15:03.022  [GF] end ok=false
+09:15:03.026  [OSF] fetch attempt 2 result ok=false
+09:15:03.030  [OSF] end ok=false reason=aligned-minute
+09:15:03.033  [OSF] http clients cleared
+09:15:03.037  [OSF] bind restore ok=true prev=null
+09:15:03.042  [OSF] wl release
+09:15:03.051  [ALIGN] alarm scheduled → in=296s (296952ms) next=09:20:00 every=5m
+09:20:00.445  [OSF] start reason=aligned-minute
+09:20:00.461  [OSF] wl acquire ms=60000
+09:20:00.467  [OSF] net wait validated timeoutMs=15000
+09:20:00.473  [OSF] net=validated → proceed
+09:20:00.475  [OSF] post-validate grace ms=1500
+09:20:01.987  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:20:01.993  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:20:02.004  [OSF] http clients injected (short+long) boundTo=1254
+09:20:02.010  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:20:02.251  [OSF] dns try=1/∞ ok=true
+09:20:02.254  [OSF] fetch attempt 1/2
+09:20:02.260  [GF] start
+09:20:02.269  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:20:02.275  [GF] end ok=false
+09:20:02.280  [OSF] fetch attempt 1 result ok=false
+09:20:02.284  [OSF] sleep before retry ms=1200
+09:20:03.492  [OSF] fetch attempt 2/2
+09:20:03.498  [GF] start
+09:20:03.505  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:20:03.509  [GF] end ok=false
+09:20:03.512  [OSF] fetch attempt 2 result ok=false
+09:20:03.516  [OSF] end ok=false reason=aligned-minute
+09:20:03.519  [OSF] http clients cleared
+09:20:03.525  [OSF] bind restore ok=true prev=null
+09:20:03.536  [OSF] wl release
+09:20:03.546  [ALIGN] alarm scheduled → in=296s (296457ms) next=09:25:00 every=5m
+09:25:00.473  [OSF] start reason=aligned-minute
+09:25:00.538  [OSF] wl acquire ms=60000
+09:25:00.541  [OSF] net wait validated timeoutMs=15000
+09:25:00.546  [OSF] net=validated → proceed
+09:25:00.549  [OSF] post-validate grace ms=1500
+09:25:02.058  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:25:02.067  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:25:02.085  [OSF] http clients injected (short+long) boundTo=1254
+09:25:02.092  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:25:02.344  [OSF] dns try=1/∞ ok=true
+09:25:02.348  [OSF] fetch attempt 1/2
+09:25:02.352  [GF] start
+09:25:02.358  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:25:02.363  [GF] end ok=false
+09:25:02.369  [OSF] fetch attempt 1 result ok=false
+09:25:02.373  [OSF] sleep before retry ms=1200
+09:25:03.579  [OSF] fetch attempt 2/2
+09:25:03.588  [GF] start
+09:25:03.596  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:25:03.602  [GF] end ok=false
+09:25:03.608  [OSF] fetch attempt 2 result ok=false
+09:25:03.615  [OSF] end ok=false reason=aligned-minute
+09:25:03.620  [OSF] http clients cleared
+09:25:03.626  [OSF] bind restore ok=true prev=null
+09:25:03.634  [OSF] wl release
+09:25:03.644  [ALIGN] alarm scheduled → in=296s (296359ms) next=09:30:00 every=5m
+09:30:00.467  [OSF] start reason=aligned-minute
+09:30:00.475  [OSF] wl acquire ms=60000
+09:30:00.481  [OSF] net wait validated timeoutMs=15000
+09:30:00.486  [OSF] net=validated → proceed
+09:30:00.489  [OSF] post-validate grace ms=1500
+09:30:01.997  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:30:02.005  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:30:02.018  [OSF] http clients injected (short+long) boundTo=1254
+09:30:02.025  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:30:02.298  [OSF] dns try=1/∞ ok=true
+09:30:02.303  [OSF] fetch attempt 1/2
+09:30:02.311  [GF] start
+09:30:02.320  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:30:02.328  [GF] end ok=false
+09:30:02.334  [OSF] fetch attempt 1 result ok=false
+09:30:02.339  [OSF] sleep before retry ms=1200
+09:30:03.547  [OSF] fetch attempt 2/2
+09:30:03.557  [GF] start
+09:30:03.564  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:30:03.570  [GF] end ok=false
+09:30:03.576  [OSF] fetch attempt 2 result ok=false
+09:30:03.582  [OSF] end ok=false reason=aligned-minute
+09:30:03.586  [OSF] http clients cleared
+09:30:03.592  [OSF] bind restore ok=true prev=null
+09:30:03.601  [OSF] wl release
+09:30:03.610  [ALIGN] alarm scheduled → in=296s (296393ms) next=09:35:00 every=5m
+09:31:05.548  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+09:31:05.552  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+09:31:05.582  [ALARM] armed • delay=1800000ms triggerAt=55312451 pi=79727537
+09:35:00.046  [OSF] start reason=aligned-minute
+09:35:00.059  [OSF] wl acquire ms=60000
+09:35:00.070  [OSF] net wait validated timeoutMs=15000
+09:35:00.078  [OSF] net=validated → proceed
+09:35:00.082  [OSF] post-validate grace ms=1500
+09:35:01.590  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:35:01.602  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:35:01.621  [OSF] http clients injected (short+long) boundTo=1254
+09:35:01.628  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:35:06.804  [OSF] dns try=1/∞ ok=false
+09:35:07.732  [OSF] dns try=2/∞ ok=true
+09:35:07.734  [OSF] fetch attempt 1/2
+09:35:07.741  [GF] start
+09:35:07.751  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:35:07.759  [GF] end ok=false
+09:35:07.767  [OSF] fetch attempt 1 result ok=false
+09:35:07.771  [OSF] sleep before retry ms=1200
+09:35:08.978  [OSF] fetch attempt 2/2
+09:35:08.986  [GF] start
+09:35:08.992  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:35:08.997  [GF] end ok=false
+09:35:09.003  [OSF] fetch attempt 2 result ok=false
+09:35:09.009  [OSF] end ok=false reason=aligned-minute
+09:35:09.014  [OSF] http clients cleared
+09:35:09.021  [OSF] bind restore ok=true prev=null
+09:35:09.032  [OSF] wl release
+09:35:09.042  [ALIGN] alarm scheduled → in=290s (290961ms) next=09:40:00 every=5m
+09:40:00.475  [OSF] start reason=aligned-minute
+09:40:00.479  [OSF] wl acquire ms=60000
+09:40:00.491  [OSF] net wait validated timeoutMs=15000
+09:40:00.496  [OSF] net=validated → proceed
+09:40:00.499  [OSF] post-validate grace ms=1500
+09:40:02.009  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:40:02.022  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:40:02.036  [OSF] http clients injected (short+long) boundTo=1254
+09:40:02.042  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:40:02.262  [OSF] dns try=1/∞ ok=true
+09:40:02.264  [OSF] fetch attempt 1/2
+09:40:02.267  [GF] start
+09:40:02.270  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:40:02.275  [GF] end ok=false
+09:40:02.277  [OSF] fetch attempt 1 result ok=false
+09:40:02.279  [OSF] sleep before retry ms=1200
+09:40:03.484  [OSF] fetch attempt 2/2
+09:40:03.489  [GF] start
+09:40:03.493  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:40:03.499  [GF] end ok=false
+09:40:03.504  [OSF] fetch attempt 2 result ok=false
+09:40:03.507  [OSF] end ok=false reason=aligned-minute
+09:40:03.511  [OSF] http clients cleared
+09:40:03.515  [OSF] bind restore ok=true prev=null
+09:40:03.522  [OSF] wl release
+09:40:03.531  [ALIGN] alarm scheduled → in=296s (296472ms) next=09:45:00 every=5m
+09:45:00.107  [OSF] start reason=aligned-minute
+09:45:00.110  [OSF] wl acquire ms=60000
+09:45:00.113  [OSF] net wait validated timeoutMs=15000
+09:45:00.126  [OSF] net=validated → proceed
+09:45:00.129  [OSF] post-validate grace ms=1500
+09:45:01.642  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+09:45:01.660  [OSF] bindProcessToNetwork ok=true netHash=1254 prev=null
+09:45:01.675  [OSF] http clients injected (short+long) boundTo=1254
+09:45:01.679  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+09:45:01.916  [OSF] dns try=1/∞ ok=true
+09:45:01.918  [OSF] fetch attempt 1/2
+09:45:01.921  [GF] start
+09:45:01.924  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:45:01.927  [GF] end ok=false
+09:45:01.930  [OSF] fetch attempt 1 result ok=false
+09:45:01.932  [OSF] sleep before retry ms=1200
+09:45:03.137  [OSF] fetch attempt 2/2
+09:45:03.143  [GF] start
+09:45:03.148  [GF][ERR] fetchOnce failed: IllegalStateException: Market closed
+09:45:03.153  [GF] end ok=false
+09:45:03.155  [OSF] fetch attempt 2 result ok=false
+09:45:03.158  [OSF] end ok=false reason=aligned-minute
+09:45:03.159  [OSF] http clients cleared
+09:45:03.162  [OSF] bind restore ok=true prev=null
+09:45:03.166  [OSF] wl release
+09:45:03.174  [ALIGN] alarm scheduled → in=296s (296830ms) next=09:50:00 every=5m

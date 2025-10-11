@@ -31,7 +31,7 @@ object ChartRenderer {
         // Linija i točka
         val strokePx: Float = 5f,
         val dotRadiusPx: Float = 6f,
-        val smoothingT: Float = 1.0f,   // ostaje ako ne koristiš monotoni splajn
+        val smoothingT: Float = 1.0f,
 
         // Ref linija
         val refStrokePx: Float = 1f,
@@ -82,9 +82,9 @@ object ChartRenderer {
         val refLabelRightInsetPx: Float = 72f,
 
         // ===== NEW: “combo” zaglađivanje SAMO za crtanje linije =====
-        val smoothMonotone: Boolean = true,     // uključi monotoni Hermite splajn
-        val smoothMedianWindow: Int = 3,         // 0 = off, 3 ili 5 preporučeno
-        val resampleStepPx: Float = 2f           // 0 = off, npr. 2f smanjuje “zubce”
+        val smoothMonotone: Boolean = true,
+        val smoothMedianWindow: Int = 3,
+        val resampleStepPx: Float = 2f
     )
 
     data class Series(
@@ -93,7 +93,11 @@ object ChartRenderer {
         val min: Double?,
         val max: Double?,
         val lastPrice: Double?,
-        val rsi: Double? = null
+        val rsi: Double? = null,
+
+        // NEW: indeks prvog današnjeg 5-min slota (0..slotsPerDay-1)
+        // Npr. ako je [SNAP][OPEN] imao slot5=264 → firstSlotInDay=264
+        val firstSlotInDay: Int? = null
     )
 
     private fun Paint.setupText(sizePx: Float, color: Int, isBold: Boolean = false) = apply {
@@ -103,7 +107,6 @@ object ChartRenderer {
         this.isAntiAlias = true
         this.typeface = if (isBold) Typeface.create(Typeface.DEFAULT, Typeface.BOLD) else Typeface.DEFAULT
     }
-
     fun renderPNG(
         context: Context,
         cfg: Config,
@@ -117,7 +120,8 @@ object ChartRenderer {
             "render start → size=${cfg.widthPx}x${cfg.heightPx}, " +
                     "points=${series.values.count { it != null }}, " +
                     "open=${series.open}, last=${series.lastPrice}, " +
-                    "min=${series.min}, max=${series.max}, rsi=${series.rsi}"
+                    "min=${series.min}, max=${series.max}, rsi=${series.rsi}, " +
+                    "firstSlotInDay=${series.firstSlotInDay}"
         )
 
         val bmp = Bitmap.createBitmap(cfg.widthPx, cfg.heightPx, Bitmap.Config.ARGB_8888)
@@ -152,16 +156,21 @@ object ChartRenderer {
         lo -= extra; hi += extra
         val span = hi - lo
 
-        fun xAt(i: Int): Float {
-            val n = (values.size - 1).coerceAtLeast(1)
-            return area.left + (i.toFloat() / n.toFloat()) * area.width()
+        // === NOVO: x prema slotu u danu ===
+        val slotsPerDay = cfg.slotsPerDay.coerceAtLeast(1)
+        val firstSlot = (series.firstSlotInDay ?: 0).coerceIn(0, slotsPerDay - 1)
+
+        fun xAtSlot(slotInDay: Int): Float {
+            // slotInDay ∈ [0, slotsPerDay-1]
+            val t = slotInDay.toFloat() / (slotsPerDay - 1).coerceAtLeast(1)
+            return area.left + t * area.width()
         }
         fun yAt(v: Double): Float {
             val t = ((v - lo) / span).toFloat()
             return area.bottom - t * area.height()
         }
 
-        // --- ref line + label (tvoje postojeće) ---
+        // --- ref line + label (kao prije) ---
         series.open?.let { op ->
             val refY = yAt(op)
             val refPaint = Paint().apply {
@@ -182,7 +191,7 @@ object ChartRenderer {
             val textW = tPaint.measureText(txt)
             val guard = 12f
             val firstIdx = series.values.indexOfFirst { it != null }
-            val firstX = if (firstIdx >= 0) xAt(firstIdx) else Float.POSITIVE_INFINITY
+            val firstX = if (firstIdx >= 0) xAtSlot(firstSlot) else Float.POSITIVE_INFINITY
             val leftX = area.left + cfg.refLabelOffsetX
             val needsRight = firstX < (leftX + textW + guard)
             val labelX = if (needsRight) {
@@ -192,8 +201,7 @@ object ChartRenderer {
             }
             c.drawText(txt, labelX, refY + cfg.refLabelOffsetY, tPaint)
         }
-
-        // ------------------ DRAW SERIES (nova “combo” cijev) ------------------
+        // ------------------ DRAW SERIES (combo cijev) ------------------
         val linePaint = Paint().apply {
             color = cfg.line
             isAntiAlias = true
@@ -203,12 +211,17 @@ object ChartRenderer {
             strokeJoin = Paint.Join.ROUND
         }
 
-        // 1) Skupi (x,y) kroz nenull vrijednosti
+        // 1) Skupi (x,y) kroz nenull vrijednosti; x prema slotu u danu
         val xyRaw = ArrayList<PointF>(values.size)
+        var k = 0 // ordinal nenull točke unutar dana
         for (i in values.indices) {
             val v = values[i] ?: continue
-            xyRaw.add(PointF(xAt(i), yAt(v)))
+            val slotInDay = (firstSlot + k) % slotsPerDay
+            xyRaw.add(PointF(xAtSlot(slotInDay), yAt(v)))
+            k++
         }
+        val filledCount = k
+        val lastSlotInDay = if (filledCount > 0) (firstSlot + filledCount - 1) % slotsPerDay else firstSlot
 
         // Ako nema dovoljno točaka, preskoči crtanje
         if (xyRaw.size >= 2) {
@@ -222,7 +235,7 @@ object ChartRenderer {
             val xySampled =
                 if (cfg.resampleStepPx > 0f) resampleByXStep(xyFiltered, cfg.resampleStepPx) else xyFiltered
 
-            // 4) Monotoni Hermite Bezier ili tvoja Catmull-Rom varijanta
+            // 4) Monotoni Hermite Bezier ili Catmull-Rom
             val path =
                 if (cfg.smoothMonotone && xySampled.size >= 2) buildMonotoneBezierPath(xySampled)
                 else buildCatmullRomPath(xySampled, cfg.smoothingT)
@@ -230,12 +243,11 @@ object ChartRenderer {
             c.drawPath(path, linePaint)
         }
 
-        // --- last dot (ne diramo) ---
+        // --- last dot (x prema lastSlotInDay) ---
         run {
-            val lastIdx = values.indexOfLast { it != null }
-            if (lastIdx >= 0) {
-                val lastV = values[lastIdx]!!
-                val lastX = xAt(lastIdx)
+            if (filledCount > 0) {
+                val lastV = values.last { it != null }!!
+                val lastX = xAtSlot(lastSlotInDay)
                 val lastY = yAt(lastV)
                 val dotPaint = Paint().apply {
                     color = cfg.line
@@ -246,7 +258,7 @@ object ChartRenderer {
             }
         }
 
-        // --- Min/Max vodilice + tekst (ne mijenjamo izgled) ---
+        // --- Min/Max vodilice + tekst (kao prije) ---
         run {
             val minVal = series.min
             val maxVal = series.max
@@ -288,7 +300,6 @@ object ChartRenderer {
                 }
             }
         }
-
         // --- header (kao prije) ---
         series.lastPrice?.let { cur ->
             val pricePaint = Paint().setupText(cfg.priceTextPx, cfg.headerText, true)
@@ -297,7 +308,11 @@ object ChartRenderer {
                 val delta = cur - op
                 val pct = if (op != 0.0) (delta / op) * 100.0 else 0.0
                 val deltaPaint = Paint().setupText(cfg.deltaTextPx, if (delta >= 0) cfg.deltaPos else cfg.deltaNeg, false)
-                val deltaTxt = String.format("%+.2f%%   %s", pct, if (abs(delta) >= 1000) String.format("%,.2f", delta) else String.format("%.2f", delta))
+                val deltaTxt = String.format(
+                    "%+.2f%%   %s",
+                    pct,
+                    if (abs(delta) >= 1000) String.format("%,.2f", delta) else String.format("%.2f", delta)
+                )
                 c.drawText(deltaTxt, cfg.deltaX, cfg.deltaY, deltaPaint)
             }
         }
@@ -324,7 +339,7 @@ object ChartRenderer {
         return bos.toByteArray()
     }
 
-    // ===== Helpers: Catmull-Rom (tvoje dosadašnje ponašanje) =====
+    // ===== Helpers: Catmull-Rom =====
     private fun buildCatmullRomPath(points: List<PointF>, tension: Float): Path {
         val path = Path()
         if (points.isEmpty()) return path
@@ -348,7 +363,7 @@ object ChartRenderer {
         return path
     }
 
-    // ===== NEW: Median filter (window 3/5/…; rubove držimo kao original) =====
+    // ===== NEW: Median filter =====
     private fun medianFilterPoints(points: List<PointF>, window: Int): List<PointF> {
         if (points.size <= 2 || window < 3) return points
         val w = if (window % 2 == 1) window else window + 1
@@ -366,7 +381,7 @@ object ChartRenderer {
         return out
     }
 
-    // ===== NEW: Resampling po X-koraku (ekran) =====
+    // ===== NEW: Resampling po X-koraku =====
     private fun resampleByXStep(points: List<PointF>, stepPx: Float): List<PointF> {
         if (points.size <= 2 || stepPx <= 0f) return points
         val out = ArrayList<PointF>(points.size)
@@ -385,7 +400,7 @@ object ChartRenderer {
         return out
     }
 
-    // ===== NEW: Monotoni kubični Hermite (Fritsch–Carlson) → Bezier path =====
+    // ===== NEW: Monotoni kubični Hermite (Fritsch–Carlson) → Bezier =====
     private fun buildMonotoneBezierPath(points: List<PointF>): Path {
         val n = points.size
         val path = Path()
@@ -400,7 +415,6 @@ object ChartRenderer {
         val d = FloatArray(n - 1) { (y[it + 1] - y[it]) / (x[it + 1] - x[it]).coerceAtLeast(1e-6f) }
         val m = FloatArray(n)
 
-        // početni nagibi – srednja vrijednost, ali čuvamo monotoniju
         m[0] = d[0]
         m[n - 1] = d[n - 2]
         for (i in 1 until n - 1) {
@@ -411,7 +425,6 @@ object ChartRenderer {
             }
         }
 
-        // Fritsch–Carlson clamp: spriječi overshoot
         for (i in 0 until n - 1) {
             if (d[i] == 0f) {
                 m[i] = 0f

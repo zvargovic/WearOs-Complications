@@ -1,7 +1,8 @@
 package com.example.complicationprovider.data
+
 import com.example.complicationprovider.tiles.ChartRenderer
 import com.example.complicationprovider.tiles.TilePngCache
-import com.example.complicationprovider.data.SnapshotStore
+import com.example.complicationprovider.util.FileLogger
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.LinkProperties
@@ -75,12 +76,15 @@ object OneShotFetcher {
      */
     suspend fun run(context: Context, reason: String = "manual"): Boolean {
         val now = System.currentTimeMillis()
+        FileLogger.writeLine("[OSF] start reason=$reason")
+
         if (now - lastRunMs < DEBOUNCE_WINDOW_MS) {
-            Log.i(TAG, "Debounce: ignoring trigger '$reason' (last run ${now - lastRunMs}ms ago)")
+            val delta = now - lastRunMs
+            FileLogger.writeLine("[OSF][DEBOUNCE] skip (last=${delta}ms ago, window=${DEBOUNCE_WINDOW_MS}ms)")
+            Log.i(TAG, "Debounce: ignoring trigger '$reason' (last run ${delta}ms ago)")
             return false
         }
         lastRunMs = now
-
         Log.d(TAG, "triggered by $reason")
 
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -89,19 +93,27 @@ object OneShotFetcher {
         }
 
         Log.d(TAG, "Acquire wakelock ($reason) for ${WAKE_TIMEOUT_MS}ms")
+        FileLogger.writeLine("[OSF] wl acquire ms=$WAKE_TIMEOUT_MS")
         wl.acquire(WAKE_TIMEOUT_MS)
         try {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             // 1) Čekaj VALIDATED mrežu s ispravnim transportom / iface
+            FileLogger.writeLine("[OSF] net wait validated timeoutMs=$NETWORK_WAIT_TIMEOUT_MS")
             val net = awaitValidatedUsableNetwork(context, NETWORK_WAIT_TIMEOUT_MS)
             if (net == null) {
+                FileLogger.writeLine("[OSF] net=timeout (no validated network)")
                 Log.w(TAG, "No validated/usable network within ${NETWORK_WAIT_TIMEOUT_MS}ms")
                 return false
+            } else {
+                FileLogger.writeLine("[OSF] net=validated → proceed")
             }
 
             // 2) Kratki grace nakon validacije
-            if (POST_VALIDATE_GRACE_MS > 0) delay(POST_VALIDATE_GRACE_MS)
+            if (POST_VALIDATE_GRACE_MS > 0) {
+                FileLogger.writeLine("[OSF] post-validate grace ms=$POST_VALIDATE_GRACE_MS")
+                delay(POST_VALIDATE_GRACE_MS)
+            }
 
             // 3) Log LinkProperties + DNS liste
             logLinkProperties(cm, net)
@@ -109,69 +121,84 @@ object OneShotFetcher {
             // 4) Privremeno bind proces na tu mrežu (i zapamti prijašnju)
             val prev = cm.getBoundNetworkForProcess()
             val boundOk = cm.bindProcessToNetwork(net)
+            FileLogger.writeLine("[OSF] bindProcessToNetwork ok=$boundOk netHash=${net.hashCode()} prev=${prev?.hashCode()}")
             Log.d(TAG, "bindProcessToNetwork(${net.hashCode()}) -> $boundOk")
+
             // >>> per-run OkHttp klijenti vezani na ovaj 'net'
             val cm2 = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val shortClient = com.example.complicationprovider.net.LoggedHttp.makeShortClient(cm2, net)
             val longClient  = com.example.complicationprovider.net.LoggedHttp.makeLongClient(cm2, net)
             com.example.complicationprovider.data.GoldFetcher.setHttpClient(longClient, shortClient)
-// <<<
+            FileLogger.writeLine("[OSF] http clients injected (short+long) boundTo=${net.hashCode()}")
 
             try {
                 // 5) DNS preflight – pokušavaj dok ne prođe (ili do max pokušaja ako je >0)
+                FileLogger.writeLine("[OSF] dns preflight start hosts=${DNS_PREFLIGHT_HOSTS.joinToString()}")
                 var tries = 0
                 val maxTxt = if (MAX_DNS_PREFLIGHT_TRIES <= 0) "∞" else MAX_DNS_PREFLIGHT_TRIES.toString()
                 while (true) {
                     tries++
                     val ok = dnsPreflight()
+                    FileLogger.writeLine("[OSF] dns try=$tries/$maxTxt ok=$ok")
                     Log.i(TAG, "DNS preflight: $ok (try $tries/$maxTxt)")
                     if (ok) break
                     if (MAX_DNS_PREFLIGHT_TRIES > 0 && tries >= MAX_DNS_PREFLIGHT_TRIES) {
+                        FileLogger.writeLine("[OSF][DNS] abort after $tries tries")
                         Log.w(TAG, "DNS preflight failed → abort this run")
                         return false
                     }
                     delay(DNS_PREFLIGHT_RETRY_SLEEP_MS)
                 }
 
-                // 6) Pokušaji fetcha
                 // 6) Pokušaji fetcha — prekini čim jedan uspije
                 var ok = false
                 for (attempt in 1..MAX_FETCH_ATTEMPTS) {
+                    FileLogger.writeLine("[OSF] fetch attempt $attempt/$MAX_FETCH_ATTEMPTS")
                     Log.i(TAG, "Fetch attempt $attempt/$MAX_FETCH_ATTEMPTS (boundNetwork=$boundOk)")
                     ok = GoldFetcher.fetchOnce(context)
+                    FileLogger.writeLine("[OSF] fetch attempt $attempt result ok=$ok")
                     if (ok) break
-                    if (attempt < MAX_FETCH_ATTEMPTS) delay(RETRY_SLEEP_MS)
+                    if (attempt < MAX_FETCH_ATTEMPTS) {
+                        FileLogger.writeLine("[OSF] sleep before retry ms=$RETRY_SLEEP_MS")
+                        delay(RETRY_SLEEP_MS)
+                    }
                 }
 
                 // 7) Ako uspjeh – pingni komplikacije i tileove
                 if (ok) {
+                    FileLogger.writeLine("[OSF] post-fetch UI nudge (complications+tiles)")
                     requestUpdateAllComplications(context)
                     runCatching {
                         SpotTileService.requestUpdate(context)
-                        TileService.getUpdater(context)
-                            .requestUpdate(SparklineTileService::class.java)
+                        TileService.getUpdater(context).requestUpdate(SparklineTileService::class.java)
                         EmaSmaTileService.requestUpdate(context)
                         Log.d(TAG, "Tile update requested")
                     }.onFailure {
+                        FileLogger.writeLine("[OSF][TILE][ERR] ${it.message}")
                         Log.w(TAG, "Tile update request failed: ${it.message}")
                     }
                 }
                 Log.d(TAG, "Fetch finished (ok=$ok)")
+                FileLogger.writeLine("[OSF] end ok=$ok reason=$reason")
                 return ok
             } finally {
                 // >>> očisti per-run klijente
                 com.example.complicationprovider.data.GoldFetcher.setHttpClient(null, null)
+                FileLogger.writeLine("[OSF] http clients cleared")
                 // 8) Vrati bind na prijašnje stanje
                 val restored = cm.bindProcessToNetwork(prev)
+                FileLogger.writeLine("[OSF] bind restore ok=$restored prev=${prev?.hashCode()}")
                 Log.d(TAG, "bindProcessToNetwork(prev=${prev?.hashCode()}) restore -> $restored")
             }
         } catch (t: Throwable) {
+            FileLogger.writeLine("[OSF][ERR] ${t::class.java.simpleName}: ${t.message}")
             Log.w(TAG, "OneShot fetch failed: ${t.message}", t)
             return false
         } finally {
             if (wl.isHeld) {
-                Log.d(TAG, "Release wakelock")
                 wl.release()
+                FileLogger.writeLine("[OSF] wl release")
+                Log.d(TAG, "Release wakelock")
             }
         }
     }
@@ -254,6 +281,7 @@ object OneShotFetcher {
         val lp = cm.getLinkProperties(net)
         val iface = lp?.interfaceName ?: "?"
         val dns = lp?.dnsServers?.joinToString(", ") { it.hostAddress ?: it.toString() } ?: "n/a"
+        FileLogger.writeLine("[OSF] link iface=$iface dns=[$dns]")
         Log.i(TAG, "Network ${net.hashCode()} LinkProperties: dns=[$dns], iface=$iface")
     }
 
@@ -274,5 +302,4 @@ object OneShotFetcher {
         }
         return true
     }
-
 }

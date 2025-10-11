@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.SystemClock
 import android.text.format.DateFormat
 import android.util.Log
+import com.example.complicationprovider.util.FileLogger
 import java.util.Date
 
 object AlignedFetchScheduler {
@@ -43,23 +44,25 @@ object AlignedFetchScheduler {
         val nowElapsed = SystemClock.elapsedRealtime()
 
         // Zaokruži WALL na sljedeći višekratnik perioda u MINUTAMA (sekunde=0)
-        // 1) u minutama:
         val nowMin = nowWall / 60_000L
-        // 2) sljedeći višekratnik perioda:
         val nextMinMultiple = ((nowMin / periodMin) + 1) * periodMin
-        // 3) natrag u ms (sekunde = 0, ms = 0)
         val nextWall = nextMinMultiple * 60_000L
 
         // Pretvori u ELAPSED referencu (koju koristi AlarmManager ELAPSED_REALTIME_WAKEUP)
         val delayMs = (nextWall - nowWall).coerceAtLeast(0L)
         val nextElapsed = nowElapsed + delayMs
 
-        am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextElapsed, pi)
-
-        val nextTimeStr = DateFormat.format("HH:mm:ss", Date(nextWall))
-        Log.d(
-            TAG,
-            "✅ scheduleNext() → next in ${delayMs / 1000}s → $nextTimeStr (aligned every ${periodMin}m)"
-        )
+        try {
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextElapsed, pi)
+            val nextTimeStr = DateFormat.format("HH:mm:ss", Date(nextWall))
+            Log.d(
+                TAG,
+                "✅ scheduleNext() → next in ${delayMs / 1000}s → $nextTimeStr (aligned every ${periodMin}m)"
+            )
+            FileLogger.writeLine("[ALIGN] alarm scheduled → in=${delayMs / 1000}s (${delayMs}ms) next=$nextTimeStr every=${periodMin}m")
+        } catch (t: Throwable) {
+            Log.w(TAG, "scheduleNext() failed: ${t.message}")
+            FileLogger.writeLine("[ALIGN][ERR] scheduleNext failed → ${t.message}")
+        }
     }
 }

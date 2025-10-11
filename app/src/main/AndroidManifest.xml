@@ -176,6 +176,23 @@
         <receiver
             android:name=".orchestrator.AlignedFetchReceiver"
             android:exported="false" />
+        <!-- BOOT/UPGRADE receiver (već ga imaš — ostavi ga, samo provjeri da je ovako) -->
+        <receiver
+            android:name=".boot.BootUpgradeReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- FETCH alarm receiver -->
+        <receiver
+            android:name=".alarm.FetchAlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <!-- WorkManager (fallback) -->
         <provider

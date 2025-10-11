@@ -10,6 +10,7 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import com.example.complicationprovider.tiles.MarketTileService   // ➕ Tile refresh
+import com.example.complicationprovider.util.FileLogger
 
 private const val TAG = "CompRefresh"
 
@@ -61,8 +62,10 @@ fun scheduleComplicationRefresh(ctx: Context, delayMs: Long) {
     try {
         am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
         Log.d(TAG, "Alarm scheduled in ${delayMs}ms (≈ ${delayMs / 1000}s).")
+        FileLogger.writeLine("[ALARM] armed • delay=${delayMs}ms triggerAt=${triggerAt} pi=${pi.hashCode()}")
     } catch (t: Throwable) {
         Log.w(TAG, "scheduleComplicationRefresh failed: ${t.message}")
+        FileLogger.writeLine("[ALARM][ERR] schedule failed • ${t.message}")
     }
 }
 
@@ -74,9 +77,11 @@ class ComplicationRefreshReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val action = intent?.action.orEmpty()
         Log.d(TAG, "onReceive action=$action")
+        FileLogger.writeLine("[ALARM] fire • action=$action")
 
         when (action) {
             Intent.ACTION_BOOT_COMPLETED -> {
+                FileLogger.writeLine("[ALARM] BOOT_COMPLETED → refreshing complications + Tile")
                 // 1) Samo pingni komplikacije (koriste zadnji snapshot)
                 requestUpdateAllComplications(context)
                 // ➕ osvježi i Tile
@@ -86,10 +91,15 @@ class ComplicationRefreshReceiver : BroadcastReceiver() {
                 scheduleComplicationRefresh(context, mins(WATCHDOG_MIN))
 
                 // (opcionalno) Stari WorkManager fallback
-                try { WorkFallback.schedule(context) } catch (_: Throwable) {}
+                try {
+                    WorkFallback.schedule(context)
+                } catch (_: Throwable) {
+                    FileLogger.writeLine("[ALARM][WARN] WorkFallback.schedule failed")
+                }
             }
 
             ACTION_REFRESH_ALARM -> {
+                FileLogger.writeLine("[ALARM] REFRESH_ALARM tick → refresh complications + Tile")
                 // Watchdog: uvijek nudge-aj komplikacije i Tile
                 requestUpdateAllComplications(context)
                 runCatching { MarketTileService.requestUpdate(context) }
@@ -102,11 +112,13 @@ class ComplicationRefreshReceiver : BroadcastReceiver() {
             ACTION_MARKET_OPEN_TICK,
             ACTION_MARKET_CLOSE_TICK -> {
                 Log.d(TAG, "Market tick → requestUpdateAllComplications() + Tile")
+                FileLogger.writeLine("[ALARM] MARKET_TICK → repaint only")
                 requestUpdateAllComplications(context)
                 runCatching { MarketTileService.requestUpdate(context) }
             }
 
             else -> {
+                FileLogger.writeLine("[ALARM] other intent → refresh + rearm watchdog")
                 // Ostali intenti: samo lagani nudge i re-armaj watchdog
                 requestUpdateAllComplications(context)
                 runCatching { MarketTileService.requestUpdate(context) }

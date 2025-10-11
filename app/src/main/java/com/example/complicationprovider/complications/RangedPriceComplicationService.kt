@@ -15,10 +15,14 @@ import com.example.complicationprovider.ACTION_MARKET_CLOSE_TICK
 import com.example.complicationprovider.ACTION_MARKET_OPEN_TICK
 import com.example.complicationprovider.R
 import com.example.complicationprovider.data.SnapshotStore
+import com.example.complicationprovider.data.SettingsRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.*
 import java.util.Date
 import java.util.Locale
@@ -26,35 +30,22 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * EUR ranged komplikacija (čita direktno iz SnapshotStore/DataStore):
- *  - OPEN  → RangedValue 0..100: value = pozicija SPOT cijene unutar DANAŠNJEG [min..max]
- *            (tekst = "XX%"; bez min/max labela)
- *            SPOT = zadnja non-null točka iz 5-min serije (danas).
- *  - CLOSED→ RangedValue countdown C→O ili SHORT_TEXT (tekst = vrijeme do otvaranja)
- *
- * Market kalendar: OTVORENO pon–pet (00:00–24:00) po UTC; vikend zatvoreno.
+ * EUR ranged komplikacija:
+ *  - OPEN  → RangedValue = pozicija serijskog SPOT-a unutar današnjeg [min..max]
+ *            SHORT_TEXT  = uvijek svježi konsenzus (zadnji snapshot iz DataStorea, fallback na seriju)
+ *  - CLOSED→ RangedValue countdown C→O ili SHORT_TEXT
  */
 class RangedPriceComplicationService : ComplicationDataSourceService() {
 
     private val TAG = "RangedPriceComp"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    // Ako tvoj watchface crta ranged “obrnuto”, prebaciti na true
+    // Ako tvoj watchface crta ranged “obrnuto”, prebaci na true
     private val INVERT_ARC = false
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? = when (type) {
-        ComplicationType.RANGED_VALUE -> {
-            // Preview OPEN (pozicija ~40%)
-            rangedOpenNormalized(
-                spot = 3213.0,
-                dayMin = 3200.0,
-                dayMax = 3240.0
-            )
-        }
-        ComplicationType.SHORT_TEXT -> {
-            // Preview CLOSED
-            shortClosed("1h 23m")
-        }
+        ComplicationType.RANGED_VALUE -> rangedOpenNormalized(3213.0, 3200.0, 3240.0)
+        ComplicationType.SHORT_TEXT   -> shortClosed("1h 23m")
         else -> null
     }
 
@@ -63,7 +54,7 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
         listener: ComplicationRequestListener
     ) {
         val type = request.complicationType
-        val app = applicationContext
+        val app  = applicationContext
 
         scope.launch {
             try {
@@ -72,7 +63,7 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
                 val marketOpen = isMarketOpenUtc(nowUtc)
 
                 if (!marketOpen) {
-                    val nextOpenMs = nextOpenUtcMs(nowUtc)
+                    val nextOpenMs  = nextOpenUtcMs(nowUtc)
                     val lastCloseMs = lastCloseUtcMs(nowUtc)
                     scheduleTick(app, ACTION_MARKET_OPEN_TICK, nextOpenMs)
 
@@ -83,7 +74,7 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
                             nextOpenMs = nextOpenMs
                         )
                         ComplicationType.SHORT_TEXT -> shortClosed(
-                            timeToOpenText = humanTimeTo(nextOpenMs - System.currentTimeMillis())
+                            humanTimeTo(nextOpenMs - System.currentTimeMillis())
                         )
                         else -> null
                     }
@@ -91,24 +82,49 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
                     return@launch
                 }
 
-                // 2) OPEN → čitaj iz SnapshotStore (današnji zapis)
-                //    Uzimamo 5-min seriju (288) da dohvatimo zadnju non-null kao SPOT.
-                val day = SnapshotStore.get(app, slots = 288)
+                // 2) OPEN → čitaj današnji zapis iz SnapshotStore (5-min serija; 288 slotova)
+                val day = SnapshotStore.get(app, slotsPerDay = 288)
 
+                // Dijagnostika repa serije
                 val dayMin = day.min ?: 0.0
                 val dayMax = day.max ?: 0.0
-                val spot = lastNonNull(day.series) ?: day.open ?: dayMax
+                val lastIdx = day.series.indexOfLast { it != null && it.isFinite() && it > 0.0 }
+                Log.d(
+                    TAG,
+                    "DS tail: lastIdx=$lastIdx " +
+                            "value=${lastIdx.takeIf { it >= 0 }?.let { day.series[it] }} " +
+                            "min=$dayMin max=$dayMax size=${day.series.size}"
+                )
 
-                Log.d(TAG, "OPEN(DataStore) → day=${day.dayKey} spot=$spot min=$dayMin max=$dayMax updated=${day.updatedMs}")
+                // Serijski spot (za luk i kao zadnji fallback)
+                val spotFromSeries = lastNonNull(day.series) ?: day.open ?: dayMax
 
-                // Ako nemamo smislen raspon, malo ga raširi oko spota
-                val (lo, hi) = ensureRange(spot, dayMin, dayMax)
+                // Svježi konsenzus za TEXT:
+                // – pokušaj u roku 500 ms dohvatiti nenult eurConsensus iz DataStorea;
+                // – ako ne dođe, padni na serijski spot.
+                val freshConsensus: Double = withTimeoutOrNull(500) {
+                    SettingsRepo(app).snapshotFlow
+                        .map { it.eurConsensus }
+                        .first { it > 0.0 }
+                } ?: spotFromSeries
+                Log.d(TAG, "Fresh consensus from DataStore = $freshConsensus")
 
+                // Log konteksta
+                val dayKey = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate().toString()
+                Log.d(
+                    TAG,
+                    "OPEN(DataStore) → day=$dayKey spotSeries=$spotFromSeries min=$dayMin max=$dayMax fresh=$freshConsensus updated=${day.updated}"
+                )
+
+                // Ako nemamo smislen raspon, malo ga raširi oko serijskog spota (luk koristi min/max)
+                val (lo, hi) = ensureRange(spotFromSeries, dayMin, dayMax)
+
+                // Gradnja podataka
                 val data = when (type) {
                     ComplicationType.RANGED_VALUE ->
-                        rangedOpenNormalized(spot = spot, dayMin = lo, dayMax = hi)
+                        rangedOpenNormalized(spot = spotFromSeries, dayMin = lo, dayMax = hi)
                     ComplicationType.SHORT_TEXT ->
-                        shortOpen(spot = spot) // € zaokruženi
+                        shortOpen(spot = freshConsensus)
                     else -> null
                 }
 
@@ -141,7 +157,7 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
             lo = pivot - pad
             hi = pivot + pad
         }
-        if (lo > hi) lo = hi.also { _ -> /* swap handled by min/max in builders anyway */ }
+        if (lo > hi) lo = hi
         return lo to hi
     }
 
@@ -156,9 +172,8 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
         val lo = min(dayMin, dayMax)
         val hi = max(dayMin, dayMax)
         val range = (hi - lo).coerceAtLeast(1e-9)
-        val frac = ((spot - lo) / range).coerceIn(0.0, 1.0)   // 0..1
-        val pct  = (frac * 100.0).toInt()                     // 0..100
-
+        val frac = ((spot - lo) / range).coerceIn(0.0, 1.0)
+        val pct  = (frac * 100.0).toInt()
         val drawPct = if (INVERT_ARC) (100 - pct).coerceIn(0, 100) else pct
 
         Log.d(TAG, "rangedOpen(norm DS) → spot=$spot min=$lo max=$hi frac=$frac pct=$pct drawPct=$drawPct")
@@ -166,12 +181,9 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
         val percentText = "$pct%"
 
         return RangedValueComplicationData.Builder(
-            /* value = */ drawPct.toFloat(),
-            /* min   = */ 0f,
-            /* max   = */ 100f,
-            /* text  = */ PlainComplicationText.Builder(percentText).build()
+            drawPct.toFloat(), 0f, 100f,
+            PlainComplicationText.Builder(percentText).build()
         )
-            // Neki watchfaceovi na ranged slotu prikazuju samo 'title' – stavi isto
             .setTitle(PlainComplicationText.Builder(percentText).build())
             .setMonochromaticImage(providerIconOpen())
             .build()
@@ -227,13 +239,11 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
 
     // ---------------- timing helpers (UTC market: Mon–Fri open, weekend closed) ----------------
 
-    /** Otvoreno pon–pet (UTC), zatvoreno sub/ned. */
     private fun isMarketOpenUtc(nowUtc: ZonedDateTime): Boolean {
         val dow = nowUtc.dayOfWeek.value // Mon=1..Sun=7
         return dow in 1..5
     }
 
-    /** Sljedeće otvaranje: prva iduća ponoć (00:00 UTC) koja pada na pon–pet. */
     private fun nextOpenUtcMs(nowUtc: ZonedDateTime): Long {
         var d = nowUtc.toLocalDate()
         while (d.dayOfWeek.value !in 1..5) d = d.plusDays(1)
@@ -241,14 +251,12 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
         return openUtc.toInstant().toEpochMilli()
     }
 
-    /** Sljedeće zatvaranje: iduća ponoć (00:00 UTC). */
     private fun nextCloseUtcMs(nowUtc: ZonedDateTime): Long {
         val nextMidnight = nowUtc.toLocalDate().plusDays(1)
         return ZonedDateTime.of(nextMidnight, LocalTime.MIDNIGHT, ZoneOffset.UTC)
             .toInstant().toEpochMilli()
     }
 
-    /** Zadnje zatvaranje: ponoć nakon zadnjeg radnog dana (petak→subota 00:00). */
     private fun lastCloseUtcMs(nowUtc: ZonedDateTime): Long {
         var d = nowUtc.toLocalDate()
         while (d.dayOfWeek.value !in 1..5) d = d.minusDays(1)
