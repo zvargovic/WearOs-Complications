@@ -27,4 +27,6 @@
     <string name="market_status">Market Status</string>
     <string name="datastore_cleared_warning">⚠️ DataStore has been completely cleared!</string>
 
+    <string name="market_closed_open_in">Market closed — opens at %s</string>
+
 </resources>

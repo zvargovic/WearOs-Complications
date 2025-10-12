@@ -30,6 +30,7 @@
     <string name="comp_spark_name">Eur/h</string>
     <string name="market_status">Market Status</string>
     <string name="datastore_cleared_warning">⚠️ DataStore je potpuno obrisan!</string>
+    <string name="market_closed_open_in">Tržište zatvoreno — otvara za %s</string>
 
 
 </resources>
