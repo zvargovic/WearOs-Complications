@@ -21,11 +21,29 @@ object MarketSession {
         val weekdaysOnly: Boolean = true
     )
 
+    // ======= PUBLIC API tražen =======
+    /** Centralizirani odgovor: je li tržište sada otvoreno. */
+    fun isOpenNow(context: Context): Boolean =
+        isOpenLocal(defaultHours(context))
+
+    /** Centralizirani tekst ETA za "closed" stanje (npr. "12h 30m"). */
+    fun closedEtaText(context: Context): String =
+        closedStatusText(context, defaultHours(context))
+    // =================================
+
+    // Ako želiš kasnije povlačiti satnicu iz nekog repo-a / prefs-a, promijeni samo ovu funkciju.
+    private fun defaultHours(@Suppress("UNUSED_PARAMETER") context: Context) = Hours(
+        openHour = 2, openMinute = 0,
+        closeHour = 2, closeMinute = 0,
+        tzId = "Europe/Zagreb",
+        weekdaysOnly = true
+    )
+
     private fun isWeekday(d: LocalDate) = d.dayOfWeek.value in 1..5
     private fun start(d: LocalDate, z: ZoneId, h: Int, m: Int) =
         ZonedDateTime.of(d, LocalTime.of(h, m), z)
     private fun end(d: LocalDate, z: ZoneId, h: Int, m: Int) =
-        ZonedDateTime.of(d.plusDays(1), LocalTime.of(m = m, hour = h), z)
+        ZonedDateTime.of(d.plusDays(1), LocalTime.of(h, m), z)
 
     /** Je li tržište sada otvoreno (uz poštovanje Mode)? */
     fun isOpenLocal(
