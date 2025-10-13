@@ -28,10 +28,11 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.max
 import kotlin.math.min
+import com.example.complicationprovider.util.MarketSession
 
 /**
  * EUR ranged komplikacija:
- *  - OPEN  → RangedValue = pozicija serijskog SPOT-a unutar današnjeg [min..max]
+ *  - OPEN  → RangedValue = pozicija serijskog SPOT-a unutar današnjeg
  *            SHORT_TEXT  = uvijek svježi konsenzus (zadnji snapshot iz DataStorea, fallback na seriju)
  *  - CLOSED→ RangedValue countdown C→O ili SHORT_TEXT
  */
@@ -58,11 +59,13 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
 
         scope.launch {
             try {
-                // 1) Market timing (UTC)
+                // 1) Market timing (centralizirano)
                 val nowUtc = Instant.now().atZone(ZoneOffset.UTC)
-                val marketOpen = isMarketOpenUtc(nowUtc)
+                val marketOpen = MarketSession.isOpenNow(app)
 
                 if (!marketOpen) {
+                    // i dalje koristimo postojeće UTC helper-e za tick schedule
+                    val nowUtc = Instant.now().atZone(ZoneOffset.UTC)
                     val nextOpenMs  = nextOpenUtcMs(nowUtc)
                     val lastCloseMs = lastCloseUtcMs(nowUtc)
                     scheduleTick(app, ACTION_MARKET_OPEN_TICK, nextOpenMs)
@@ -74,7 +77,7 @@ class RangedPriceComplicationService : ComplicationDataSourceService() {
                             nextOpenMs = nextOpenMs
                         )
                         ComplicationType.SHORT_TEXT -> shortClosed(
-                            humanTimeTo(nextOpenMs - System.currentTimeMillis())
+                            MarketSession.closedEtaText(app)
                         )
                         else -> null
                     }

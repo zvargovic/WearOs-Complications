@@ -507,51 +507,54 @@ object ChartRenderer {
         val c = Canvas(bmp)
         c.drawColor(cfg.bg)
 
-        // --- IKONA U CENTRU + TEKST ODMAH ISPOD IKONE ---
+        // --- IKONA U CENTRU + TEKST ISPOD IKONE ---
         val drawable = ContextCompat.getDrawable(context, iconResId)
         if (drawable != null) {
-            // veličina ikone ~60% kraće dimenzije canvasa
+            // centar canvasa (za luk)
+            val cxCanvas = cfg.widthPx / 2f
+            val cyCanvas = cfg.heightPx / 2f
+
+            // centar ikone (blago podignut)
+            val cxIcon = cxCanvas
+            val cyIcon = cyCanvas - (cfg.heightPx * 0.01f)
             val iconSize = (min(cfg.widthPx, cfg.heightPx) * 0.60f).toInt()
-            val cx = cfg.widthPx / 2f
-            val cy = cfg.heightPx / 2f - (cfg.heightPx * 0.06f)
 
-            val left = (cx - iconSize / 2f).toInt()
-            val top  = (cy - iconSize / 2f).toInt()
-            val right = (cx + iconSize / 2f).toInt()
-            val bottom = (cy + iconSize / 2f).toInt()
-
+            // crtanje ikone
+            val left   = (cxIcon - iconSize / 2f).toInt()
+            val top    = (cyIcon - iconSize / 2f).toInt()
+            val right  = (cxIcon + iconSize / 2f).toInt()
+            val bottom = (cyIcon + iconSize / 2f).toInt()
             drawable.setBounds(left, top, right, bottom)
-            drawable.setAlpha(255)
+            drawable.alpha = 255
             drawable.draw(c)
 
-// --- STATUS TEKST NA LUKU (uz donji rub ekrana) ---
+            // --- STATUS TEKST NA DOLJNJEM LUKU (mirror) ---
             val text = statusText
             val tp = Paint().setupText(cfg.marketTextPx, cfg.marketTextColor, cfg.marketTextBold).apply {
-                textAlign = Paint.Align.LEFT   // bitno za drawTextOnPath + hOffset
+                textAlign = Paint.Align.LEFT
                 if (cfg.marketTextShadow) setShadowLayer(3f, 0f, 0f, 0x80000000.toInt())
+                letterSpacing = 0f
             }
 
-// Geometrija kružnice: polumjer malo manji od ruba da ne reže tekst
-
-            val inset = 30f                    // uvučenost luka od ruba (povećaj da ide više gore)
+            val inset = 40f
             val r = (min(cfg.widthPx, cfg.heightPx) / 2f) - inset
 
-// Donji luk: od ~200° do ~340° (0° je desno, + ide u smjeru kazaljke)
-            val startDeg = 200f                // pomak lijevo/desno
-            val sweepDeg = 140f                // širina luka (120–160 tipično)
-            val arcRect = RectF(cx - r, cy - r, cx + r, cy + r)
+            val textW = tp.measureText(text)
+            val padPx = 40f
+            val desiredSweepDeg = Math.toDegrees(((textW + padPx) / r).toDouble()).toFloat()
+
+            // NEGATIVAN sweep = “zrcalno”, i centrirano oko 270°
+            val sweepDeg = -desiredSweepDeg.coerceIn(120f, 210f)
+            val startDeg = 90f + (kotlin.math.abs(sweepDeg) / 2f)
+
+            val arcRect = RectF(cxCanvas - r, cyCanvas - r, cxCanvas + r, cyCanvas + r)
             val arc = Path().apply { addArc(arcRect, startDeg, sweepDeg) }
 
-// Centriraj tekst po luku
-            val textW = tp.measureText(text)
-            val arcLen = (Math.toRadians(sweepDeg.toDouble()) * r).toFloat()
+            val arcLen = (Math.toRadians(kotlin.math.abs(sweepDeg).toDouble()) * r).toFloat()
             val hOffset = ((arcLen - textW) / 2f).coerceAtLeast(0f)
-
-// Vertikalni offset: negativno = prema centru ekrana
             val fm = tp.fontMetrics
-            val vOffset = -fm.descent + 4f
+            val vOffset = -fm.ascent + 2f
 
-// Crtaj tekst po putanji
             c.drawTextOnPath(text, arc, hOffset, vOffset, tp)
         }
 

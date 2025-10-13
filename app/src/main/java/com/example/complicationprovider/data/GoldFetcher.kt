@@ -23,6 +23,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlin.math.abs
+import com.example.complicationprovider.util.MarketSession
 
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
@@ -93,11 +94,10 @@ object GoldFetcher {
     private suspend fun performFetch(context: Context) {
         val repo = SettingsRepo(context)
 
-        val runNow = isMarketOpenUtc() || !didFirstFetch
+        val runNow = MarketSession.isOpenNow(context) || !didFirstFetch
         if (!runNow) {
-            val now = ZonedDateTime.now(ZoneOffset.UTC)
-            val until = timeUntilMarketOpen(now)
-            Log.i(TAG, "[MARKET] Closed (UTC ${now.dayOfWeek} ${now.toLocalTime()}) — skip, until: $until")
+            val until = MarketSession.closedEtaText(context)
+            Log.i(TAG, "[MARKET] Closed — skip, until: $until")
             throw IllegalStateException("Market closed")
         }
 
@@ -402,27 +402,6 @@ object GoldFetcher {
         Log.i(TAG, "[IND][USD] SMA$pShort=${d2(usdSma9)}  SMA$pLong=${d2(usdSma50)}")
     }
 
-    // ——— market status ———
-    //private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean =
-       // when (now.dayOfWeek) {
-            //DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> false
-           //else -> true
-        //}
-    // ——— market status (force open for testing) ———
-    private fun isMarketOpenUtc(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): Boolean = true
-
-    private fun timeUntilMarketOpen(now: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)): String =
-        when (now.dayOfWeek) {
-            DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> {
-                val nextOpen = now.with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-                    .toLocalDate().atStartOfDay(ZoneOffset.UTC)
-                val dur = Duration.between(now, nextOpen)
-                val h = dur.toHours()
-                val m = dur.minusHours(h).toMinutes()
-                "${h}h ${m}m"
-            }
-            else -> "0h 0m"
-        }
 
     // ——— modeli/pomagala ———
     private data class Quote(

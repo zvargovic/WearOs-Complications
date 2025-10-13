@@ -1,0 +1,1581 @@
+  [WORK] doWork end → success
+13:00:00.040  [OSF] start reason=aligned-minute
+13:00:00.049  [OSF] wl acquire ms=60000
+13:00:00.057  [OSF] net wait validated timeoutMs=15000
+13:00:00.065  [OSF] net=validated → proceed
+13:00:00.068  [OSF] post-validate grace ms=1500
+13:00:01.581  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+13:00:01.594  [OSF] bindProcessToNetwork ok=true netHash=2387 prev=null
+13:00:01.618  [OSF] http clients injected (short+long) boundTo=2387
+13:00:01.622  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:00:01.698  [OSF] dns try=1/∞ ok=true
+13:00:01.703  [OSF] fetch attempt 1/2
+13:00:01.711  [GF] start
+13:00:02.024  [SRC] GP USD=4081.50
+13:00:02.565  [SRC] Investing USD=4081.60
+13:00:03.067  [SRC] TD USD=4081.53
+13:00:03.259  [SRC] FX EUR/USD=1.158290
+13:00:03.373  [SRC] GP EUR=3523.25
+13:00:03.584  [SRC] Investing EUR=3523.50
+13:00:03.586  [GF] usdQuotes=[(Goldprice.org, 4081.50), (Investing, 4081.60), (TD, 4081.53)]
+13:00:03.587  [GF] eurUsdRate=1.158290
+13:00:03.588  [GF] eurBase=[(Goldprice.org, 3523.25), (Investing, 3523.50)]
+13:00:03.592  [GF] eurQuotes=[(Goldprice.org, 3523.25), (Investing, 3523.50), (TD, 3523.75)]
+13:00:03.596  [GF] consensus USD=4081.54 EUR=3523.50
+13:00:03.598  [GLAST][OK] price=3523.50 ts=1760353203597
+13:00:03.665  [SNAP][OK] slot5=132 price=3523.50
+13:00:03.727  [GF] saved snapshot eur=3523.5 usd=4081.54 fx=1.15829
+13:00:04.282  [GF] end ok=true
+13:00:04.284  [OSF] fetch attempt 1 result ok=true
+13:00:04.285  [OSF] post-fetch UI nudge (complications+tiles)
+13:00:04.309  [OSF] end ok=true reason=aligned-minute
+13:00:04.310  [OSF] http clients cleared
+13:00:04.313  [OSF] bind restore ok=true prev=null
+13:00:04.314  [OSF] wl release
+13:00:04.318  [ALIGN] alarm scheduled → in=295s (295684ms) next=13:05:00 every=5m
+13:03:42.761  [ALIGN] alarm scheduled → in=77s (77240ms) next=13:05:00 every=5m
+13:03:46.344  [SNAP] clearAll
+13:04:05.932  [SNAP][OPEN][SKIP] no-valid-gLast
+13:05:00.016  [OSF] start reason=aligned-minute
+13:05:00.026  [OSF] wl acquire ms=60000
+13:05:00.037  [OSF] net wait validated timeoutMs=15000
+13:05:00.045  [OSF] net=validated → proceed
+13:05:00.048  [OSF] post-validate grace ms=1500
+13:05:01.563  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+13:05:01.575  [OSF] bindProcessToNetwork ok=true netHash=2387 prev=null
+13:05:01.600  [OSF] http clients injected (short+long) boundTo=2387
+13:05:01.606  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:05:01.687  [OSF] dns try=1/∞ ok=true
+13:05:01.690  [OSF] fetch attempt 1/2
+13:05:01.696  [GF] start
+13:05:02.139  [SRC] GP USD=4078.15
+13:05:02.799  [SRC] Investing USD=4083.61
+13:05:03.439  [SRC] TD USD=4077.96
+13:05:03.654  [SRC] FX EUR/USD=1.159050
+13:05:03.763  [SRC] GP EUR=3519.55
+13:05:04.387  [SRC] Investing EUR=3519.82
+13:05:04.395  [GF] usdQuotes=[(Goldprice.org, 4078.15), (Investing, 4083.61), (TD, 4077.96)]
+13:05:04.399  [GF] eurUsdRate=1.159050
+13:05:04.402  [GF] eurBase=[(Goldprice.org, 3519.55), (Investing, 3519.82)]
+13:05:04.429  [GF] eurQuotes=[(Goldprice.org, 3519.55), (Investing, 3519.82), (TD, 3518.36)]
+13:05:04.443  [GF] consensus USD=4078.06 EUR=3519.24
+13:05:04.447  [GLAST][OK] price=3519.24 ts=1760353504446
+13:05:04.453  [SNAP][OK] slot5=133 price=3519.24
+13:05:04.589  [GF] saved snapshot eur=3519.24 usd=4078.06 fx=1.15905
+13:05:05.048  [SNAP][OPEN] set-from-gLast=3519.24 day=2025-10-13
+13:05:05.150  [GF] end ok=true
+13:05:05.154  [OSF] fetch attempt 1 result ok=true
+13:05:05.156  [OSF] post-fetch UI nudge (complications+tiles)
+13:05:05.199  [OSF] end ok=true reason=aligned-minute
+13:05:05.201  [OSF] http clients cleared
+13:05:05.205  [OSF] bind restore ok=true prev=null
+13:05:05.209  [OSF] wl release
+13:05:05.215  [ALIGN] alarm scheduled → in=294s (294787ms) next=13:10:00 every=5m
+13:10:00.030  [OSF] start reason=aligned-minute
+13:10:00.038  [OSF] wl acquire ms=60000
+13:10:00.044  [OSF] net wait validated timeoutMs=15000
+13:10:00.054  [OSF] net=validated → proceed
+13:10:00.058  [OSF] post-validate grace ms=1500
+13:10:01.571  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+13:10:01.583  [OSF] bindProcessToNetwork ok=true netHash=2387 prev=null
+13:10:01.594  [OSF] http clients injected (short+long) boundTo=2387
+13:10:01.599  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:10:01.695  [OSF] dns try=1/∞ ok=true
+13:10:01.699  [OSF] fetch attempt 1/2
+13:10:01.706  [GF] start
+13:10:02.019  [SRC] GP USD=4079.64
+13:10:08.194  [SRC] Investing USD=4079.83
+13:10:08.623  [SRC] TD USD=4079.66
+13:10:08.833  [SRC] FX EUR/USD=1.159030
+13:10:08.930  [SRC] GP EUR=3520.03
+13:10:09.657  [SRC] Investing EUR=3519.84
+13:10:09.664  [GF] usdQuotes=[(Goldprice.org, 4079.64), (Investing, 4079.83), (TD, 4079.66)]
+13:10:09.666  [GF] eurUsdRate=1.159030
+13:10:09.669  [GF] eurBase=[(Goldprice.org, 3520.03), (Investing, 3519.84)]
+13:10:09.696  [GF] eurQuotes=[(Goldprice.org, 3520.03), (Investing, 3519.84), (TD, 3519.89)]
+13:10:09.710  [GF] consensus USD=4079.71 EUR=3519.92
+13:10:09.714  [GLAST][OK] price=3519.92 ts=1760353809712
+13:10:09.723  [SNAP][OK] slot5=134 price=3519.92
+13:10:09.835  [GF] saved snapshot eur=3519.92 usd=4079.71 fx=1.15903
+13:10:10.454  [GF] end ok=true
+13:10:10.457  [OSF] fetch attempt 1 result ok=true
+13:10:10.459  [OSF] post-fetch UI nudge (complications+tiles)
+13:10:10.493  [OSF] end ok=true reason=aligned-minute
+13:10:10.496  [OSF] http clients cleared
+13:10:10.499  [OSF] bind restore ok=true prev=null
+13:10:10.503  [OSF] wl release
+13:10:10.510  [ALIGN] alarm scheduled → in=289s (289493ms) next=13:15:00 every=5m
+13:15:00.025  [OSF] start reason=aligned-minute
+13:15:00.035  [OSF] wl acquire ms=60000
+13:15:00.042  [OSF] net wait validated timeoutMs=15000
+13:15:00.051  [OSF] net=validated → proceed
+13:15:00.054  [OSF] post-validate grace ms=1500
+13:15:01.563  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:15:01.569  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:15:01.577  [OSF] http clients injected (short+long) boundTo=2409
+13:15:01.581  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:15:01.841  [OSF] dns try=1/∞ ok=true
+13:15:01.843  [OSF] fetch attempt 1/2
+13:15:01.847  [GF] start
+13:15:02.255  [SRC] GP USD=4080.74
+13:15:03.305  [SRC] Investing USD=4082.21
+13:15:03.878  [SRC] TD USD=4081.38
+13:15:04.125  [SRC] FX EUR/USD=1.158750
+13:15:04.255  [SRC] GP EUR=3520.80
+13:15:05.175  [SRC] Investing EUR=3521.98
+13:15:05.181  [GF] usdQuotes=[(Goldprice.org, 4080.74), (Investing, 4082.21), (TD, 4081.38)]
+13:15:05.184  [GF] eurUsdRate=1.158750
+13:15:05.186  [GF] eurBase=[(Goldprice.org, 3520.80), (Investing, 3521.98)]
+13:15:05.197  [GF] eurQuotes=[(Goldprice.org, 3520.80), (Investing, 3521.98), (TD, 3522.23)]
+13:15:05.223  [GF] consensus USD=4081.44 EUR=3521.67
+13:15:05.228  [GLAST][OK] price=3521.67 ts=1760354105226
+13:15:05.238  [SNAP][OK] slot5=135 price=3521.67
+13:15:05.403  [GF] saved snapshot eur=3521.67 usd=4081.44 fx=1.15875
+13:15:05.906  [GF] end ok=true
+13:15:05.909  [OSF] fetch attempt 1 result ok=true
+13:15:05.911  [OSF] post-fetch UI nudge (complications+tiles)
+13:15:05.946  [OSF] end ok=true reason=aligned-minute
+13:15:05.949  [OSF] http clients cleared
+13:15:05.952  [OSF] bind restore ok=true prev=null
+13:15:05.956  [OSF] wl release
+13:15:05.962  [ALIGN] alarm scheduled → in=294s (294040ms) next=13:20:00 every=5m
+13:19:30.391  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+13:19:30.395  [OSF] start reason=fallback-worker
+13:19:30.400  [OSF] wl acquire ms=60000
+13:19:30.407  [OSF] net wait validated timeoutMs=15000
+13:19:30.417  [OSF] net=validated → proceed
+13:19:30.421  [OSF] post-validate grace ms=1500
+13:19:31.930  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:19:31.936  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:19:31.944  [OSF] http clients injected (short+long) boundTo=2409
+13:19:31.948  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:19:32.066  [OSF] dns try=1/∞ ok=true
+13:19:32.069  [OSF] fetch attempt 1/2
+13:19:32.074  [GF] start
+13:19:32.450  [SRC] GP USD=4084.08
+13:19:33.633  [SRC] Investing USD=4084.25
+13:19:34.273  [SRC] TD USD=4082.87
+13:19:34.497  [SRC] FX EUR/USD=1.159080
+13:19:34.636  [SRC] GP EUR=3523.21
+13:19:35.692  [SRC] Investing EUR=3523.24
+13:19:35.699  [GF] usdQuotes=[(Goldprice.org, 4084.08), (Investing, 4084.25), (TD, 4082.87)]
+13:19:35.703  [GF] eurUsdRate=1.159080
+13:19:35.705  [GF] eurBase=[(Goldprice.org, 3523.21), (Investing, 3523.24)]
+13:19:35.716  [GF] eurQuotes=[(Goldprice.org, 3523.21), (Investing, 3523.24), (TD, 3522.51)]
+13:19:35.728  [GF] consensus USD=4083.73 EUR=3522.99
+13:19:35.733  [GLAST][OK] price=3522.99 ts=1760354375730
+13:19:35.758  [SNAP][OK] slot5=135 price=3522.99
+13:19:35.916  [GF] saved snapshot eur=3522.99 usd=4083.73 fx=1.15908
+13:19:36.597  [GF] end ok=true
+13:19:36.599  [OSF] fetch attempt 1 result ok=true
+13:19:36.600  [OSF] post-fetch UI nudge (complications+tiles)
+13:19:36.638  [OSF] end ok=true reason=fallback-worker
+13:19:36.639  [OSF] http clients cleared
+13:19:36.640  [OSF] bind restore ok=true prev=null
+13:19:36.643  [OSF] wl release
+13:19:36.645  [WORK] doWork end → success
+13:20:00.017  [OSF] start reason=aligned-minute
+13:20:00.029  [OSF] wl acquire ms=60000
+13:20:00.037  [OSF] net wait validated timeoutMs=15000
+13:20:00.045  [OSF] net=validated → proceed
+13:20:00.048  [OSF] post-validate grace ms=1500
+13:20:01.558  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:20:01.567  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:20:01.580  [OSF] http clients injected (short+long) boundTo=2409
+13:20:01.585  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:20:01.669  [OSF] dns try=1/∞ ok=true
+13:20:01.672  [OSF] fetch attempt 1/2
+13:20:01.676  [GF] start
+13:20:02.095  [SRC] GP USD=4084.26
+13:20:02.701  [SRC] Investing USD=4078.57
+13:20:03.342  [SRC] TD USD=4083.83
+13:20:03.567  [SRC] FX EUR/USD=1.159160
+13:20:03.673  [SRC] GP EUR=3523.47
+13:20:04.956  [SRC] Investing EUR=3523.69
+13:20:04.962  [GF] usdQuotes=[(Goldprice.org, 4084.26), (Investing, 4078.57), (TD, 4083.83)]
+13:20:04.964  [GF] eurUsdRate=1.159160
+13:20:04.967  [GF] eurBase=[(Goldprice.org, 3523.47), (Investing, 3523.69)]
+13:20:04.979  [GF] eurQuotes=[(Goldprice.org, 3523.47), (Investing, 3523.69), (TD, 3523.09)]
+13:20:05.007  [GF] consensus USD=4084.05 EUR=3523.42
+13:20:05.010  [GLAST][OK] price=3523.42 ts=1760354405009
+13:20:05.022  [SNAP][OK] slot5=136 price=3523.42
+13:20:05.132  [GF] saved snapshot eur=3523.42 usd=4084.05 fx=1.15916
+13:20:05.673  [GF] end ok=true
+13:20:05.677  [OSF] fetch attempt 1 result ok=true
+13:20:05.679  [OSF] post-fetch UI nudge (complications+tiles)
+13:20:05.715  [OSF] end ok=true reason=aligned-minute
+13:20:05.717  [OSF] http clients cleared
+13:20:05.720  [OSF] bind restore ok=true prev=null
+13:20:05.724  [OSF] wl release
+13:20:05.730  [ALIGN] alarm scheduled → in=294s (294272ms) next=13:25:00 every=5m
+13:25:00.146  [OSF] start reason=aligned-minute
+13:25:00.153  [OSF] wl acquire ms=60000
+13:25:00.159  [OSF] net wait validated timeoutMs=15000
+13:25:00.167  [OSF] net=validated → proceed
+13:25:00.170  [OSF] post-validate grace ms=1500
+13:25:01.680  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:25:01.688  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:25:01.699  [OSF] http clients injected (short+long) boundTo=2409
+13:25:01.703  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:25:02.004  [OSF] dns try=1/∞ ok=true
+13:25:02.012  [OSF] fetch attempt 1/2
+13:25:02.025  [GF] start
+13:25:02.473  [SRC] GP USD=4082.14
+13:25:03.174  [SRC] Investing USD=4083.02
+13:25:03.780  [SRC] TD USD=4081.11
+13:25:04.024  [SRC] FX EUR/USD=1.158780
+13:25:04.169  [SRC] GP EUR=3522.91
+13:25:04.870  [SRC] Investing EUR=3522.60
+13:25:04.877  [GF] usdQuotes=[(Goldprice.org, 4082.14), (Investing, 4083.02), (TD, 4081.11)]
+13:25:04.880  [GF] eurUsdRate=1.158780
+13:25:04.883  [GF] eurBase=[(Goldprice.org, 3522.91), (Investing, 3522.60)]
+13:25:04.894  [GF] eurQuotes=[(Goldprice.org, 3522.91), (Investing, 3522.60), (TD, 3521.90)]
+13:25:04.910  [GF] consensus USD=4082.09 EUR=3522.47
+13:25:04.915  [GLAST][OK] price=3522.47 ts=1760354704913
+13:25:04.957  [SNAP][OK] slot5=137 price=3522.47
+13:25:05.075  [GF] saved snapshot eur=3522.47 usd=4082.09 fx=1.15878
+13:25:05.636  [GF] end ok=true
+13:25:05.640  [OSF] fetch attempt 1 result ok=true
+13:25:05.642  [OSF] post-fetch UI nudge (complications+tiles)
+13:25:05.700  [OSF] end ok=true reason=aligned-minute
+13:25:05.704  [OSF] http clients cleared
+13:25:05.708  [OSF] bind restore ok=true prev=null
+13:25:05.714  [OSF] wl release
+13:25:05.725  [ALIGN] alarm scheduled → in=294s (294279ms) next=13:30:00 every=5m
+13:28:46.134  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+13:28:46.138  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+13:28:46.213  [ALARM] armed • delay=1800000ms triggerAt=242382671 pi=69336059
+13:30:00.129  [OSF] start reason=aligned-minute
+13:30:00.132  [OSF] wl acquire ms=60000
+13:30:00.137  [OSF] net wait validated timeoutMs=15000
+13:30:00.145  [OSF] net=validated → proceed
+13:30:00.147  [OSF] post-validate grace ms=1500
+13:30:01.656  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:30:01.663  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:30:01.673  [OSF] http clients injected (short+long) boundTo=2409
+13:30:01.678  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:30:01.938  [OSF] dns try=1/∞ ok=true
+13:30:01.941  [OSF] fetch attempt 1/2
+13:30:01.945  [GF] start
+13:30:02.339  [SRC] GP USD=4081.40
+13:30:03.441  [SRC] Investing USD=4080.92
+13:30:04.009  [SRC] TD USD=4080.43
+13:30:04.215  [SRC] FX EUR/USD=1.158340
+13:30:04.379  [SRC] GP EUR=3523.51
+13:30:05.340  [SRC] Investing EUR=3523.41
+13:30:05.346  [GF] usdQuotes=[(Goldprice.org, 4081.40), (Investing, 4080.92), (TD, 4080.43)]
+13:30:05.348  [GF] eurUsdRate=1.158340
+13:30:05.350  [GF] eurBase=[(Goldprice.org, 3523.51), (Investing, 3523.41)]
+13:30:05.360  [GF] eurQuotes=[(Goldprice.org, 3523.51), (Investing, 3523.41), (TD, 3522.65)]
+13:30:05.373  [GF] consensus USD=4080.92 EUR=3523.19
+13:30:05.377  [GLAST][OK] price=3523.19 ts=1760355005375
+13:30:05.410  [SNAP][OK] slot5=138 price=3523.19
+13:30:05.572  [GF] saved snapshot eur=3523.19 usd=4080.92 fx=1.15834
+13:30:06.066  [GF] end ok=true
+13:30:06.070  [OSF] fetch attempt 1 result ok=true
+13:30:06.073  [OSF] post-fetch UI nudge (complications+tiles)
+13:30:06.116  [OSF] end ok=true reason=aligned-minute
+13:30:06.128  [OSF] http clients cleared
+13:30:06.133  [OSF] bind restore ok=true prev=null
+13:30:06.137  [OSF] wl release
+13:30:06.148  [ALIGN] alarm scheduled → in=293s (293858ms) next=13:35:00 every=5m
+13:35:00.139  [OSF] start reason=aligned-minute
+13:35:00.143  [OSF] wl acquire ms=60000
+13:35:00.150  [OSF] net wait validated timeoutMs=15000
+13:35:00.156  [OSF] net=validated → proceed
+13:35:00.159  [OSF] post-validate grace ms=1500
+13:35:01.667  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:35:01.674  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:35:01.683  [OSF] http clients injected (short+long) boundTo=2409
+13:35:01.688  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:35:01.975  [OSF] dns try=1/∞ ok=true
+13:35:01.978  [OSF] fetch attempt 1/2
+13:35:01.986  [GF] start
+13:35:02.430  [SRC] GP USD=4078.86
+13:35:03.101  [SRC] Investing USD=4078.58
+13:35:03.621  [SRC] TD USD=4085.08
+13:35:03.855  [SRC] FX EUR/USD=1.158070
+13:35:03.984  [SRC] GP EUR=3520.82
+13:35:04.334  [SRC] Investing EUR=3521.74
+13:35:04.339  [GF] usdQuotes=[(Goldprice.org, 4078.86), (Investing, 4078.58), (TD, 4085.08)]
+13:35:04.342  [GF] eurUsdRate=1.158070
+13:35:04.344  [GF] eurBase=[(Goldprice.org, 3520.82), (Investing, 3521.74)]
+13:35:04.355  [GF] eurQuotes=[(Goldprice.org, 3520.82), (Investing, 3521.74), (TD, 3527.49)]
+13:35:04.367  [GF] consensus USD=4078.72 EUR=3521.28
+13:35:04.371  [GLAST][OK] price=3521.28 ts=1760355304369
+13:35:04.406  [SNAP][OK] slot5=139 price=3521.28
+13:35:04.528  [GF] saved snapshot eur=3521.28 usd=4078.72 fx=1.15807
+13:35:04.987  [GF] end ok=true
+13:35:04.990  [OSF] fetch attempt 1 result ok=true
+13:35:04.993  [OSF] post-fetch UI nudge (complications+tiles)
+13:35:05.048  [OSF] end ok=true reason=aligned-minute
+13:35:05.051  [OSF] http clients cleared
+13:35:05.054  [OSF] bind restore ok=true prev=null
+13:35:05.058  [OSF] wl release
+13:35:05.065  [ALIGN] alarm scheduled → in=294s (294938ms) next=13:40:00 every=5m
+13:35:33.226  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+13:35:33.229  [OSF] start reason=fallback-worker
+13:35:33.234  [OSF] wl acquire ms=60000
+13:35:33.238  [OSF] net wait validated timeoutMs=15000
+13:35:33.244  [OSF] net=validated → proceed
+13:35:33.247  [OSF] post-validate grace ms=1500
+13:35:34.760  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:35:34.773  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:35:34.788  [OSF] http clients injected (short+long) boundTo=2409
+13:35:34.795  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:35:35.035  [OSF] dns try=1/∞ ok=true
+13:35:35.039  [OSF] fetch attempt 1/2
+13:35:35.045  [GF] start
+13:35:35.544  [SRC] GP USD=4077.70
+13:35:36.224  [SRC] Investing USD=4077.46
+13:35:36.688  [SRC] TD USD=4085.08
+13:35:36.903  [SRC] FX EUR/USD=1.158070
+13:35:37.017  [SRC] GP EUR=3520.83
+13:35:37.399  [SRC] Investing EUR=3522.68
+13:35:37.407  [GF] usdQuotes=[(Goldprice.org, 4077.70), (Investing, 4077.46), (TD, 4085.08)]
+13:35:37.410  [GF] eurUsdRate=1.158070
+13:35:37.414  [GF] eurBase=[(Goldprice.org, 3520.83), (Investing, 3522.68)]
+13:35:37.427  [GF] eurQuotes=[(Goldprice.org, 3520.83), (Investing, 3522.68), (TD, 3527.49)]
+13:35:37.442  [GF] consensus USD=4077.58 EUR=3522.68
+13:35:37.447  [GLAST][OK] price=3522.68 ts=1760355337444
+13:35:37.484  [SNAP][OK] slot5=139 price=3522.68
+13:35:37.609  [GF] saved snapshot eur=3522.68 usd=4077.58 fx=1.15807
+13:35:38.062  [GF] end ok=true
+13:35:38.066  [OSF] fetch attempt 1 result ok=true
+13:35:38.066  [OSF] post-fetch UI nudge (complications+tiles)
+13:35:38.094  [OSF] end ok=true reason=fallback-worker
+13:35:38.096  [OSF] http clients cleared
+13:35:38.098  [OSF] bind restore ok=true prev=null
+13:35:38.101  [OSF] wl release
+13:35:38.103  [WORK] doWork end → success
+13:40:00.141  [OSF] start reason=aligned-minute
+13:40:00.151  [OSF] wl acquire ms=60000
+13:40:00.157  [OSF] net wait validated timeoutMs=15000
+13:40:00.165  [OSF] net=validated → proceed
+13:40:00.178  [OSF] post-validate grace ms=1500
+13:40:01.688  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:40:01.694  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:40:01.702  [OSF] http clients injected (short+long) boundTo=2409
+13:40:01.706  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:40:02.037  [OSF] dns try=1/∞ ok=true
+13:40:02.041  [OSF] fetch attempt 1/2
+13:40:02.047  [GF] start
+13:40:02.449  [SRC] GP USD=4076.84
+13:40:04.150  [SRC] Investing USD=4076.63
+13:40:04.753  [SRC] TD USD=4085.08
+13:40:05.017  [SRC] FX EUR/USD=1.157920
+13:40:05.148  [SRC] GP EUR=3521.43
+13:40:06.078  [SRC] Investing EUR=3521.41
+13:40:06.084  [GF] usdQuotes=[(Goldprice.org, 4076.84), (Investing, 4076.63), (TD, 4085.08)]
+13:40:06.087  [GF] eurUsdRate=1.157920
+13:40:06.089  [GF] eurBase=[(Goldprice.org, 3521.43), (Investing, 3521.41)]
+13:40:06.099  [GF] eurQuotes=[(Goldprice.org, 3521.43), (Investing, 3521.41), (TD, 3527.95)]
+13:40:06.114  [GF] consensus USD=4076.74 EUR=3521.42
+13:40:06.138  [GLAST][OK] price=3521.42 ts=1760355606133
+13:40:06.165  [SNAP][OK] slot5=140 price=3521.42
+13:40:06.404  [GF] saved snapshot eur=3521.42 usd=4076.74 fx=1.15792
+13:40:06.748  [GF] end ok=true
+13:40:06.751  [OSF] fetch attempt 1 result ok=true
+13:40:06.753  [OSF] post-fetch UI nudge (complications+tiles)
+13:40:06.779  [OSF] end ok=true reason=aligned-minute
+13:40:06.780  [OSF] http clients cleared
+13:40:06.782  [OSF] bind restore ok=true prev=null
+13:40:06.784  [OSF] wl release
+13:40:06.788  [ALIGN] alarm scheduled → in=293s (293214ms) next=13:45:00 every=5m
+13:45:00.155  [OSF] start reason=aligned-minute
+13:45:00.161  [OSF] wl acquire ms=60000
+13:45:00.169  [OSF] net wait validated timeoutMs=15000
+13:45:00.185  [OSF] net=validated → proceed
+13:45:00.189  [OSF] post-validate grace ms=1500
+13:45:01.703  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:45:01.711  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:45:01.722  [OSF] http clients injected (short+long) boundTo=2409
+13:45:01.727  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:45:02.307  [OSF] dns try=1/∞ ok=true
+13:45:02.313  [OSF] fetch attempt 1/2
+13:45:02.324  [GF] start
+13:45:02.785  [SRC] GP USD=4076.93
+13:45:03.811  [SRC] Investing USD=4077.26
+13:45:04.627  [SRC] TD USD=4086.08
+13:45:04.883  [SRC] FX EUR/USD=1.157410
+13:45:05.005  [SRC] GP EUR=3522.79
+13:45:05.938  [SRC] Investing EUR=3522.41
+13:45:05.946  [GF] usdQuotes=[(Goldprice.org, 4076.93), (Investing, 4077.26), (TD, 4086.08)]
+13:45:05.949  [GF] eurUsdRate=1.157410
+13:45:05.952  [GF] eurBase=[(Goldprice.org, 3522.79), (Investing, 3522.41)]
+13:45:05.965  [GF] eurQuotes=[(Goldprice.org, 3522.79), (Investing, 3522.41), (TD, 3530.37)]
+13:45:05.977  [GF] consensus USD=4077.10 EUR=3522.60
+13:45:05.982  [GLAST][OK] price=3522.60 ts=1760355905980
+13:45:06.029  [SNAP][OK] slot5=141 price=3522.60
+13:45:06.172  [GF] saved snapshot eur=3522.6 usd=4077.1 fx=1.15741
+13:45:06.670  [GF] end ok=true
+13:45:06.674  [OSF] fetch attempt 1 result ok=true
+13:45:06.677  [OSF] post-fetch UI nudge (complications+tiles)
+13:45:06.725  [OSF] end ok=true reason=aligned-minute
+13:45:06.729  [OSF] http clients cleared
+13:45:06.733  [OSF] bind restore ok=true prev=null
+13:45:06.739  [OSF] wl release
+13:45:06.748  [ALIGN] alarm scheduled → in=293s (293255ms) next=13:50:00 every=5m
+13:50:00.027  [OSF] start reason=aligned-minute
+13:50:00.033  [OSF] wl acquire ms=60000
+13:50:00.041  [OSF] net wait validated timeoutMs=15000
+13:50:00.051  [OSF] net=validated → proceed
+13:50:00.055  [OSF] post-validate grace ms=1500
+13:50:01.564  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:50:01.571  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:50:01.584  [OSF] http clients injected (short+long) boundTo=2409
+13:50:01.589  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:50:01.800  [OSF] dns try=1/∞ ok=true
+13:50:01.806  [OSF] fetch attempt 1/2
+13:50:01.814  [GF] start
+13:50:02.226  [SRC] GP USD=4076.57
+13:50:03.457  [SRC] Investing USD=4076.63
+13:50:04.016  [SRC] TD USD=4084.18
+13:50:04.244  [SRC] FX EUR/USD=1.157480
+13:50:04.378  [SRC] GP EUR=3520.85
+13:50:04.788  [SRC] Investing EUR=3521.41
+13:50:04.794  [GF] usdQuotes=[(Goldprice.org, 4076.57), (Investing, 4076.63), (TD, 4084.18)]
+13:50:04.797  [GF] eurUsdRate=1.157480
+13:50:04.800  [GF] eurBase=[(Goldprice.org, 3520.85), (Investing, 3521.41)]
+13:50:04.812  [GF] eurQuotes=[(Goldprice.org, 3520.85), (Investing, 3521.41), (TD, 3528.51)]
+13:50:04.825  [GF] consensus USD=4076.60 EUR=3521.13
+13:50:04.830  [GLAST][OK] price=3521.13 ts=1760356204828
+13:50:04.853  [SNAP][OK] slot5=142 price=3521.13
+13:50:04.998  [GF] saved snapshot eur=3521.13 usd=4076.6 fx=1.15748
+13:50:05.476  [GF] end ok=true
+13:50:05.479  [OSF] fetch attempt 1 result ok=true
+13:50:05.481  [OSF] post-fetch UI nudge (complications+tiles)
+13:50:05.523  [OSF] end ok=true reason=aligned-minute
+13:50:05.526  [OSF] http clients cleared
+13:50:05.529  [OSF] bind restore ok=true prev=null
+13:50:05.535  [OSF] wl release
+13:50:05.542  [ALIGN] alarm scheduled → in=294s (294460ms) next=13:55:00 every=5m
+13:50:57.025  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+13:50:57.034  [OSF] start reason=fallback-worker
+13:50:57.036  [OSF] wl acquire ms=60000
+13:50:57.040  [OSF] net wait validated timeoutMs=15000
+13:50:57.072  [OSF] net=validated → proceed
+13:50:57.074  [OSF] post-validate grace ms=1500
+13:50:58.594  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:50:58.602  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:50:58.609  [OSF] http clients injected (short+long) boundTo=2409
+13:50:58.613  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:50:58.655  [OSF] dns try=1/∞ ok=true
+13:50:58.658  [OSF] fetch attempt 1/2
+13:50:58.663  [GF] start
+13:50:59.007  [SRC] GP USD=4075.41
+13:50:59.562  [SRC] Investing USD=4076.49
+13:51:00.422  [SRC] TD USD=4084.94
+13:51:00.640  [SRC] FX EUR/USD=1.157800
+13:51:00.772  [SRC] GP EUR=3520.78
+13:51:01.167  [SRC][WARN] Investing EUR fail: extract fail
+13:51:01.172  [GF] usdQuotes=[(Goldprice.org, 4075.41), (Investing, 4076.49), (TD, 4084.94)]
+13:51:01.174  [GF] eurUsdRate=1.157800
+13:51:01.177  [GF] eurBase=[(Goldprice.org, 3520.78), (Investing, n/a)]
+13:51:01.187  [GF] eurQuotes=[(Goldprice.org, 3520.78), (Investing, n/a), (TD, 3528.19)]
+13:51:01.196  [GF] consensus USD=4075.95 EUR=3524.49
+13:51:01.200  [GLAST][OK] price=3524.49 ts=1760356261198
+13:51:01.224  [SNAP][OK] slot5=142 price=3524.49
+13:51:01.377  [GF] saved snapshot eur=3524.49 usd=4075.95 fx=1.1578
+13:51:01.945  [GF] end ok=true
+13:51:01.947  [OSF] fetch attempt 1 result ok=true
+13:51:01.947  [OSF] post-fetch UI nudge (complications+tiles)
+13:51:01.969  [OSF] end ok=true reason=fallback-worker
+13:51:01.970  [OSF] http clients cleared
+13:51:01.971  [OSF] bind restore ok=true prev=null
+13:51:01.979  [OSF] wl release
+13:51:01.981  [WORK] doWork end → success
+13:55:00.042  [OSF] start reason=aligned-minute
+13:55:00.055  [OSF] wl acquire ms=60000
+13:55:00.065  [OSF] net wait validated timeoutMs=15000
+13:55:00.074  [OSF] net=validated → proceed
+13:55:00.078  [OSF] post-validate grace ms=1500
+13:55:01.589  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+13:55:01.597  [OSF] bindProcessToNetwork ok=true netHash=2409 prev=null
+13:55:01.611  [OSF] http clients injected (short+long) boundTo=2409
+13:55:01.616  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+13:55:01.710  [OSF] dns try=1/∞ ok=true
+13:55:01.717  [OSF] fetch attempt 1/2
+13:55:01.725  [GF] start
+13:55:02.201  [SRC] GP USD=4075.00
+13:55:03.125  [SRC] Investing USD=4076.19
+13:55:03.837  [SRC] TD USD=4085.74
+13:55:04.081  [SRC] FX EUR/USD=1.157360
+13:55:04.205  [SRC] GP EUR=3521.51
+13:55:04.698  [SRC] Investing EUR=3521.25
+13:55:04.706  [GF] usdQuotes=[(Goldprice.org, 4075.00), (Investing, 4076.19), (TD, 4085.74)]
+13:55:04.709  [GF] eurUsdRate=1.157360
+13:55:04.713  [GF] eurBase=[(Goldprice.org, 3521.51), (Investing, 3521.25)]
+13:55:04.728  [GF] eurQuotes=[(Goldprice.org, 3521.51), (Investing, 3521.25), (TD, 3530.22)]
+13:55:04.742  [GF] consensus USD=4075.60 EUR=3521.38
+13:55:04.748  [GLAST][OK] price=3521.38 ts=1760356504745
+13:55:04.802  [SNAP][OK] slot5=143 price=3521.38
+13:55:04.976  [GF] saved snapshot eur=3521.38 usd=4075.6 fx=1.15736
+13:55:05.508  [GF] end ok=true
+13:55:05.512  [OSF] fetch attempt 1 result ok=true
+13:55:05.514  [OSF] post-fetch UI nudge (complications+tiles)
+13:55:05.566  [OSF] end ok=true reason=aligned-minute
+13:55:05.571  [OSF] http clients cleared
+13:55:05.577  [OSF] bind restore ok=true prev=null
+13:55:05.583  [OSF] wl release
+13:55:05.593  [ALIGN] alarm scheduled → in=294s (294410ms) next=14:00:00 every=5m
+13:58:46.228  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+13:58:46.231  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+13:58:46.258  [ALARM] armed • delay=1800000ms triggerAt=244182716 pi=61170679
+14:00:00.018  [OSF] start reason=aligned-minute
+14:00:00.028  [OSF] wl acquire ms=60000
+14:00:00.034  [OSF] net wait validated timeoutMs=15000
+14:00:00.044  [OSF] net=validated → proceed
+14:00:00.048  [OSF] post-validate grace ms=1500
+14:00:01.560  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:00:01.569  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=null
+14:00:01.580  [OSF] http clients injected (short+long) boundTo=2420
+14:00:01.584  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:00:06.623  [OSF] dns try=1/∞ ok=false
+14:00:12.468  [OSF] dns try=2/∞ ok=false
+14:00:13.294  [OSF] dns try=3/∞ ok=false
+14:00:14.119  [OSF] dns try=4/∞ ok=false
+14:00:14.948  [OSF] dns try=5/∞ ok=false
+14:00:15.777  [OSF] dns try=6/∞ ok=false
+14:00:16.606  [OSF] dns try=7/∞ ok=false
+14:00:17.437  [OSF] dns try=8/∞ ok=false
+14:00:18.273  [OSF] dns try=9/∞ ok=false
+14:00:19.102  [OSF] dns try=10/∞ ok=false
+14:00:19.932  [OSF] dns try=11/∞ ok=false
+14:00:20.764  [OSF] dns try=12/∞ ok=false
+14:00:21.599  [OSF] dns try=13/∞ ok=false
+14:00:22.438  [OSF] dns try=14/∞ ok=false
+14:00:23.277  [OSF] dns try=15/∞ ok=false
+14:00:24.121  [OSF] dns try=16/∞ ok=false
+14:00:24.962  [OSF] dns try=17/∞ ok=false
+14:00:25.800  [OSF] dns try=18/∞ ok=false
+14:00:26.642  [OSF] dns try=19/∞ ok=false
+14:00:27.483  [OSF] dns try=20/∞ ok=false
+14:00:28.322  [OSF] dns try=21/∞ ok=false
+14:00:29.158  [OSF] dns try=22/∞ ok=false
+14:00:29.996  [OSF] dns try=23/∞ ok=false
+14:00:30.837  [OSF] dns try=24/∞ ok=false
+14:00:31.656  [OSF] dns try=25/∞ ok=false
+14:00:32.467  [OSF] dns try=26/∞ ok=false
+14:00:33.283  [OSF] dns try=27/∞ ok=false
+14:00:34.101  [OSF] dns try=28/∞ ok=false
+14:00:34.918  [OSF] dns try=29/∞ ok=false
+14:00:35.736  [OSF] dns try=30/∞ ok=false
+14:00:36.550  [OSF] dns try=31/∞ ok=false
+14:00:37.377  [OSF] dns try=32/∞ ok=false
+14:00:38.209  [OSF] dns try=33/∞ ok=false
+14:00:39.031  [OSF] dns try=34/∞ ok=false
+14:00:39.851  [OSF] dns try=35/∞ ok=false
+14:00:40.667  [OSF] dns try=36/∞ ok=false
+14:00:41.479  [OSF] dns try=37/∞ ok=false
+14:00:42.291  [OSF] dns try=38/∞ ok=false
+14:00:43.107  [OSF] dns try=39/∞ ok=false
+14:00:43.920  [OSF] dns try=40/∞ ok=false
+14:00:44.730  [OSF] dns try=41/∞ ok=false
+14:00:45.543  [OSF] dns try=42/∞ ok=false
+14:00:46.361  [OSF] dns try=43/∞ ok=false
+14:00:47.180  [OSF] dns try=44/∞ ok=false
+14:00:47.993  [OSF] dns try=45/∞ ok=false
+14:00:48.801  [OSF] dns try=46/∞ ok=false
+14:00:49.625  [OSF] dns try=47/∞ ok=false
+14:01:00.469  [OSF] dns try=48/∞ ok=false
+14:01:01.296  [OSF] dns try=49/∞ ok=false
+14:01:02.131  [OSF] dns try=50/∞ ok=false
+14:01:12.994  [OSF] dns try=51/∞ ok=false
+14:01:13.828  [OSF] dns try=52/∞ ok=false
+14:01:14.655  [OSF] dns try=53/∞ ok=false
+14:01:15.483  [OSF] dns try=54/∞ ok=false
+14:04:51.655  [OSF] dns try=55/∞ ok=false
+14:04:52.472  [OSF] dns try=56/∞ ok=false
+14:04:53.297  [OSF] dns try=57/∞ ok=false
+14:04:54.128  [OSF] dns try=58/∞ ok=false
+14:04:54.951  [OSF] dns try=59/∞ ok=false
+14:05:48.831  [OSF] dns try=60/∞ ok=false
+14:05:49.671  [OSF] dns try=61/∞ ok=false
+14:05:50.496  [OSF] dns try=62/∞ ok=false
+14:05:51.320  [OSF] dns try=63/∞ ok=false
+14:05:52.149  [OSF] dns try=64/∞ ok=false
+14:05:52.975  [OSF] dns try=65/∞ ok=false
+14:05:53.809  [OSF] dns try=66/∞ ok=false
+14:05:54.654  [OSF] dns try=67/∞ ok=false
+14:05:55.476  [OSF] dns try=68/∞ ok=false
+14:06:10.402  [OSF] dns try=69/∞ ok=false
+14:06:11.231  [OSF] dns try=70/∞ ok=false
+14:06:12.059  [OSF] dns try=71/∞ ok=false
+14:06:12.878  [OSF] dns try=72/∞ ok=false
+14:06:49.075  [OSF] dns try=73/∞ ok=false
+14:07:11.631  [OSF] dns try=74/∞ ok=false
+14:07:12.457  [OSF] dns try=75/∞ ok=false
+14:08:16.763  [OSF] dns try=76/∞ ok=false
+14:08:17.584  [OSF] dns try=77/∞ ok=false
+14:09:02.096  [OSF] dns try=78/∞ ok=false
+14:10:30.541  [OSF] dns try=79/∞ ok=false
+14:10:31.355  [OSF] dns try=80/∞ ok=false
+14:10:32.185  [OSF] dns try=81/∞ ok=false
+14:10:38.044  [OSF] dns try=82/∞ ok=false
+14:11:40.252  [OSF] dns try=83/∞ ok=false
+14:11:41.063  [OSF] dns try=84/∞ ok=false
+14:12:24.851  [OSF] dns try=85/∞ ok=false
+14:12:25.664  [OSF] dns try=86/∞ ok=false
+14:12:26.486  [OSF] dns try=87/∞ ok=false
+14:12:27.308  [OSF] dns try=88/∞ ok=false
+14:12:28.133  [OSF] dns try=89/∞ ok=false
+14:12:28.960  [OSF] dns try=90/∞ ok=false
+14:12:29.783  [OSF] dns try=91/∞ ok=false
+14:12:30.615  [OSF] dns try=92/∞ ok=false
+14:12:31.443  [OSF] dns try=93/∞ ok=false
+14:12:32.278  [OSF] dns try=94/∞ ok=false
+14:12:33.115  [OSF] dns try=95/∞ ok=false
+14:12:33.951  [OSF] dns try=96/∞ ok=false
+14:13:04.068  [OSF] dns try=97/∞ ok=false
+14:13:04.893  [OSF] dns try=98/∞ ok=false
+14:13:05.724  [OSF] dns try=99/∞ ok=false
+14:13:06.558  [OSF] dns try=100/∞ ok=false
+14:13:07.394  [OSF] dns try=101/∞ ok=false
+14:13:08.229  [OSF] dns try=102/∞ ok=false
+14:13:09.065  [OSF] dns try=103/∞ ok=false
+14:13:09.902  [OSF] dns try=104/∞ ok=false
+14:13:10.739  [OSF] dns try=105/∞ ok=false
+14:13:11.568  [OSF] dns try=106/∞ ok=false
+14:13:12.404  [OSF] dns try=107/∞ ok=false
+14:13:13.230  [OSF] dns try=108/∞ ok=false
+14:13:19.083  [OSF] dns try=109/∞ ok=false
+14:13:19.911  [OSF] dns try=110/∞ ok=false
+14:13:35.579  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+14:13:35.596  [OSF] start reason=fallback-worker
+14:13:35.609  [OSF] wl acquire ms=60000
+14:13:35.614  [OSF] net wait validated timeoutMs=15000
+14:13:35.624  [OSF] net=validated → proceed
+14:13:35.627  [OSF] post-validate grace ms=1500
+14:13:36.167  [OSF] dns try=111/∞ ok=true
+14:13:36.172  [OSF] fetch attempt 1/2
+14:13:36.180  [GF] start
+14:13:36.611  [SRC] GP USD=4074.17
+14:13:37.152  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:13:37.167  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=2420
+14:13:37.188  [OSF] http clients injected (short+long) boundTo=2420
+14:13:37.196  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:13:37.229  [OSF] dns try=1/∞ ok=true
+14:13:37.240  [OSF] fetch attempt 1/2
+14:13:37.250  [GF] start
+14:13:38.377  [SRC] Investing USD=4074.66
+14:13:38.559  [SRC] GP USD=4074.17
+14:13:39.568  [SRC] TD USD=4082.24
+14:13:39.769  [SRC] FX EUR/USD=1.157270
+14:13:39.848  [SRC] GP EUR=3520.98
+14:13:40.738  [SRC] Investing USD=4074.56
+14:13:43.525  [SRC] TD USD=4082.24
+14:13:43.742  [SRC] FX EUR/USD=1.157270
+14:13:43.847  [SRC] GP EUR=3520.53
+14:13:44.877  [SRC] Investing EUR=3520.69
+14:13:44.882  [GF] usdQuotes=[(Goldprice.org, 4074.17), (Investing, 4074.66), (TD, 4082.24)]
+14:13:44.884  [GF] eurUsdRate=1.157270
+14:13:44.886  [GF] eurBase=[(Goldprice.org, 3520.98), (Investing, 3520.69)]
+14:13:44.898  [GF] eurQuotes=[(Goldprice.org, 3520.98), (Investing, 3520.69), (TD, 3527.47)]
+14:13:44.912  [GF] consensus USD=4074.42 EUR=3520.84
+14:13:44.928  [GLAST][OK] price=3520.84 ts=1760357624915
+14:13:45.072  [GF] saved snapshot eur=3520.84 usd=4074.42 fx=1.15727
+14:13:45.213  [SRC] Investing EUR=3520.72
+14:13:45.230  [GF] usdQuotes=[(Goldprice.org, 4074.17), (Investing, 4074.56), (TD, 4082.24)]
+14:13:45.234  [GF] eurUsdRate=1.157270
+14:13:45.237  [GF] eurBase=[(Goldprice.org, 3520.53), (Investing, 3520.72)]
+14:13:45.251  [GF] eurQuotes=[(Goldprice.org, 3520.53), (Investing, 3520.72), (TD, 3527.47)]
+14:13:45.262  [GF] consensus USD=4074.37 EUR=3520.63
+14:13:45.265  [GLAST][OK] price=3520.63 ts=1760357625264
+14:13:45.472  [GF] saved snapshot eur=3520.63 usd=4074.37 fx=1.15727
+14:13:45.597  [GF] end ok=true
+14:13:45.600  [OSF] fetch attempt 1 result ok=true
+14:13:45.603  [OSF] post-fetch UI nudge (complications+tiles)
+14:13:45.691  [OSF] end ok=true reason=aligned-minute
+14:13:45.693  [OSF] http clients cleared
+14:13:45.706  [OSF] bind restore ok=true prev=null
+14:13:45.717  [ALIGN] alarm scheduled → in=74s (74286ms) next=14:15:00 every=5m
+14:13:45.995  [GF] end ok=true
+14:13:45.997  [OSF] fetch attempt 1 result ok=true
+14:13:45.999  [OSF] post-fetch UI nudge (complications+tiles)
+14:13:46.036  [OSF] end ok=true reason=fallback-worker
+14:13:46.039  [OSF] http clients cleared
+14:13:46.043  [OSF] bind restore ok=true prev=2420
+14:13:46.047  [OSF] wl release
+14:13:46.050  [WORK] doWork end → success
+14:15:00.192  [OSF] start reason=aligned-minute
+14:15:00.199  [OSF] wl acquire ms=60000
+14:15:00.203  [OSF] net wait validated timeoutMs=15000
+14:15:00.211  [OSF] net=validated → proceed
+14:15:00.214  [OSF] post-validate grace ms=1500
+14:15:01.722  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:15:01.727  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=2420
+14:15:01.735  [OSF] http clients injected (short+long) boundTo=2420
+14:15:01.740  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:15:01.789  [OSF] dns try=1/∞ ok=true
+14:15:01.794  [OSF] fetch attempt 1/2
+14:15:01.801  [GF] start
+14:15:02.135  [SRC] GP USD=4074.27
+14:15:03.496  [SRC] Investing USD=4076.78
+14:15:03.986  [SRC] TD USD=4081.83
+14:15:04.192  [SRC] FX EUR/USD=1.157290
+14:15:04.300  [SRC] GP EUR=3520.66
+14:15:06.091  [SRC] Investing EUR=3522.41
+14:15:06.096  [GF] usdQuotes=[(Goldprice.org, 4074.27), (Investing, 4076.78), (TD, 4081.83)]
+14:15:06.098  [GF] eurUsdRate=1.157290
+14:15:06.100  [GF] eurBase=[(Goldprice.org, 3520.66), (Investing, 3522.41)]
+14:15:06.111  [GF] eurQuotes=[(Goldprice.org, 3520.66), (Investing, 3522.41), (TD, 3527.06)]
+14:15:06.124  [GF] consensus USD=4076.78 EUR=3522.41
+14:15:06.128  [GLAST][OK] price=3522.41 ts=1760357706127
+14:15:06.168  [SNAP][OK] slot5=147 price=3522.41
+14:15:06.285  [GF] saved snapshot eur=3522.41 usd=4076.78 fx=1.15729
+14:15:06.745  [GF] end ok=true
+14:15:06.748  [OSF] fetch attempt 1 result ok=true
+14:15:06.751  [OSF] post-fetch UI nudge (complications+tiles)
+14:15:06.807  [OSF] end ok=true reason=aligned-minute
+14:15:06.810  [OSF] http clients cleared
+14:15:06.813  [OSF] bind restore ok=true prev=2420
+14:15:06.817  [OSF] wl release
+14:15:06.825  [ALIGN] alarm scheduled → in=293s (293178ms) next=14:20:00 every=5m
+14:20:00.031  [OSF] start reason=aligned-minute
+14:20:00.035  [OSF] wl acquire ms=60000
+14:20:00.040  [OSF] net wait validated timeoutMs=15000
+14:20:00.047  [OSF] net=validated → proceed
+14:20:00.050  [OSF] post-validate grace ms=1500
+14:20:01.560  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:20:01.565  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=2420
+14:20:01.572  [OSF] http clients injected (short+long) boundTo=2420
+14:20:01.576  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:20:06.750  [OSF] dns try=1/∞ ok=false
+14:20:07.749  [OSF] dns try=2/∞ ok=true
+14:20:07.752  [OSF] fetch attempt 1/2
+14:20:07.761  [GF] start
+14:20:08.230  [SRC] GP USD=4077.74
+14:20:28.748  [SRC] Investing USD=4097.60
+14:20:29.200  [SRC] TD USD=4082.39
+14:20:29.394  [SRC] FX EUR/USD=1.157290
+14:20:29.687  [SRC] GP EUR=3522.88
+14:20:32.414  [SRC] Investing EUR=3524.27
+14:20:32.420  [GF] usdQuotes=[(Goldprice.org, 4077.74), (Investing, 4097.60), (TD, 4082.39)]
+14:20:32.422  [GF] eurUsdRate=1.157290
+14:20:32.424  [GF] eurBase=[(Goldprice.org, 3522.88), (Investing, 3524.27)]
+14:20:32.433  [GF] eurQuotes=[(Goldprice.org, 3522.88), (Investing, 3524.27), (TD, 3527.54)]
+14:20:32.446  [GF] consensus USD=4082.39 EUR=3524.27
+14:20:32.450  [GLAST][OK] price=3524.27 ts=1760358032448
+14:20:32.493  [SNAP][OK] slot5=148 price=3524.27
+14:20:32.623  [GF] saved snapshot eur=3524.27 usd=4082.39 fx=1.15729
+14:20:33.071  [GF] end ok=true
+14:20:33.073  [OSF] fetch attempt 1 result ok=true
+14:20:33.077  [OSF] post-fetch UI nudge (complications+tiles)
+14:20:33.131  [OSF] end ok=true reason=aligned-minute
+14:20:33.133  [OSF] http clients cleared
+14:20:33.137  [OSF] bind restore ok=true prev=2420
+14:20:33.141  [OSF] wl release
+14:20:33.148  [ALIGN] alarm scheduled → in=266s (266855ms) next=14:25:00 every=5m
+14:25:00.219  [OSF] start reason=aligned-minute
+14:25:00.229  [OSF] wl acquire ms=60000
+14:25:00.233  [OSF] net wait validated timeoutMs=15000
+14:25:00.239  [OSF] net=validated → proceed
+14:25:00.241  [OSF] post-validate grace ms=1500
+14:25:01.750  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:25:01.756  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=2420
+14:25:01.765  [OSF] http clients injected (short+long) boundTo=2420
+14:25:01.770  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:25:01.901  [OSF] dns try=1/∞ ok=true
+14:25:01.905  [OSF] fetch attempt 1/2
+14:25:01.912  [GF] start
+14:25:02.242  [SRC] GP USD=4080.64
+14:25:04.274  [SRC] Investing USD=4081.09
+14:25:04.688  [SRC] TD USD=4088.90
+14:25:04.872  [SRC] FX EUR/USD=1.157010
+14:25:04.947  [SRC] GP EUR=3526.65
+14:25:06.849  [SRC] Investing EUR=3526.98
+14:25:06.854  [GF] usdQuotes=[(Goldprice.org, 4080.64), (Investing, 4081.09), (TD, 4088.90)]
+14:25:06.856  [GF] eurUsdRate=1.157010
+14:25:06.859  [GF] eurBase=[(Goldprice.org, 3526.65), (Investing, 3526.98)]
+14:25:06.870  [GF] eurQuotes=[(Goldprice.org, 3526.65), (Investing, 3526.98), (TD, 3534.02)]
+14:25:06.883  [GF] consensus USD=4080.87 EUR=3526.82
+14:25:06.887  [GLAST][OK] price=3526.82 ts=1760358306886
+14:25:06.929  [SNAP][OK] slot5=149 price=3526.82
+14:25:07.046  [GF] saved snapshot eur=3526.82 usd=4080.87 fx=1.15701
+14:25:07.503  [GF] end ok=true
+14:25:07.506  [OSF] fetch attempt 1 result ok=true
+14:25:07.508  [OSF] post-fetch UI nudge (complications+tiles)
+14:25:07.562  [OSF] end ok=true reason=aligned-minute
+14:25:07.564  [OSF] http clients cleared
+14:25:07.568  [OSF] bind restore ok=true prev=2420
+14:25:07.572  [OSF] wl release
+14:25:07.579  [ALIGN] alarm scheduled → in=292s (292424ms) next=14:30:00 every=5m
+14:28:46.278  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+14:28:46.281  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+14:28:46.302  [ALARM] armed • delay=1800000ms triggerAt=245982760 pi=49514684
+14:30:00.236  [OSF] start reason=aligned-minute
+14:30:00.241  [OSF] wl acquire ms=60000
+14:30:00.248  [OSF] net wait validated timeoutMs=15000
+14:30:00.255  [OSF] net=validated → proceed
+14:30:00.258  [OSF] post-validate grace ms=1500
+14:30:01.771  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:30:01.777  [OSF] bindProcessToNetwork ok=true netHash=2420 prev=2420
+14:30:01.785  [OSF] http clients injected (short+long) boundTo=2420
+14:30:01.789  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:30:01.901  [OSF] dns try=1/∞ ok=true
+14:30:01.912  [OSF] fetch attempt 1/2
+14:30:01.921  [GF] start
+14:30:02.264  [SRC] GP USD=4083.31
+14:30:02.718  [SRC] Investing USD=4079.61
+14:30:03.155  [SRC] TD USD=4091.79
+14:30:03.370  [SRC] FX EUR/USD=1.156740
+14:30:03.480  [SRC] GP EUR=3530.73
+14:30:04.806  [SRC] Investing EUR=3530.80
+14:30:04.810  [GF] usdQuotes=[(Goldprice.org, 4083.31), (Investing, 4079.61), (TD, 4091.79)]
+14:30:04.812  [GF] eurUsdRate=1.156740
+14:30:04.814  [GF] eurBase=[(Goldprice.org, 3530.73), (Investing, 3530.80)]
+14:30:04.824  [GF] eurQuotes=[(Goldprice.org, 3530.73), (Investing, 3530.80), (TD, 3537.35)]
+14:30:04.835  [GF] consensus USD=4083.31 EUR=3530.77
+14:30:04.838  [GLAST][OK] price=3530.77 ts=1760358604836
+14:30:04.866  [SNAP][OK] slot5=150 price=3530.77
+14:30:05.013  [GF] saved snapshot eur=3530.77 usd=4083.31 fx=1.15674
+14:30:05.494  [GF] end ok=true
+14:30:05.496  [OSF] fetch attempt 1 result ok=true
+14:30:05.498  [OSF] post-fetch UI nudge (complications+tiles)
+14:30:05.534  [OSF] end ok=true reason=aligned-minute
+14:30:05.536  [OSF] http clients cleared
+14:30:05.540  [OSF] bind restore ok=true prev=2420
+14:30:05.544  [OSF] wl release
+14:30:05.550  [ALIGN] alarm scheduled → in=294s (294452ms) next=14:35:00 every=5m
+14:30:07.521  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+14:30:07.524  [OSF] start reason=fallback-worker
+14:30:07.527  [OSF][DEBOUNCE] skip (last=7288ms ago, window=20000ms)
+14:30:07.538  [WORK] doWork end → retry (fetch failed)
+14:31:17.752  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+14:31:17.755  [OSF] start reason=fallback-worker
+14:31:17.762  [OSF] wl acquire ms=60000
+14:31:17.769  [OSF] net wait validated timeoutMs=15000
+14:31:17.777  [OSF] net=validated → proceed
+14:31:17.783  [OSF] post-validate grace ms=1500
+14:31:19.299  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+14:31:19.316  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2420
+14:31:19.333  [OSF] http clients injected (short+long) boundTo=2453
+14:31:19.341  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:31:24.412  [OSF] dns try=1/∞ ok=false
+14:31:30.271  [OSF] dns try=2/∞ ok=false
+14:31:36.166  [OSF] dns try=3/∞ ok=false
+14:31:37.038  [OSF] dns try=4/∞ ok=true
+14:31:37.046  [OSF] fetch attempt 1/2
+14:31:37.056  [GF] start
+14:31:37.461  [SRC] GP USD=4084.20
+14:31:41.038  [SRC] Investing USD=4083.38
+14:31:41.691  [SRC] TD USD=4091.81
+14:31:42.269  [SRC] FX EUR/USD=1.156330
+14:31:42.515  [SRC] GP EUR=3531.16
+14:31:43.817  [SRC] Investing EUR=3531.52
+14:31:43.822  [GF] usdQuotes=[(Goldprice.org, 4084.20), (Investing, 4083.38), (TD, 4091.81)]
+14:31:43.825  [GF] eurUsdRate=1.156330
+14:31:43.827  [GF] eurBase=[(Goldprice.org, 3531.16), (Investing, 3531.52)]
+14:31:43.840  [GF] eurQuotes=[(Goldprice.org, 3531.16), (Investing, 3531.52), (TD, 3538.62)]
+14:31:43.854  [GF] consensus USD=4083.79 EUR=3531.34
+14:31:43.858  [GLAST][OK] price=3531.34 ts=1760358703856
+14:31:43.904  [SNAP][OK] slot5=150 price=3531.34
+14:31:44.034  [GF] saved snapshot eur=3531.34 usd=4083.79 fx=1.15633
+14:31:44.536  [GF] end ok=true
+14:31:44.539  [OSF] fetch attempt 1 result ok=true
+14:31:44.541  [OSF] post-fetch UI nudge (complications+tiles)
+14:31:44.609  [OSF] end ok=true reason=fallback-worker
+14:31:44.612  [OSF] http clients cleared
+14:31:44.616  [OSF] bind restore ok=false prev=2420
+14:31:44.621  [OSF] wl release
+14:31:44.624  [WORK] doWork end → success
+14:35:00.009  [OSF] start reason=aligned-minute
+14:35:00.013  [OSF] wl acquire ms=60000
+14:35:00.016  [OSF] net wait validated timeoutMs=15000
+14:35:00.022  [OSF] net=validated → proceed
+14:35:00.024  [OSF] post-validate grace ms=1500
+14:35:01.531  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:35:01.537  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:35:01.544  [OSF] http clients injected (short+long) boundTo=2464
+14:35:01.549  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:35:01.694  [OSF] dns try=1/∞ ok=true
+14:35:01.698  [OSF] fetch attempt 1/2
+14:35:01.705  [GF] start
+14:35:02.098  [SRC] GP USD=4082.84
+14:35:02.895  [SRC] Investing USD=4080.30
+14:35:03.381  [SRC] TD USD=4090.70
+14:35:03.602  [SRC] FX EUR/USD=1.156700
+14:35:03.691  [SRC] GP EUR=3530.46
+14:35:04.587  [SRC] Investing EUR=3530.13
+14:35:04.591  [GF] usdQuotes=[(Goldprice.org, 4082.84), (Investing, 4080.30), (TD, 4090.70)]
+14:35:04.593  [GF] eurUsdRate=1.156700
+14:35:04.595  [GF] eurBase=[(Goldprice.org, 3530.46), (Investing, 3530.13)]
+14:35:04.605  [GF] eurQuotes=[(Goldprice.org, 3530.46), (Investing, 3530.13), (TD, 3536.53)]
+14:35:04.615  [GF] consensus USD=4082.84 EUR=3530.30
+14:35:04.618  [GLAST][OK] price=3530.30 ts=1760358904617
+14:35:04.650  [SNAP][OK] slot5=151 price=3530.30
+14:35:04.776  [GF] saved snapshot eur=3530.3 usd=4082.84 fx=1.1567
+14:35:05.297  [GF] end ok=true
+14:35:05.300  [OSF] fetch attempt 1 result ok=true
+14:35:05.301  [OSF] post-fetch UI nudge (complications+tiles)
+14:35:05.338  [OSF] end ok=true reason=aligned-minute
+14:35:05.341  [OSF] http clients cleared
+14:35:05.345  [OSF] bind restore ok=true prev=2453
+14:35:05.349  [OSF] wl release
+14:35:05.356  [ALIGN] alarm scheduled → in=294s (294647ms) next=14:40:00 every=5m
+14:40:00.227  [OSF] start reason=aligned-minute
+14:40:00.307  [OSF] wl acquire ms=60000
+14:40:00.313  [OSF] net wait validated timeoutMs=15000
+14:40:00.320  [OSF] net=validated → proceed
+14:40:00.322  [OSF] post-validate grace ms=1500
+14:40:01.830  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:40:01.835  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:40:01.840  [OSF] http clients injected (short+long) boundTo=2464
+14:40:01.843  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:40:01.997  [OSF] dns try=1/∞ ok=true
+14:40:02.000  [OSF] fetch attempt 1/2
+14:40:02.005  [GF] start
+14:40:02.344  [SRC] GP USD=4080.40
+14:40:03.785  [SRC] Investing USD=4080.13
+14:40:04.281  [SRC] TD USD=4086.22
+14:40:04.461  [SRC] FX EUR/USD=1.156800
+14:40:04.547  [SRC] GP EUR=3526.49
+14:40:05.829  [SRC] Investing EUR=3526.95
+14:40:05.834  [GF] usdQuotes=[(Goldprice.org, 4080.40), (Investing, 4080.13), (TD, 4086.22)]
+14:40:05.836  [GF] eurUsdRate=1.156800
+14:40:05.838  [GF] eurBase=[(Goldprice.org, 3526.49), (Investing, 3526.95)]
+14:40:05.849  [GF] eurQuotes=[(Goldprice.org, 3526.49), (Investing, 3526.95), (TD, 3532.35)]
+14:40:05.860  [GF] consensus USD=4080.27 EUR=3526.72
+14:40:05.866  [GLAST][OK] price=3526.72 ts=1760359205864
+14:40:05.909  [SNAP][OK] slot5=152 price=3526.72
+14:40:06.092  [GF] saved snapshot eur=3526.72 usd=4080.27 fx=1.1568
+14:40:06.567  [GF] end ok=true
+14:40:06.570  [OSF] fetch attempt 1 result ok=true
+14:40:06.572  [OSF] post-fetch UI nudge (complications+tiles)
+14:40:06.608  [OSF] end ok=true reason=aligned-minute
+14:40:06.610  [OSF] http clients cleared
+14:40:06.614  [OSF] bind restore ok=true prev=2453
+14:40:06.619  [OSF] wl release
+14:40:06.625  [ALIGN] alarm scheduled → in=293s (293377ms) next=14:45:00 every=5m
+14:45:00.272  [OSF] start reason=aligned-minute
+14:45:00.275  [OSF] wl acquire ms=60000
+14:45:00.295  [OSF] net wait validated timeoutMs=15000
+14:45:00.300  [OSF] net=validated → proceed
+14:45:00.302  [OSF] post-validate grace ms=1500
+14:45:01.812  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:45:01.820  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:45:01.829  [OSF] http clients injected (short+long) boundTo=2464
+14:45:01.834  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:45:02.084  [OSF] dns try=1/∞ ok=true
+14:45:02.086  [OSF] fetch attempt 1/2
+14:45:02.089  [GF] start
+14:45:02.474  [SRC] GP USD=4077.45
+14:45:03.042  [SRC] Investing USD=4078.26
+14:45:03.537  [SRC] TD USD=4087.02
+14:45:03.740  [SRC] FX EUR/USD=1.157080
+14:45:03.833  [SRC] GP EUR=3524.23
+14:45:04.716  [SRC] Investing EUR=3525.16
+14:45:04.721  [GF] usdQuotes=[(Goldprice.org, 4077.45), (Investing, 4078.26), (TD, 4087.02)]
+14:45:04.723  [GF] eurUsdRate=1.157080
+14:45:04.725  [GF] eurBase=[(Goldprice.org, 3524.23), (Investing, 3525.16)]
+14:45:04.734  [GF] eurQuotes=[(Goldprice.org, 3524.23), (Investing, 3525.16), (TD, 3532.18)]
+14:45:04.745  [GF] consensus USD=4077.86 EUR=3524.70
+14:45:04.748  [GLAST][OK] price=3524.70 ts=1760359504747
+14:45:04.797  [SNAP][OK] slot5=153 price=3524.70
+14:45:04.939  [GF] saved snapshot eur=3524.7 usd=4077.86 fx=1.15708
+14:45:05.440  [GF] end ok=true
+14:45:05.442  [OSF] fetch attempt 1 result ok=true
+14:45:05.444  [OSF] post-fetch UI nudge (complications+tiles)
+14:45:05.480  [OSF] end ok=true reason=aligned-minute
+14:45:05.483  [OSF] http clients cleared
+14:45:05.487  [OSF] bind restore ok=true prev=2453
+14:45:05.491  [OSF] wl release
+14:45:05.498  [ALIGN] alarm scheduled → in=294s (294504ms) next=14:50:00 every=5m
+14:50:00.262  [OSF] start reason=aligned-minute
+14:50:00.265  [OSF] wl acquire ms=60000
+14:50:00.281  [OSF] net wait validated timeoutMs=15000
+14:50:00.298  [OSF] net=validated → proceed
+14:50:00.301  [OSF] post-validate grace ms=1500
+14:50:01.810  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:50:01.817  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:50:01.826  [OSF] http clients injected (short+long) boundTo=2464
+14:50:01.831  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:50:02.044  [OSF] dns try=1/∞ ok=true
+14:50:02.047  [OSF] fetch attempt 1/2
+14:50:02.051  [GF] start
+14:50:02.442  [SRC] GP USD=4076.71
+14:50:03.031  [SRC] Investing USD=4076.85
+14:50:03.565  [SRC] TD USD=4084.63
+14:50:03.780  [SRC] FX EUR/USD=1.156600
+14:50:03.891  [SRC] GP EUR=3524.46
+14:50:04.716  [SRC] Investing EUR=3524.78
+14:50:04.721  [GF] usdQuotes=[(Goldprice.org, 4076.71), (Investing, 4076.85), (TD, 4084.63)]
+14:50:04.723  [GF] eurUsdRate=1.156600
+14:50:04.725  [GF] eurBase=[(Goldprice.org, 3524.46), (Investing, 3524.78)]
+14:50:04.735  [GF] eurQuotes=[(Goldprice.org, 3524.46), (Investing, 3524.78), (TD, 3531.58)]
+14:50:04.745  [GF] consensus USD=4076.78 EUR=3524.62
+14:50:04.749  [GLAST][OK] price=3524.62 ts=1760359804747
+14:50:04.798  [SNAP][OK] slot5=154 price=3524.62
+14:50:04.985  [GF] saved snapshot eur=3524.62 usd=4076.78 fx=1.1566
+14:50:05.483  [GF] end ok=true
+14:50:05.486  [OSF] fetch attempt 1 result ok=true
+14:50:05.487  [OSF] post-fetch UI nudge (complications+tiles)
+14:50:05.524  [OSF] end ok=true reason=aligned-minute
+14:50:05.527  [OSF] http clients cleared
+14:50:05.531  [OSF] bind restore ok=true prev=2453
+14:50:05.535  [OSF] wl release
+14:50:05.542  [ALIGN] alarm scheduled → in=294s (294461ms) next=14:55:00 every=5m
+14:55:00.023  [OSF] start reason=aligned-minute
+14:55:00.030  [OSF] wl acquire ms=60000
+14:55:00.036  [OSF] net wait validated timeoutMs=15000
+14:55:00.045  [OSF] net=validated → proceed
+14:55:00.050  [OSF] post-validate grace ms=1500
+14:55:00.200  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+14:55:00.203  [OSF] start reason=fallback-worker
+14:55:00.205  [OSF][DEBOUNCE] skip (last=179ms ago, window=20000ms)
+14:55:00.207  [WORK] doWork end → retry (fetch failed)
+14:55:01.559  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:55:01.566  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:55:01.576  [OSF] http clients injected (short+long) boundTo=2464
+14:55:01.579  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:55:01.786  [OSF] dns try=1/∞ ok=true
+14:55:01.789  [OSF] fetch attempt 1/2
+14:55:01.791  [GF] start
+14:55:02.139  [SRC] GP USD=4077.33
+14:55:02.694  [SRC] Investing USD=4077.80
+14:55:03.205  [SRC] TD USD=4083.51
+14:55:03.417  [SRC] FX EUR/USD=1.156330
+14:55:03.522  [SRC] GP EUR=3526.03
+14:55:04.235  [SRC] Investing EUR=3526.39
+14:55:04.240  [GF] usdQuotes=[(Goldprice.org, 4077.33), (Investing, 4077.80), (TD, 4083.51)]
+14:55:04.242  [GF] eurUsdRate=1.156330
+14:55:04.244  [GF] eurBase=[(Goldprice.org, 3526.03), (Investing, 3526.39)]
+14:55:04.255  [GF] eurQuotes=[(Goldprice.org, 3526.03), (Investing, 3526.39), (TD, 3531.44)]
+14:55:04.267  [GF] consensus USD=4077.57 EUR=3526.21
+14:55:04.273  [GLAST][OK] price=3526.21 ts=1760360104271
+14:55:04.317  [SNAP][OK] slot5=155 price=3526.21
+14:55:04.463  [GF] saved snapshot eur=3526.21 usd=4077.57 fx=1.15633
+14:55:04.900  [GF] end ok=true
+14:55:04.903  [OSF] fetch attempt 1 result ok=true
+14:55:04.905  [OSF] post-fetch UI nudge (complications+tiles)
+14:55:04.958  [OSF] end ok=true reason=aligned-minute
+14:55:04.960  [OSF] http clients cleared
+14:55:04.964  [OSF] bind restore ok=true prev=2453
+14:55:04.968  [OSF] wl release
+14:55:04.975  [ALIGN] alarm scheduled → in=295s (295028ms) next=15:00:00 every=5m
+14:56:57.333  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+14:56:57.336  [OSF] start reason=fallback-worker
+14:56:57.339  [OSF] wl acquire ms=60000
+14:56:57.344  [OSF] net wait validated timeoutMs=15000
+14:56:57.349  [OSF] net=validated → proceed
+14:56:57.351  [OSF] post-validate grace ms=1500
+14:56:58.859  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+14:56:58.866  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+14:56:58.875  [OSF] http clients injected (short+long) boundTo=2464
+14:56:58.879  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+14:56:59.005  [OSF] dns try=1/∞ ok=true
+14:56:59.012  [OSF] fetch attempt 1/2
+14:56:59.021  [GF] start
+14:56:59.428  [SRC] GP USD=4080.09
+14:57:00.097  [SRC] Investing USD=4077.17
+14:57:00.544  [SRC] TD USD=4083.61
+14:57:00.749  [SRC] FX EUR/USD=1.156330
+14:57:00.845  [SRC] GP EUR=3526.37
+14:57:01.535  [SRC] Investing EUR=3526.96
+14:57:01.540  [GF] usdQuotes=[(Goldprice.org, 4080.09), (Investing, 4077.17), (TD, 4083.61)]
+14:57:01.542  [GF] eurUsdRate=1.156330
+14:57:01.544  [GF] eurBase=[(Goldprice.org, 3526.37), (Investing, 3526.96)]
+14:57:01.553  [GF] eurQuotes=[(Goldprice.org, 3526.37), (Investing, 3526.96), (TD, 3531.53)]
+14:57:01.563  [GF] consensus USD=4080.09 EUR=3526.67
+14:57:01.566  [GLAST][OK] price=3526.67 ts=1760360221565
+14:57:01.734  [GF] saved snapshot eur=3526.67 usd=4080.09 fx=1.15633
+14:57:02.219  [GF] end ok=true
+14:57:02.222  [OSF] fetch attempt 1 result ok=true
+14:57:02.224  [OSF] post-fetch UI nudge (complications+tiles)
+14:57:02.258  [OSF] end ok=true reason=fallback-worker
+14:57:02.261  [OSF] http clients cleared
+14:57:02.265  [OSF] bind restore ok=true prev=2453
+14:57:02.268  [OSF] wl release
+14:57:02.271  [WORK] doWork end → success
+14:58:46.318  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+14:58:46.324  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+14:58:46.351  [ALARM] armed • delay=1800000ms triggerAt=247782809 pi=15275356
+15:00:00.022  [OSF] start reason=aligned-minute
+15:00:00.025  [OSF] wl acquire ms=60000
+15:00:00.034  [OSF] net wait validated timeoutMs=15000
+15:00:00.042  [OSF] net=validated → proceed
+15:00:00.048  [OSF] post-validate grace ms=1500
+15:00:01.558  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:00:01.564  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:00:01.573  [OSF] http clients injected (short+long) boundTo=2464
+15:00:01.577  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:00:01.780  [OSF] dns try=1/∞ ok=true
+15:00:01.783  [OSF] fetch attempt 1/2
+15:00:01.788  [GF] start
+15:00:02.173  [SRC] GP USD=4080.67
+15:00:02.741  [SRC] Investing USD=4080.39
+15:00:03.222  [SRC] TD USD=4086.32
+15:00:03.437  [SRC] FX EUR/USD=1.156740
+15:00:03.537  [SRC] GP EUR=3527.58
+15:00:04.603  [SRC] Investing EUR=3527.51
+15:00:04.608  [GF] usdQuotes=[(Goldprice.org, 4080.67), (Investing, 4080.39), (TD, 4086.32)]
+15:00:04.610  [GF] eurUsdRate=1.156740
+15:00:04.612  [GF] eurBase=[(Goldprice.org, 3527.58), (Investing, 3527.51)]
+15:00:04.621  [GF] eurQuotes=[(Goldprice.org, 3527.58), (Investing, 3527.51), (TD, 3532.62)]
+15:00:04.632  [GF] consensus USD=4080.53 EUR=3527.55
+15:00:04.636  [GLAST][OK] price=3527.55 ts=1760360404634
+15:00:04.683  [SNAP][OK] slot5=156 price=3527.55
+15:00:04.845  [GF] saved snapshot eur=3527.55 usd=4080.53 fx=1.15674
+15:00:05.297  [GF] end ok=true
+15:00:05.300  [OSF] fetch attempt 1 result ok=true
+15:00:05.302  [OSF] post-fetch UI nudge (complications+tiles)
+15:00:05.337  [OSF] end ok=true reason=aligned-minute
+15:00:05.339  [OSF] http clients cleared
+15:00:05.343  [OSF] bind restore ok=true prev=2453
+15:00:05.347  [OSF] wl release
+15:00:05.354  [ALIGN] alarm scheduled → in=294s (294649ms) next=15:05:00 every=5m
+15:05:00.288  [OSF] start reason=aligned-minute
+15:05:00.292  [OSF] wl acquire ms=60000
+15:05:00.296  [OSF] net wait validated timeoutMs=15000
+15:05:00.301  [OSF] net=validated → proceed
+15:05:00.304  [OSF] post-validate grace ms=1500
+15:05:01.812  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:05:01.819  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:05:01.828  [OSF] http clients injected (short+long) boundTo=2464
+15:05:01.831  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:05:02.070  [OSF] dns try=1/∞ ok=true
+15:05:02.076  [OSF] fetch attempt 1/2
+15:05:02.081  [GF] start
+15:05:02.489  [SRC] GP USD=4081.38
+15:05:27.552  [SRC][WARN] Investing USD fail: no page
+15:05:27.580  [SRC][WARN] TD USD fail: Unable to resolve host "api.twelvedata.com": No address associated with hostname
+15:05:27.606  [SRC][WARN] FX fail: Unable to resolve host "api.twelvedata.com": No address associated with hostname
+15:05:27.632  [SRC][WARN] GP EUR fail: Unable to resolve host "data-asg.goldprice.org": No address associated with hostname
+15:05:27.663  [SRC][WARN] Investing EUR fail: no page
+15:05:27.667  [GF] usdQuotes=[(Goldprice.org, 4081.38), (Investing, n/a), (TD, n/a)]
+15:05:27.669  [GF] eurUsdRate=1
+15:05:27.671  [GF] eurBase=[(Goldprice.org, n/a), (Investing, n/a)]
+15:05:27.674  [GF] eurQuotes=[(Goldprice.org, n/a), (Investing, n/a), (TD, n/a)]
+15:05:27.677  [GF] consensus USD=4081.38 EUR=0
+15:05:27.679  [GLAST][REJECT] out-of-range price=0.00
+15:05:27.691  [SNAP][REJECT] out-of-range price=0.00
+15:05:27.821  [GF] saved snapshot eur=0.0 usd=4081.38 fx=1.0
+15:05:28.293  [GF] end ok=true
+15:05:28.297  [OSF] fetch attempt 1 result ok=true
+15:05:28.300  [OSF] post-fetch UI nudge (complications+tiles)
+15:05:28.358  [OSF] end ok=true reason=aligned-minute
+15:05:28.361  [OSF] http clients cleared
+15:05:28.365  [OSF] bind restore ok=true prev=2453
+15:05:28.369  [OSF] wl release
+15:05:28.377  [ALIGN] alarm scheduled → in=271s (271626ms) next=15:10:00 every=5m
+15:10:00.026  [OSF] start reason=aligned-minute
+15:10:00.035  [OSF] wl acquire ms=60000
+15:10:00.042  [OSF] net wait validated timeoutMs=15000
+15:10:00.049  [OSF] net=validated → proceed
+15:10:00.052  [OSF] post-validate grace ms=1500
+15:10:01.560  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:10:01.566  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:10:01.580  [OSF] http clients injected (short+long) boundTo=2464
+15:10:01.585  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:10:01.811  [OSF] dns try=1/∞ ok=true
+15:10:01.813  [OSF] fetch attempt 1/2
+15:10:01.816  [GF] start
+15:10:02.183  [SRC] GP USD=4084.54
+15:10:03.139  [SRC] Investing USD=4085.91
+15:10:03.675  [SRC] TD USD=4090.14
+15:10:03.902  [SRC] FX EUR/USD=1.157050
+15:10:03.998  [SRC] GP EUR=3529.47
+15:10:04.771  [SRC] Investing EUR=3530.57
+15:10:04.775  [GF] usdQuotes=[(Goldprice.org, 4084.54), (Investing, 4085.91), (TD, 4090.14)]
+15:10:04.777  [GF] eurUsdRate=1.157050
+15:10:04.779  [GF] eurBase=[(Goldprice.org, 3529.47), (Investing, 3530.57)]
+15:10:04.788  [GF] eurQuotes=[(Goldprice.org, 3529.47), (Investing, 3530.57), (TD, 3534.97)]
+15:10:04.798  [GF] consensus USD=4085.23 EUR=3530.02
+15:10:04.802  [GLAST][OK] price=3530.02 ts=1760361004800
+15:10:04.858  [SNAP][OK] slot5=158 price=3530.02
+15:10:05.004  [GF] saved snapshot eur=3530.02 usd=4085.23 fx=1.15705
+15:10:05.504  [GF] end ok=true
+15:10:05.507  [OSF] fetch attempt 1 result ok=true
+15:10:05.509  [OSF] post-fetch UI nudge (complications+tiles)
+15:10:05.543  [OSF] end ok=true reason=aligned-minute
+15:10:05.545  [OSF] http clients cleared
+15:10:05.549  [OSF] bind restore ok=true prev=2453
+15:10:05.552  [OSF] wl release
+15:10:05.559  [ALIGN] alarm scheduled → in=294s (294444ms) next=15:15:00 every=5m
+15:15:00.020  [OSF] start reason=aligned-minute
+15:15:00.022  [OSF] wl acquire ms=60000
+15:15:00.028  [OSF] net wait validated timeoutMs=15000
+15:15:00.036  [OSF] net=validated → proceed
+15:15:00.039  [OSF] post-validate grace ms=1500
+15:15:01.545  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:15:01.549  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:15:01.556  [OSF] http clients injected (short+long) boundTo=2464
+15:15:01.558  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:15:01.767  [OSF] dns try=1/∞ ok=true
+15:15:01.770  [OSF] fetch attempt 1/2
+15:15:01.774  [GF] start
+15:15:02.137  [SRC] GP USD=4087.47
+15:15:02.743  [SRC] Investing USD=4084.69
+15:15:03.320  [SRC] TD USD=4092.51
+15:15:03.509  [SRC] FX EUR/USD=1.157110
+15:15:03.600  [SRC] GP EUR=3532.83
+15:15:04.453  [SRC] Investing EUR=3532.33
+15:15:04.458  [GF] usdQuotes=[(Goldprice.org, 4087.47), (Investing, 4084.69), (TD, 4092.51)]
+15:15:04.460  [GF] eurUsdRate=1.157110
+15:15:04.463  [GF] eurBase=[(Goldprice.org, 3532.83), (Investing, 3532.33)]
+15:15:04.472  [GF] eurQuotes=[(Goldprice.org, 3532.83), (Investing, 3532.33), (TD, 3536.84)]
+15:15:04.481  [GF] consensus USD=4087.47 EUR=3532.58
+15:15:04.485  [GLAST][OK] price=3532.58 ts=1760361304483
+15:15:04.536  [SNAP][OK] slot5=159 price=3532.58
+15:15:04.687  [GF] saved snapshot eur=3532.58 usd=4087.47 fx=1.15711
+15:15:05.119  [GF] end ok=true
+15:15:05.121  [OSF] fetch attempt 1 result ok=true
+15:15:05.123  [OSF] post-fetch UI nudge (complications+tiles)
+15:15:05.162  [OSF] end ok=true reason=aligned-minute
+15:15:05.164  [OSF] http clients cleared
+15:15:05.168  [OSF] bind restore ok=true prev=2453
+15:15:05.172  [OSF] wl release
+15:15:05.179  [ALIGN] alarm scheduled → in=294s (294824ms) next=15:20:00 every=5m
+15:20:00.330  [OSF] start reason=aligned-minute
+15:20:00.337  [OSF] wl acquire ms=60000
+15:20:00.345  [OSF] net wait validated timeoutMs=15000
+15:20:00.353  [OSF] net=validated → proceed
+15:20:00.356  [OSF] post-validate grace ms=1500
+15:20:01.865  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:20:01.872  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:20:01.881  [OSF] http clients injected (short+long) boundTo=2464
+15:20:01.885  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:20:02.126  [OSF] dns try=1/∞ ok=true
+15:20:02.129  [OSF] fetch attempt 1/2
+15:20:02.132  [GF] start
+15:20:02.502  [SRC] GP USD=4086.81
+15:20:03.069  [SRC] Investing USD=4087.55
+15:20:03.578  [SRC] TD USD=4093.66
+15:20:03.845  [SRC] FX EUR/USD=1.156890
+15:20:03.946  [SRC] GP EUR=3533.25
+15:20:04.640  [SRC] Investing EUR=3532.45
+15:20:04.645  [GF] usdQuotes=[(Goldprice.org, 4086.81), (Investing, 4087.55), (TD, 4093.66)]
+15:20:04.647  [GF] eurUsdRate=1.156890
+15:20:04.649  [GF] eurBase=[(Goldprice.org, 3533.25), (Investing, 3532.45)]
+15:20:04.659  [GF] eurQuotes=[(Goldprice.org, 3533.25), (Investing, 3532.45), (TD, 3538.50)]
+15:20:04.669  [GF] consensus USD=4087.18 EUR=3532.85
+15:20:04.672  [GLAST][OK] price=3532.85 ts=1760361604671
+15:20:04.730  [SNAP][OK] slot5=160 price=3532.85
+15:20:04.850  [GF] saved snapshot eur=3532.85 usd=4087.18 fx=1.15689
+15:20:05.300  [GF] end ok=true
+15:20:05.302  [OSF] fetch attempt 1 result ok=true
+15:20:05.304  [OSF] post-fetch UI nudge (complications+tiles)
+15:20:05.340  [OSF] end ok=true reason=aligned-minute
+15:20:05.342  [OSF] http clients cleared
+15:20:05.346  [OSF] bind restore ok=true prev=2453
+15:20:05.350  [OSF] wl release
+15:20:05.357  [ALIGN] alarm scheduled → in=294s (294646ms) next=15:25:00 every=5m
+15:24:27.503  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+15:24:27.508  [OSF] start reason=fallback-worker
+15:24:27.515  [OSF] wl acquire ms=60000
+15:24:27.520  [OSF] net wait validated timeoutMs=15000
+15:24:27.527  [OSF] net=validated → proceed
+15:24:27.529  [OSF] post-validate grace ms=1500
+15:24:29.043  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:24:29.049  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:24:29.059  [OSF] http clients injected (short+long) boundTo=2464
+15:24:29.065  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:24:29.308  [OSF] dns try=1/∞ ok=true
+15:24:29.311  [OSF] fetch attempt 1/2
+15:24:29.314  [GF] start
+15:24:29.661  [SRC] GP USD=4088.28
+15:24:30.228  [SRC] Investing USD=4087.33
+15:24:30.726  [SRC] TD USD=4093.45
+15:24:30.939  [SRC] FX EUR/USD=1.156820
+15:24:31.058  [SRC] GP EUR=3534.45
+15:24:32.142  [SRC] Investing EUR=3535.24
+15:24:32.147  [GF] usdQuotes=[(Goldprice.org, 4088.28), (Investing, 4087.33), (TD, 4093.45)]
+15:24:32.149  [GF] eurUsdRate=1.156820
+15:24:32.151  [GF] eurBase=[(Goldprice.org, 3534.45), (Investing, 3535.24)]
+15:24:32.164  [GF] eurQuotes=[(Goldprice.org, 3534.45), (Investing, 3535.24), (TD, 3538.54)]
+15:24:32.176  [GF] consensus USD=4087.81 EUR=3534.85
+15:24:32.181  [GLAST][OK] price=3534.85 ts=1760361872178
+15:24:32.238  [SNAP][OK] slot5=160 price=3534.85
+15:24:32.360  [GF] saved snapshot eur=3534.85 usd=4087.81 fx=1.15682
+15:24:32.813  [GF] end ok=true
+15:24:32.816  [OSF] fetch attempt 1 result ok=true
+15:24:32.818  [OSF] post-fetch UI nudge (complications+tiles)
+15:24:32.854  [OSF] end ok=true reason=fallback-worker
+15:24:32.857  [OSF] http clients cleared
+15:24:32.861  [OSF] bind restore ok=true prev=2453
+15:24:32.865  [OSF] wl release
+15:24:32.868  [WORK] doWork end → success
+15:25:00.324  [OSF] start reason=aligned-minute
+15:25:00.329  [OSF] wl acquire ms=60000
+15:25:00.335  [OSF] net wait validated timeoutMs=15000
+15:25:00.342  [OSF] net=validated → proceed
+15:25:00.344  [OSF] post-validate grace ms=1500
+15:25:01.852  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:25:01.858  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:25:01.868  [OSF] http clients injected (short+long) boundTo=2464
+15:25:01.873  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:25:02.102  [OSF] dns try=1/∞ ok=true
+15:25:02.105  [OSF] fetch attempt 1/2
+15:25:02.108  [GF] start
+15:25:02.428  [SRC] GP USD=4089.81
+15:25:03.098  [SRC] Investing USD=4088.02
+15:25:03.567  [SRC] TD USD=4093.45
+15:25:03.752  [SRC] FX EUR/USD=1.156820
+15:25:03.838  [SRC] GP EUR=3535.27
+15:25:04.389  [SRC] Investing EUR=3530.15
+15:25:04.395  [GF] usdQuotes=[(Goldprice.org, 4089.81), (Investing, 4088.02), (TD, 4093.45)]
+15:25:04.397  [GF] eurUsdRate=1.156820
+15:25:04.399  [GF] eurBase=[(Goldprice.org, 3535.27), (Investing, 3530.15)]
+15:25:04.410  [GF] eurQuotes=[(Goldprice.org, 3535.27), (Investing, 3530.15), (TD, 3538.54)]
+15:25:04.420  [GF] consensus USD=4089.81 EUR=3535.27
+15:25:04.424  [GLAST][OK] price=3535.27 ts=1760361904422
+15:25:04.484  [SNAP][OK] slot5=161 price=3535.27
+15:25:04.639  [GF] saved snapshot eur=3535.27 usd=4089.81 fx=1.15682
+15:25:05.116  [GF] end ok=true
+15:25:05.119  [OSF] fetch attempt 1 result ok=true
+15:25:05.121  [OSF] post-fetch UI nudge (complications+tiles)
+15:25:05.164  [OSF] end ok=true reason=aligned-minute
+15:25:05.166  [OSF] http clients cleared
+15:25:05.170  [OSF] bind restore ok=true prev=2453
+15:25:05.175  [OSF] wl release
+15:25:05.182  [ALIGN] alarm scheduled → in=294s (294821ms) next=15:30:00 every=5m
+15:28:46.697  [ALARM] fire • action=com.example.complicationprovider.ACTION_REFRESH_ALARM
+15:28:46.700  [ALARM] REFRESH_ALARM tick → refresh complications + Tile
+15:28:46.723  [ALARM] armed • delay=1800000ms triggerAt=249583181 pi=136289408
+15:30:00.365  [OSF] start reason=aligned-minute
+15:30:00.369  [OSF] wl acquire ms=60000
+15:30:00.377  [OSF] net wait validated timeoutMs=15000
+15:30:00.385  [OSF] net=validated → proceed
+15:30:00.387  [OSF] post-validate grace ms=1500
+15:30:01.895  [OSF] link iface=rmnet0 dns=[212.91.97.3, 212.91.97.4]
+15:30:01.903  [OSF] bindProcessToNetwork ok=true netHash=2464 prev=2453
+15:30:01.913  [OSF] http clients injected (short+long) boundTo=2464
+15:30:01.919  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:30:02.217  [OSF] dns try=1/∞ ok=true
+15:30:02.221  [OSF] fetch attempt 1/2
+15:30:02.233  [GF] start
+15:30:02.627  [SRC] GP USD=4091.59
+15:30:03.252  [SRC] Investing USD=4091.20
+15:30:03.727  [SRC] TD USD=4097.29
+15:30:03.941  [SRC] FX EUR/USD=1.157080
+15:30:04.074  [SRC] GP EUR=3535.68
+15:30:04.767  [SRC] Investing EUR=3535.63
+15:30:04.772  [GF] usdQuotes=[(Goldprice.org, 4091.59), (Investing, 4091.20), (TD, 4097.29)]
+15:30:04.774  [GF] eurUsdRate=1.157080
+15:30:04.777  [GF] eurBase=[(Goldprice.org, 3535.68), (Investing, 3535.63)]
+15:30:04.787  [GF] eurQuotes=[(Goldprice.org, 3535.68), (Investing, 3535.63), (TD, 3541.06)]
+15:30:04.797  [GF] consensus USD=4091.40 EUR=3535.66
+15:30:04.801  [GLAST][OK] price=3535.66 ts=1760362204799
+15:30:04.863  [SNAP][OK] slot5=162 price=3535.66
+15:30:05.072  [GF] saved snapshot eur=3535.66 usd=4091.4 fx=1.15708
+15:30:05.544  [GF] end ok=true
+15:30:05.546  [OSF] fetch attempt 1 result ok=true
+15:30:05.549  [OSF] post-fetch UI nudge (complications+tiles)
+15:30:05.615  [OSF] end ok=true reason=aligned-minute
+15:30:05.618  [OSF] http clients cleared
+15:30:05.622  [OSF] bind restore ok=true prev=2453
+15:30:05.627  [OSF] wl release
+15:30:05.635  [ALIGN] alarm scheduled → in=294s (294368ms) next=15:35:00 every=5m
+15:35:00.017  [OSF] start reason=aligned-minute
+15:35:00.029  [OSF] wl acquire ms=60000
+15:35:00.034  [OSF] net wait validated timeoutMs=15000
+15:35:00.041  [OSF] net=validated → proceed
+15:35:00.044  [OSF] post-validate grace ms=1500
+15:35:01.554  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+15:35:01.562  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2453
+15:35:01.570  [OSF] http clients injected (short+long) boundTo=2453
+15:35:01.573  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:35:06.661  [OSF] dns try=1/∞ ok=false
+15:35:12.491  [OSF] dns try=2/∞ ok=false
+15:35:13.304  [OSF] dns try=3/∞ ok=false
+15:35:14.116  [OSF] dns try=4/∞ ok=false
+15:35:14.931  [OSF] dns try=5/∞ ok=false
+15:35:15.749  [OSF] dns try=6/∞ ok=false
+15:35:16.562  [OSF] dns try=7/∞ ok=false
+15:35:17.380  [OSF] dns try=8/∞ ok=false
+15:35:18.198  [OSF] dns try=9/∞ ok=false
+15:35:19.017  [OSF] dns try=10/∞ ok=false
+15:35:19.842  [OSF] dns try=11/∞ ok=false
+15:35:20.660  [OSF] dns try=12/∞ ok=false
+15:35:21.483  [OSF] dns try=13/∞ ok=false
+15:35:22.313  [OSF] dns try=14/∞ ok=false
+15:35:23.142  [OSF] dns try=15/∞ ok=false
+15:35:23.970  [OSF] dns try=16/∞ ok=false
+15:35:24.809  [OSF] dns try=17/∞ ok=false
+15:35:25.634  [OSF] dns try=18/∞ ok=false
+15:35:26.453  [OSF] dns try=19/∞ ok=false
+15:35:27.275  [OSF] dns try=20/∞ ok=false
+15:35:28.101  [OSF] dns try=21/∞ ok=false
+15:35:28.931  [OSF] dns try=22/∞ ok=false
+15:35:29.757  [OSF] dns try=23/∞ ok=false
+15:35:30.576  [OSF] dns try=24/∞ ok=false
+15:35:31.401  [OSF] dns try=25/∞ ok=false
+15:35:32.231  [OSF] dns try=26/∞ ok=false
+15:35:33.065  [OSF] dns try=27/∞ ok=false
+15:35:33.899  [OSF] dns try=28/∞ ok=false
+15:35:34.719  [OSF] dns try=29/∞ ok=false
+15:35:35.544  [OSF] dns try=30/∞ ok=false
+15:35:36.377  [OSF] dns try=31/∞ ok=false
+15:35:37.210  [OSF] dns try=32/∞ ok=false
+15:35:38.044  [OSF] dns try=33/∞ ok=false
+15:35:38.877  [OSF] dns try=34/∞ ok=false
+15:35:39.710  [OSF] dns try=35/∞ ok=false
+15:35:40.545  [OSF] dns try=36/∞ ok=false
+15:35:41.379  [OSF] dns try=37/∞ ok=false
+15:35:42.213  [OSF] dns try=38/∞ ok=false
+15:35:43.039  [OSF] dns try=39/∞ ok=false
+15:35:43.869  [OSF] dns try=40/∞ ok=false
+15:35:44.703  [OSF] dns try=41/∞ ok=false
+15:35:45.612  [OSF] dns try=42/∞ ok=true
+15:35:45.616  [OSF] fetch attempt 1/2
+15:35:45.625  [GF] start
+15:35:45.889  [SRC] GP USD=4085.97
+15:35:51.308  [SRC] Investing USD=4085.69
+15:35:51.748  [SRC] TD USD=4095.12
+15:35:51.938  [SRC] FX EUR/USD=1.156880
+15:35:52.032  [SRC] GP EUR=3532.31
+15:35:53.483  [SRC][WARN] Investing EUR fail: no page
+15:35:53.490  [GF] usdQuotes=[(Goldprice.org, 4085.97), (Investing, 4085.69), (TD, 4095.12)]
+15:35:53.494  [GF] eurUsdRate=1.156880
+15:35:53.497  [GF] eurBase=[(Goldprice.org, 3532.31), (Investing, n/a)]
+15:35:53.512  [GF] eurQuotes=[(Goldprice.org, 3532.31), (Investing, n/a), (TD, 3539.80)]
+15:35:53.522  [GF] consensus USD=4085.83 EUR=3536.06
+15:35:53.527  [GLAST][OK] price=3536.06 ts=1760362553525
+15:35:53.566  [SNAP][OK] slot5=163 price=3536.06
+15:35:53.747  [GF] saved snapshot eur=3536.06 usd=4085.83 fx=1.15688
+15:35:54.304  [GF] end ok=true
+15:35:54.307  [OSF] fetch attempt 1 result ok=true
+15:35:54.310  [OSF] post-fetch UI nudge (complications+tiles)
+15:35:54.356  [OSF] end ok=true reason=aligned-minute
+15:35:54.359  [OSF] http clients cleared
+15:35:54.363  [OSF] bind restore ok=true prev=2453
+15:35:54.370  [OSF] wl release
+15:35:54.378  [ALIGN] alarm scheduled → in=245s (245625ms) next=15:40:00 every=5m
+15:40:00.386  [OSF] start reason=aligned-minute
+15:40:00.391  [OSF] wl acquire ms=60000
+15:40:00.397  [OSF] net wait validated timeoutMs=15000
+15:40:00.404  [OSF] net=validated → proceed
+15:40:00.407  [OSF] post-validate grace ms=1500
+15:40:01.916  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+15:40:01.921  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2453
+15:40:01.929  [OSF] http clients injected (short+long) boundTo=2453
+15:40:01.933  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:40:01.977  [OSF] dns try=1/∞ ok=true
+15:40:01.980  [OSF] fetch attempt 1/2
+15:40:01.984  [GF] start
+15:40:02.280  [SRC] GP USD=4087.07
+15:40:03.241  [SRC] Investing USD=4085.70
+15:40:03.696  [SRC] TD USD=4091.28
+15:40:03.862  [SRC] FX EUR/USD=1.156990
+15:40:03.923  [SRC] GP EUR=3531.35
+15:40:05.094  [SRC] Investing EUR=3532.18
+15:40:05.099  [GF] usdQuotes=[(Goldprice.org, 4087.07), (Investing, 4085.70), (TD, 4091.28)]
+15:40:05.101  [GF] eurUsdRate=1.156990
+15:40:05.103  [GF] eurBase=[(Goldprice.org, 3531.35), (Investing, 3532.18)]
+15:40:05.112  [GF] eurQuotes=[(Goldprice.org, 3531.35), (Investing, 3532.18), (TD, 3536.14)]
+15:40:05.122  [GF] consensus USD=4086.39 EUR=3531.77
+15:40:05.126  [GLAST][OK] price=3531.77 ts=1760362805125
+15:40:05.180  [SNAP][OK] slot5=164 price=3531.77
+15:40:05.297  [GF] saved snapshot eur=3531.77 usd=4086.39 fx=1.15699
+15:40:05.803  [GF] end ok=true
+15:40:05.805  [OSF] fetch attempt 1 result ok=true
+15:40:05.808  [OSF] post-fetch UI nudge (complications+tiles)
+15:40:05.848  [OSF] end ok=true reason=aligned-minute
+15:40:05.854  [OSF] http clients cleared
+15:40:05.857  [OSF] bind restore ok=true prev=2453
+15:40:05.861  [OSF] wl release
+15:40:05.868  [ALIGN] alarm scheduled → in=294s (294135ms) next=15:45:00 every=5m
+15:44:28.632  [WORK] doWork start → OneShotFetcher.run(fallback-worker)
+15:44:28.635  [OSF] start reason=fallback-worker
+15:44:28.646  [OSF] wl acquire ms=60000
+15:44:28.665  [OSF] net wait validated timeoutMs=15000
+15:44:28.677  [OSF] net=validated → proceed
+15:44:28.680  [OSF] post-validate grace ms=1500
+15:44:30.194  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+15:44:30.202  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2453
+15:44:30.211  [OSF] http clients injected (short+long) boundTo=2453
+15:44:30.215  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:44:30.302  [OSF] dns try=1/∞ ok=true
+15:44:30.304  [OSF] fetch attempt 1/2
+15:44:30.307  [GF] start
+15:44:30.595  [SRC] GP USD=4085.45
+15:44:31.811  [SRC] Investing USD=4086.05
+15:44:32.294  [SRC] TD USD=4090.47
+15:44:32.472  [SRC] FX EUR/USD=1.156920
+15:44:32.546  [SRC] GP EUR=3531.35
+15:44:33.691  [SRC] Investing EUR=3531.67
+15:44:33.704  [GF] usdQuotes=[(Goldprice.org, 4085.45), (Investing, 4086.05), (TD, 4090.47)]
+15:44:33.711  [GF] eurUsdRate=1.156920
+15:44:33.717  [GF] eurBase=[(Goldprice.org, 3531.35), (Investing, 3531.67)]
+15:44:33.743  [GF] eurQuotes=[(Goldprice.org, 3531.35), (Investing, 3531.67), (TD, 3535.66)]
+15:44:33.776  [GF] consensus USD=4085.75 EUR=3531.51
+15:44:33.831  [GLAST][OK] price=3531.51 ts=1760363073813
+15:44:33.893  [SNAP][OK] slot5=164 price=3531.51
+15:44:34.102  [GF] saved snapshot eur=3531.51 usd=4085.75 fx=1.15692
+15:44:34.575  [GF] end ok=true
+15:44:34.577  [OSF] fetch attempt 1 result ok=true
+15:44:34.580  [OSF] post-fetch UI nudge (complications+tiles)
+15:44:34.623  [OSF] end ok=true reason=fallback-worker
+15:44:34.625  [OSF] http clients cleared
+15:44:34.628  [OSF] bind restore ok=true prev=2453
+15:44:34.632  [OSF] wl release
+15:44:34.635  [WORK] doWork end → success
+15:45:00.024  [OSF] start reason=aligned-minute
+15:45:00.028  [OSF] wl acquire ms=60000
+15:45:00.034  [OSF] net wait validated timeoutMs=15000
+15:45:00.042  [OSF] net=validated → proceed
+15:45:00.045  [OSF] post-validate grace ms=1500
+15:45:01.553  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+15:45:01.557  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2453
+15:45:01.564  [OSF] http clients injected (short+long) boundTo=2453
+15:45:01.568  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:45:01.622  [OSF] dns try=1/∞ ok=true
+15:45:01.625  [OSF] fetch attempt 1/2
+15:45:01.629  [GF] start
+15:45:01.913  [SRC] GP USD=4084.05
+15:45:02.785  [SRC] Investing USD=4088.32
+15:45:03.170  [SRC] TD USD=4090.47
+15:45:03.363  [SRC] FX EUR/USD=1.156920
+15:45:03.441  [SRC] GP EUR=3531.57
+15:45:04.698  [SRC] Investing EUR=3531.67
+15:45:04.702  [GF] usdQuotes=[(Goldprice.org, 4084.05), (Investing, 4088.32), (TD, 4090.47)]
+15:45:04.704  [GF] eurUsdRate=1.156920
+15:45:04.706  [GF] eurBase=[(Goldprice.org, 3531.57), (Investing, 3531.67)]
+15:45:04.715  [GF] eurQuotes=[(Goldprice.org, 3531.57), (Investing, 3531.67), (TD, 3535.66)]
+15:45:04.725  [GF] consensus USD=4088.32 EUR=3531.62
+15:45:04.729  [GLAST][OK] price=3531.62 ts=1760363104727
+15:45:04.793  [SNAP][OK] slot5=165 price=3531.62
+15:45:04.929  [GF] saved snapshot eur=3531.62 usd=4088.32 fx=1.15692
+15:45:05.388  [GF] end ok=true
+15:45:05.390  [OSF] fetch attempt 1 result ok=true
+15:45:05.392  [OSF] post-fetch UI nudge (complications+tiles)
+15:45:05.426  [OSF] end ok=true reason=aligned-minute
+15:45:05.429  [OSF] http clients cleared
+15:45:05.432  [OSF] bind restore ok=true prev=2453
+15:45:05.436  [OSF] wl release
+15:45:05.444  [ALIGN] alarm scheduled → in=294s (294560ms) next=15:50:00 every=5m
+15:50:00.432  [OSF] start reason=aligned-minute
+15:50:00.436  [OSF] wl acquire ms=60000
+15:50:00.440  [OSF] net wait validated timeoutMs=15000
+15:50:00.492  [OSF] net=validated → proceed
+15:50:00.496  [OSF] post-validate grace ms=1500
+15:50:02.007  [OSF] link iface=wlan0 dns=[fda2:83fb:c477::1, 192.168.1.254]
+15:50:02.013  [OSF] bindProcessToNetwork ok=true netHash=2453 prev=2453
+15:50:02.021  [OSF] http clients injected (short+long) boundTo=2453
+15:50:02.025  [OSF] dns preflight start hosts=data-asg.goldprice.org, api.twelvedata.com, www.investing.com
+15:50:02.108  [OSF] dns try=1/∞ ok=true
+15:50:02.113  [OSF] fetch attempt 1/2
+15:50:02.119  [GF] start
+15:50:02.402  [SRC] GP USD=4091.77
+15:50:04.405  [SRC] Investing USD=4092.08
+15:50:04.790  [SRC] TD USD=4097.38
+15:50:04.939  [SRC] FX EUR/USD=1.157430
+15:50:05.003  [SRC] GP EUR=3535.63
+15:50:06.247  [SRC] Investing EUR=3535.27
+15:50:06.252  [GF] usdQuotes=[(Goldprice.org, 4091.77), (Investing, 4092.08), (TD, 4097.38)]
+15:50:06.255  [GF] eurUsdRate=1.157430
+15:50:06.257  [GF] eurBase=[(Goldprice.org, 3535.63), (Investing, 3535.27)]
+15:50:06.266  [GF] eurQuotes=[(Goldprice.org, 3535.63), (Investing, 3535.27), (TD, 3540.07)]
+15:50:06.277  [GF] consensus USD=4091.93 EUR=3535.45
+15:50:06.281  [GLAST][OK] price=3535.45 ts=1760363406279
+15:50:06.346  [SNAP][OK] slot5=166 price=3535.45
+15:50:06.489  [GF] saved snapshot eur=3535.45 usd=4091.93 fx=1.15743
+15:50:07.045  [GF] end ok=true
+15:50:07.048  [OSF] fetch attempt 1 result ok=true
+15:50:07.050  [OSF] post-fetch UI nudge (complications+tiles)
+15:50:07.091  [OSF] end ok=true reason=aligned-minute
+15:50:07.094  [OSF] http clients cleared
+15:50:07.097  [OSF] bind restore ok=true prev=2453
+15:50:07.104  [OSF] wl release
+15:50:07.111  [ALIGN] alarm scheduled → in=292s (292891ms) next=15:55:00 every=5m
