@@ -1,53 +1,91 @@
-// app/src/main/java/com/example/complicationprovider/net/LoggedHttp.kt
 package com.example.complicationprovider.net
 
-import android.net.ConnectivityManager
-import android.net.Network
-import okhttp3.Dns
+import android.util.Log
+import com.example.complicationprovider.util.FileLogger
+import okhttp3.EventListener
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import java.net.InetAddress
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
- * Minimalni helper za izradu OkHttp klijenata koji su vezani na točno zadanu mrežu (Network).
- * - DNS ide preko Network.getAllByName() → izbjegava globalni negativni cache.
- * - socketFactory = net.socketFactory → sav promet ide kroz tu mrežu.
- * - Dva preseta timeouts: "short" i "long".
- *
- * Namjerno bez HttpLoggingInterceptor-a (nema dodatnih ovisnosti).
+ * Pomoćni graditelj OkHttp klijenata s pojačanom dijagnostikom.
+ * Ne zadržava globalno stanje – svaki poziv vraća SVJEŽI klijent.
  */
 object LoggedHttp {
 
-    /** DNS koji resolve-a *preko zadanog Network-a*. */
-    private class NetworkDns(private val net: Network) : Dns {
-        override fun lookup(hostname: String): List<InetAddress> {
-            // Network#getAllByName baca UnknownHostException ako ne može resolve-ati
-            val addrs = net.getAllByName(hostname)
-            return addrs?.toList() ?: emptyList()
+    private const val TAG = "LoggedHttp"
+
+    /** Lagani log interceptor (bez tijela) da ne puni logove. */
+    private val wiretap = Interceptor { chain ->
+        val req: Request = chain.request()
+        val t0 = System.nanoTime()
+        FileLogger.writeLine("[HTTP] → ${req.method} ${req.url}")
+        try {
+            val resp: Response = chain.proceed(req)
+            val t1 = System.nanoTime()
+            val ms = (t1 - t0) / 1_000_000
+            FileLogger.writeLine("[HTTP] ← ${resp.code} ${req.url}  ${ms}ms")
+            resp
+        } catch (t: Throwable) {
+            FileLogger.writeLine("[HTTP][ERR] ${t::class.java.simpleName}: ${t.message}")
+            throw t
         }
     }
 
-    /** Zajednički dio za oba klijenta. */
-    private fun baseBuilder(net: Network): OkHttpClient.Builder =
-        OkHttpClient.Builder()
-            .dns(NetworkDns(net))
-            .socketFactory(net.socketFactory)
-            .retryOnConnectionFailure(true)
-            .pingInterval(15, TimeUnit.SECONDS) // HTTP/2 health
+    /** EventListener za mrežnu dijagnostiku (DNS/conn/tls). */
+    private fun events(tag: String) = object : EventListener() {
+        override fun dnsStart(call: okhttp3.Call, domainName: String) {
+            FileLogger.writeLine("[$tag] dnsStart $domainName")
+        }
+        override fun dnsEnd(call: okhttp3.Call, domainName: String, inetAddressList: List<java.net.InetAddress>) {
+            FileLogger.writeLine("[$tag] dnsEnd $domainName → ${inetAddressList.joinToString { it.hostAddress ?: "?" }}")
+        }
+        override fun connectStart(call: okhttp3.Call, inetSocketAddress: java.net.InetSocketAddress, proxy: java.net.Proxy) {
+            FileLogger.writeLine("[$tag] connectStart ${inetSocketAddress.hostString}:${inetSocketAddress.port}")
+        }
+        override fun secureConnectStart(call: okhttp3.Call) {
+            FileLogger.writeLine("[$tag] tlsStart")
+        }
+        override fun secureConnectEnd(call: okhttp3.Call, handshake: okhttp3.Handshake?) {
+            FileLogger.writeLine("[$tag] tlsEnd ${handshake?.cipherSuite}")
+        }
+        override fun connectFailed(
+            call: okhttp3.Call,
+            inetSocketAddress: java.net.InetSocketAddress,
+            proxy: java.net.Proxy,
+            protocol: okhttp3.Protocol?,
+            ioe: IOException
+        ) {
+            FileLogger.writeLine("[$tag][ERR] connectFailed ${inetSocketAddress.hostString}:${inetSocketAddress.port} ${ioe.message}")
+        }
+    }
 
-    /** Kratki timeouts – za brze JSON/REST pozive. */
-    fun makeShortClient(cm: ConnectivityManager, net: Network): OkHttpClient =
-        baseBuilder(net)
-            .connectTimeout(8, TimeUnit.SECONDS)
-            .readTimeout(8, TimeUnit.SECONDS)
-            .callTimeout(8, TimeUnit.SECONDS)
+    /**
+     * Svježi “produžni” klijent (dulji timeouts).
+     * - Bez shared ConnectionPool-a (svaki je nov).
+     * - Bez Cache-a (izbjegni “zaglavljena” stanja).
+     */
+    fun new(tag: String = TAG): OkHttpClient =
+        OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(25, TimeUnit.SECONDS)
+            .writeTimeout(25, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .eventListenerFactory { events(tag) }
+            .addInterceptor(wiretap)
             .build()
 
-    /** Dulji timeouts – za scrape/teže stranice. */
-    fun makeLongClient(cm: ConnectivityManager, net: Network): OkHttpClient =
-        baseBuilder(net)
-            .connectTimeout(25, TimeUnit.SECONDS)
-            .readTimeout(25, TimeUnit.SECONDS)
-            .callTimeout(25, TimeUnit.SECONDS)
+    /** Kratki klijent za “brze” pozive (FX, pingovi). */
+    fun newShort(tag: String = "$TAG-short"): OkHttpClient =
+        OkHttpClient.Builder()
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(8, TimeUnit.SECONDS)
+            .writeTimeout(8, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .eventListenerFactory { events(tag) }
+            .addInterceptor(wiretap)
             .build()
 }

@@ -26,11 +26,10 @@ class WorkFallback(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result = try {
-        FileLogger.writeLine("[WORK] doWork start → OneShotFetcher.run(fallback-worker)")
-        Log.d(TAG_WORK, "Fallback tick → OneShotFetcher.run + requestUpdateAllComplications")
+        FileLogger.writeLine("[WORK] doWork start → OneShotFetcher.runOnce()")
+        Log.d(TAG_WORK, "Fallback tick → OneShotFetcher.run")
 
-        val ok = OneShotFetcher.run(applicationContext, reason = "fallback-worker")
-
+        val ok = OneShotFetcher.runOnce(applicationContext,"fallback-worker"  )
         if (ok) {
             FileLogger.writeLine("[WORK] doWork end → success")
             Result.success()
@@ -58,7 +57,7 @@ class WorkFallback(
             try {
                 WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
                     UNIQUE_NAME,
-                    ExistingPeriodicWorkPolicy.UPDATE, // zamijeni staro raspoređivanje, ako postoji
+                    ExistingPeriodicWorkPolicy.UPDATE,
                     req
                 )
                 Log.d(TAG_WORK, "Scheduled unique periodic fallback work (15 min).")

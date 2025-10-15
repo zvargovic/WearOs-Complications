@@ -5,28 +5,36 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.complicationprovider.data.OneShotFetcher
+import com.example.complicationprovider.util.FileLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+private const val TAG = "AlignedFetchReceiver"
+
 /**
- * Pokreće OneShotFetcher točno svake pune minute (ili koliko je podešeno u AlignedFetchScheduler).
- * Nakon svakog fetch-a sam se ponovno zakazuje.
+ * Prima “aligned” alarm i odrađuje jedan ciklus fetch-a, pa replanira sljedeći tick.
  */
 class AlignedFetchReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
-        val action = intent?.action ?: "?"
-        Log.d("AlignedFetchReceiver", "onReceive action=$action")
+        FileLogger.writeLine("[ALIGNED] onReceive")
+        Log.d(TAG, "Aligned fetch tick")
 
-        CoroutineScope(Dispatchers.Default).launch {
+        val pending = goAsync()
+        val app = context.applicationContext
+
+        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             try {
-                OneShotFetcher.run(context.applicationContext, reason = "aligned-minute")
-                Log.d("AlignedFetchReceiver", "OneShotFetcher.run() done")
+                val ok = OneShotFetcher.runOnce(app, reason = "aligned-alarm")
+                FileLogger.writeLine("[ALIGNED] runOnce ok=$ok")
             } catch (t: Throwable) {
-                Log.w("AlignedFetchReceiver", "Fetcher failed: ${t.message}", t)
+                Log.w(TAG, "Aligned run failed: ${t.message}", t)
+                FileLogger.writeLine("[ALIGNED][ERR] ${t::class.java.simpleName}: ${t.message}")
             } finally {
-                // zakazivanje idućeg ticka
-                AlignedFetchScheduler.scheduleNext(context.applicationContext)
+                // uvijek replaniraj sljedeći tick
+                AlignedFetchScheduler.scheduleNext(app)
+                pending.finish()
             }
         }
     }

@@ -2,51 +2,71 @@ package com.example.complicationprovider.data
 
 import android.content.Context
 import android.util.Log
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.complicationprovider.orchestrator.AlignedFetchScheduler
+import com.example.complicationprovider.tiles.TilePreRender
+import com.example.complicationprovider.util.FileLogger
+import kotlinx.coroutines.runBlocking
+private const val TAG = "FetchOrchestratorWorker"
+private const val UNIQUE_NAME = "gold_fetch_orchestrator"
 
 /**
- * Worker koji odrađuje jedan fetch i na kraju zakaže sljedeći.
+ * Jednokratni worker koji odvrti jedan kompletan ciklus dohvaćanja
+ * koristeći OneShotFetcher. Namijenjen kao “orchestrator” kad ga
+ * netko želi explicitno pogurnuti preko WorkManagera.
  */
 class FetchOrchestratorWorker(
-    ctx: Context,
+    appContext: Context,
     params: WorkerParameters
-) : CoroutineWorker(ctx, params) {
+) : CoroutineWorker(appContext, params) {
 
-    override suspend fun doWork(): Result {
-        Log.d(TAG, "doWork() → starting orchestrated fetch")
+    override suspend fun doWork(): Result = try {
+        FileLogger.writeLine("[ORCH] doWork start → OneShotFetcher.runOnce()")
+        Log.d(TAG, "Orchestrator tick → OneShotFetcher.run")
 
-        return try {
-            val ok = OneShotFetcher.run(applicationContext, reason = "orchestrator")
-            if (ok) {
-                Log.d(TAG, "doWork() → fetch OK")
-            } else {
-                Log.w(TAG, "doWork() → fetch failed")
-            }
-
-            // 🔑 Zakazivanje sljedećeg ciklusa nakon završetka ovog run-a
-            AlignedFetchScheduler.scheduleNext(applicationContext)
-
+        val ok = OneShotFetcher.runOnce(applicationContext,"orchestrator")
+        if (ok) {
+            FileLogger.writeLine("[ORCH] doWork end → success")
+            // (sigurnosno: prerender nakon fetch-a; u slučaju faila radi se i u run catch-u)
+            runCatching { TilePreRender.run(applicationContext) }
             Result.success()
-        } catch (t: Throwable) {
-            Log.e(TAG, "doWork() exception: ${t.message}", t)
-
-            // Također zakaži idući pokušaj iako je ovaj pukao
-            AlignedFetchScheduler.scheduleNext(applicationContext)
-
+        } else {
+            FileLogger.writeLine("[ORCH] doWork end → retry (fetch failed)")
             Result.retry()
         }
+    } catch (t: Throwable) {
+        Log.w(TAG, "Orchestrator work failed: ${t.message}", t)
+        FileLogger.writeLine("[ORCH][ERR] doWork exception → ${t::class.java.simpleName}: ${t.message}")
+        // pokušaj prikazati CLOSED/OPEN izgled prema MarketSession
+        runCatching { TilePreRender.run(applicationContext) }
+        Result.retry()
     }
 
     companion object {
-        private const val TAG = "FetchOrchestrator"
+        /**
+         * Pokreni ovaj worker jednokratno (UNIQUE) — ako već postoji u redu, zamijeni.
+         * Mreža je obavezna.
+         */
+        fun enqueue(ctx: Context) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
 
-        fun ensureScheduled(context: Context) {
-            Log.d(TAG, "ensureScheduled() → enqueued/kept UNIQUE one-time work")
-            AlignedFetchScheduler.scheduleNext(context)
+            val req = OneTimeWorkRequestBuilder<FetchOrchestratorWorker>()
+                .setConstraints(constraints)
+                .build()
+
+            WorkManager.getInstance(ctx).enqueueUniqueWork(
+                UNIQUE_NAME,
+                ExistingWorkPolicy.REPLACE,
+                req
+            )
+            FileLogger.writeLine("[ORCH] enqueueUniqueWork • name=$UNIQUE_NAME")
         }
     }
 }

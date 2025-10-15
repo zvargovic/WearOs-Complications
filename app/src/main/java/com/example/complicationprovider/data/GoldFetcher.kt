@@ -2,6 +2,7 @@ package com.example.complicationprovider.data
 
 import com.example.complicationprovider.util.FileLogger
 import com.example.complicationprovider.tiles.TilePreRender
+import com.example.complicationprovider.util.MarketSession
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +17,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.time.DayOfWeek
-import java.time.Duration
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlin.math.abs
-import com.example.complicationprovider.util.MarketSession
 
 object GoldFetcher {
     private const val TAG = "GoldFetcher"
@@ -63,7 +58,7 @@ object GoldFetcher {
     private const val TD_FX_URL = "https://api.twelvedata.com/exchange_rate"
 
     private const val UA =
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit(537.36) Chrome/124.0 Safari/537.36"
 
     // Rasponi / tolerancije
     private const val MIN_USD = 200.0
@@ -94,11 +89,13 @@ object GoldFetcher {
     private suspend fun performFetch(context: Context) {
         val repo = SettingsRepo(context)
 
-        val runNow = MarketSession.isOpenNow(context) || !didFirstFetch
+        // 1) Status tržišta preko MarketSession (centralizirano)
+        val isOpen = MarketSession.isOpenNow(context)
+        val runNow = isOpen || !didFirstFetch
         if (!runNow) {
-            val until = MarketSession.closedEtaText(context)
-            Log.i(TAG, "[MARKET] Closed — skip, until: $until")
-            throw IllegalStateException("Market closed")
+            val etaText = MarketSession.closedEtaText(context)
+            Log.i(TAG, "[MARKET] Closed — skip fetch. $etaText")
+            throw IllegalStateException("Market closed — $etaText")
         }
 
         val settings = repo.flow.first()
@@ -151,7 +148,6 @@ object GoldFetcher {
         val usdCons = consensus(usdQuotes.filter { it.value != null })
         val eurCons = consensus(eurQuotes.filter { it.value != null })
         FileLogger.writeLine("[GF] consensus USD=$usdCons EUR=$eurCons")
-
         // Global last
         runCatching {
             SnapshotStore.setGlobalLast(context, System.currentTimeMillis(), eurCons.toDouble())
@@ -314,7 +310,6 @@ object GoldFetcher {
         Log.w(TAG, "[WARN] FX failed: ${t.message}")
         BigDecimal.ONE
     }
-
     // ——— Investing parser ———
     private fun parseInvestingPriceFromHtml(html: String, currency: String): Double? {
         val (lo, hi) = if (currency.equals("USD", true)) MIN_USD to MAX_USD else MIN_EUR to MAX_EUR
@@ -365,8 +360,8 @@ object GoldFetcher {
         fun d2(v: Double?) = if (v == null) "n/a" else
             DecimalFormat("0.00", DecimalFormatSymbols(Locale.US).apply { decimalSeparator = '.' }).format(v)
 
-        val dayStartUtc = ZonedDateTime.now(ZoneOffset.UTC).toLocalDate()
-            .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val dayStartUtc = java.time.ZonedDateTime.now(java.time.ZoneOffset.UTC).toLocalDate()
+            .atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
 
         val eurRsi = Indicators.rsi(closeEur, pRsi)
         val eurSma20 = Indicators.sma(closeEur, pMid)
@@ -401,7 +396,6 @@ object GoldFetcher {
         Log.i(TAG, "[IND][EUR] SMA$pShort=${d2(eurSma9)}  SMA$pLong=${d2(eurSma50)}")
         Log.i(TAG, "[IND][USD] SMA$pShort=${d2(usdSma9)}  SMA$pLong=${d2(usdSma50)}")
     }
-
 
     // ——— modeli/pomagala ———
     private data class Quote(

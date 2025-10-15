@@ -1,106 +1,143 @@
 package com.example.complicationprovider.net
 
 import android.content.Context
-import android.net.*
-import android.util.Log
-import kotlinx.coroutines.CoroutineScope
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
+import android.os.Build
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-// === Centralni import za OneShotFetcher (ali ga više ne zovemo osim ako flagovi dopuštaju)
-import com.example.complicationprovider.data.OneShotFetcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import java.net.InetAddress
+import java.util.concurrent.CancellationException
 
 /**
- * NetWatch: prati mrežu i (po potrebi) triggira fetch.
- * SADA: po defaultu NEMA triggiranja; jedini izvor fetcha je WorkManager.
+ * Kombinira stari i novi NetWatch API — puni backward compatibility.
  */
 object NetWatch {
-    private const val TAG = "NetWatch"
 
-    // --------- FEATURE FLAGS (podesivo) ----------
-    /** Ako je true: na VALIDATED mrežu triggat će OneShotFetcher. Default: false (isključeno). */
-    private const val TRIGGER_ON_VALIDATED = false
-    /** Ako je true: na promjene Wi-Fi-ja triggat će OneShotFetcher. Default: false (isključeno). */
-    private const val TRIGGER_ON_WIFI = false
-    // ---------------------------------------------
+    // ======== LEGACY API (za OneShotFetcher.kt) ========
 
-    private var registered = false
-    private var callback: ConnectivityManager.NetworkCallback? = null
-
-    fun start(context: Context) {
-        if (registered) return
+    /** Je li mreža dostupna (bilo WiFi ili mobilna). */
+    fun isOnline(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val net = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(net) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
 
-        val req = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
+    /** Tekstualni opis trenutno aktivnog transporta. */
+    fun activeTransport(context: Context): String {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val net = cm.activeNetwork ?: return "none"
+        val caps = cm.getNetworkCapabilities(net) ?: return "none"
+        return when {
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> "wifi"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> "cellular"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "ethernet"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> "bt"
+            else -> "unknown"
+        }
+    }
 
-        callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                Log.d(TAG, "onAvailable (network=${network.hashCode()})")
-                maybeTrigger(context, reason = "available")
-            }
+    /** Suspendira dok se ne pojavi validna mreža (do timeouta). */
+    suspend fun waitForInternet(context: Context, timeoutMs: Long = 4000L): Boolean {
+        val start = System.currentTimeMillis()
+        while (System.currentTimeMillis() - start < timeoutMs) {
+            if (isOnline(context)) return true
+            delay(250)
+        }
+        return false
+    }
 
-            override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
-                val validated = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-                val wifi = caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                val cell = caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                Log.d(TAG, "onCapabilitiesChanged validated=$validated wifi=$wifi cell=$cell")
-                if (validated) {
-                    maybeTrigger(context, reason = "validated-online")
+    /** Legacy DNS warmup (samo lista hostova). */
+    suspend fun warmupDns(hosts: List<String>): Boolean = withContext(Dispatchers.IO) {
+        var ok = false
+        for (h in hosts) {
+            val r = runCatching { InetAddress.getAllByName(h) }.isSuccess
+            ok = ok or r
+        }
+        ok
+    }
+
+    // ======== NOVI API (za Workeri / Receivers) ========
+
+    suspend fun <R> runWithNet(
+        context: Context,
+        reason: String? = null,
+        warmupDns: Boolean = true,
+        timeoutMs: Long = 4_000L,
+        block: suspend () -> R
+    ): R {
+        if (!hasValidatedNetwork(context)) {
+            delay(350)
+            if (!hasValidatedNetwork(context))
+                throw IllegalStateException("No validated network${reason?.let { " ($it)" } ?: ""}")
+        }
+
+        if (warmupDns) {
+            withContext(Dispatchers.IO) {
+                runCatching {
+                    warmupDns(
+                        context = context,
+                        hosts = listOf("google.com", "api.metals.live", "api.metals.dev")
+                    )
                 }
-            }
-
-            override fun onLinkPropertiesChanged(network: Network, lp: LinkProperties) {
-                Log.d(TAG, "onLinkPropertiesChanged iface=${lp.interfaceName} dns=${lp.dnsServers}")
-            }
-
-            override fun onLost(network: Network) {
-                Log.d(TAG, "onLost (network=${network.hashCode()})")
             }
         }
 
-        cm.registerNetworkCallback(req, callback!!)
-        registered = true
-        Log.i(TAG, "NetWatch started (TRIGGER_ON_VALIDATED=$TRIGGER_ON_VALIDATED, TRIGGER_ON_WIFI=$TRIGGER_ON_WIFI)")
+        return withTimeoutSoft(timeoutMs) { block() }
     }
 
-    fun stop(context: Context) {
-        if (!registered) return
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        runCatching { cm.unregisterNetworkCallback(callback!!) }
-        callback = null
-        registered = false
-        Log.i(TAG, "NetWatch stopped")
-    }
+    suspend fun <R> withOnline(context: Context, reason: String? = null, block: suspend () -> R): R =
+        runWithNet(context, reason, true, 4_000L, block)
 
-    private fun maybeTrigger(context: Context, reason: String) {
-        when (reason) {
-            "validated-online" -> {
-                if (TRIGGER_ON_VALIDATED) {
-                    Log.i(TAG, "→ OneShotFetcher.run(reason=$reason)")
-                    CoroutineScope(Dispatchers.Default).launch {
-                        OneShotFetcher.run(context, reason)
-                        Log.i(TAG, "OneShotFetcher.run DONE (reason=$reason)")
-                    }
-                } else {
-                    Log.d(TAG, "suppressed trigger (validated-online) — orchestrator only")
-                }
-            }
-            "available" -> {
-                if (TRIGGER_ON_WIFI) {
-                    Log.i(TAG, "→ OneShotFetcher.run(reason=$reason)")
-                    CoroutineScope(Dispatchers.Default).launch {
-                        OneShotFetcher.run(context, reason)
-                        Log.i(TAG, "OneShotFetcher.run DONE (reason=$reason)")
-                    }
-                } else {
-                    Log.d(TAG, "suppressed trigger (available) — orchestrator only")
-                }
-            }
-            else -> {
-                Log.d(TAG, "suppressed trigger ($reason)")
+    suspend fun <R> withOnline(context: Context, block: suspend () -> R): R =
+        runWithNet(context, null, true, 4_000L, block)
+
+    suspend fun <R> netGuard(context: Context, reason: String? = null, block: suspend () -> R): R =
+        runWithNet(context, reason, true, 4_000L, block)
+
+    suspend fun <R> netGuard(context: Context, block: suspend () -> R): R =
+        runWithNet(context, null, true, 4_000L, block)
+
+    fun pokeSockets(context: Context) {
+        runCatching {
+            val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+            if (wifi != null && Build.VERSION.SDK_INT < 29) {
+                @Suppress("DEPRECATION")
+                wifi.reassociate()
             }
         }
+    }
+
+    suspend fun warmupDns(context: Context, hosts: List<String>): Boolean = withContext(Dispatchers.IO) {
+        var ok = false
+        for (h in hosts) {
+            val r = runCatching { InetAddress.getAllByName(h) }.isSuccess
+            ok = ok or r
+        }
+        ok
+    }
+
+    private fun hasValidatedNetwork(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val net = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(net) ?: return false
+        val validated = if (Build.VERSION.SDK_INT >= 23)
+            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        else
+            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        val hasTransport =
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                    caps.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)
+        return validated && hasTransport
+    }
+
+    private suspend fun <T> withTimeoutSoft(timeoutMs: Long, block: suspend () -> T): T {
+        if (timeoutMs <= 0L) return block()
+        return kotlinx.coroutines.withTimeout(timeoutMs) { block() }
     }
 }
