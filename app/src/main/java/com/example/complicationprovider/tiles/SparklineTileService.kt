@@ -22,6 +22,17 @@ class SparklineTileService : TileService() {
     companion object {
         private const val TAG = "SparklineTile"
         private const val IMG_ID = "chart_v10"   // isti ID u layoutu i resources
+        fun requestUpdate(context: android.content.Context) {
+            android.util.Log.d(TAG, "requestUpdate() → TileUpdater.requestUpdate")
+            TileService.getUpdater(context).requestUpdate(SparklineTileService::class.java)
+        }
+
+        /** (opcionalno) počisti memory cache da prisilimo novi render PNG-a */
+        fun invalidateCache() {
+            TilePngCache.bytes = null
+            TilePngCache.version = ""     // prazno umjesto null
+
+        }
     }
 
     // ------------------------------------------------------------
@@ -31,6 +42,7 @@ class SparklineTileService : TileService() {
         Log.wtf(TAG, ">>> onTileRequest START")
         val freshness = 60_000L
         val ver = System.currentTimeMillis().toString()
+        Log.d("SparkLineTileService", "onTileRequest ver=$ver")
 
         val image = LayoutElementBuilders.Image.Builder()
             .setWidth(DimensionBuilders.expand())

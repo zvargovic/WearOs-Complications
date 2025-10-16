@@ -163,7 +163,18 @@ object SnapshotStore {
                     "new=${fmt2(priceEur)} open=${fmt2(open)}"
         )
 
-        if (slot5 == null) return
+// Ako NIJE slot → osvježi "rep" 5-min serije da bude jednak globalLast/new
+        if (slot5 == null) {
+            // Osvježi zadnju poznatu točku u seriji da prati “trenutnu” cijenu
+            val map = parseSeries(p.getString(KEY_SERIES5, ""))
+            if (map.isNotEmpty()) {
+                val lastIdx = map.keys.max()
+                map[lastIdx] = priceEur
+                saveSeries(context, KEY_SERIES5, map)
+                Log.d(TAG, "appendIfOnSlot() → forced tail update to ${fmt2(priceEur)} at idx=$lastIdx")
+            }
+            return
+        }
 
         // ——— SANITY GUARDS ———
         if (!isInRange(priceEur)) {
@@ -189,6 +200,8 @@ object SnapshotStore {
         // upiši u serije
         val added5 = saveOrReplacePoint(context, KEY_SERIES5, slot5, priceEur)
         if (added5) {
+            trimTailAfter(context, KEY_SERIES5, slot5)
+
             // 30-min slot(ovi)
             val slot30 = totalMin / 30
             saveOrReplacePoint(context, KEY_SERIES30, slot30, priceEur)
@@ -210,7 +223,7 @@ object SnapshotStore {
     /** Pomoćna čitanja za renderer / complicatione. */
     fun get(
         context: Context,
-        slotsPerDay: Int = 288, // 5-min slotovi
+        slotsPerDay: Int = 288,
     ): SnapshotData {
         val p = prefs(context)
         val day = p.getString(KEY_DAY, null)
@@ -221,15 +234,16 @@ object SnapshotStore {
 
         val series5 = parseSeries(p.getString(KEY_SERIES5, ""))
         val values = ArrayList<Double?>(slotsPerDay)
-        // napuni do slotsPerDay
         for (i in 0 until slotsPerDay) values += series5[i] ?: null
+
+        val gLast = p.getString(KEY_GLOBAL_LAST, null)?.toDoubleOrNull()
+        val gLastTs = p.getLong(KEY_GLOBAL_LAST_TS, 0)
 
         val nonNull = values.count { it != null }
         Log.d(
             TAG,
             "get() → savedDay=$day today=${todayUtc()} open=${fmt2(open)} min=${fmt2(minV)} max=${fmt2(maxV)} " +
-                    "updated=$updated seriesNonNull=$nonNull gLast=${p.getString(KEY_GLOBAL_LAST, "n/a")} " +
-                    "gLastTs=${p.getLong(KEY_GLOBAL_LAST_TS, 0)}"
+                    "updated=$updated seriesNonNull=$nonNull gLast=${fmt2(gLast)} gLastTs=$gLastTs"
         )
 
         return SnapshotData(
@@ -237,7 +251,9 @@ object SnapshotStore {
             min = minV,
             max = maxV,
             updated = updated,
-            series = values
+            series = values,
+            gLast = gLast,
+            gLastTs = gLastTs
         )
     }
 
@@ -307,6 +323,22 @@ object SnapshotStore {
         }
         prefs(context).edit().putString(key, sb.toString()).apply()
     }
+    private fun trimTailAfter(context: Context, key: String, lastIdx: Int) {
+        val p = prefs(context)
+        val raw = p.getString(key, "") ?: ""
+        if (raw.isBlank()) return
+
+        val map = parseSeries(raw)
+        val before = map.size
+        // obriši sve slotove > lastIdx
+        val toRemove = map.keys.filter { it > lastIdx }
+        if (toRemove.isNotEmpty()) {
+            toRemove.forEach { map.remove(it) }
+            saveSeries(context, key, map)
+            Log.d(TAG, "trimTailAfter() → cleared indices > $lastIdx for $key (removed=${toRemove.size}, from=$before to=${map.size})")
+            FileLogger.writeLine("[SNAP] trimTailAfter cleared > $lastIdx ($key)")
+        }
+    }
 
     private fun saveSeries5(context: Context, map: Map<Int, Double>) = saveSeries(context, KEY_SERIES5, map)
     private fun saveSeries30(context: Context, map: Map<Int, Double>) = saveSeries(context, KEY_SERIES30, map)
@@ -317,6 +349,8 @@ object SnapshotStore {
         val min: Double,
         val max: Double,
         val updated: Long,
-        val series: List<Double?> // 5-min slotovi
+        val series: List<Double?>, // 5-min slotovi
+        val gLast: Double?,      // globalni “trenutni” last
+        val gLastTs: Long?
     )
 }

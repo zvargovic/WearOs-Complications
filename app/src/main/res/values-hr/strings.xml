@@ -31,6 +31,7 @@
     <string name="market_status">Market Status</string>
     <string name="datastore_cleared_warning">⚠️ DataStore je potpuno obrisan!</string>
     <string name="market_closed_open_in">Tržište zatvoreno — otvara za %s</string>
-
+    <string name="day_graph">Dnevni graf</string>
+    <string name="spot_sign">Cijena</string>
 
 </resources>

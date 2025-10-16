@@ -327,25 +327,49 @@ object ChartRenderer {
         val filledCount = k
         val lastSlotInDay = if (filledCount > 0) (firstSlot + filledCount - 1) % slotsPerDay else firstSlot
 
+        // Path
         if (xyRaw.size >= 2) {
-            val xyFiltered = if (cfg.smoothMedianWindow >= 3) {
-                val w = if (cfg.smoothMedianWindow % 2 == 1) cfg.smoothMedianWindow else cfg.smoothMedianWindow + 1
-                medianFilterPoints(xyRaw, w)
-            } else xyRaw
-            val xySampled = if (cfg.resampleStepPx > 0f) resampleByXStep(xyFiltered, cfg.resampleStepPx) else xyFiltered
-            val path = if (cfg.smoothMonotone && xySampled.size >= 2) buildMonotoneBezierPath(xySampled)
-            else buildCatmullRomPath(xySampled, cfg.smoothingT)
+            val xyFiltered =
+                if (cfg.smoothMedianWindow >= 3) {
+                    val w = if (cfg.smoothMedianWindow % 2 == 1)
+                        cfg.smoothMedianWindow else cfg.smoothMedianWindow + 1
+                    medianFilterPoints(xyRaw, w)
+                } else xyRaw
+
+            val xySampled =
+                if (cfg.resampleStepPx > 0f)
+                    resampleByXStep(xyFiltered, cfg.resampleStepPx) else xyFiltered
+
+            val path =
+                if (cfg.smoothMonotone && xySampled.size >= 2)
+                    buildMonotoneBezierPath(xySampled)
+                else
+                    buildCatmullRomPath(xySampled, cfg.smoothingT)
+
             c.drawPath(path, linePaint)
         }
 
-        if (filledCount > 0) {
-            val lastV = values.last { it != null }!!
+// Zadnja stvarna točka iz serije (standardna dot)
+        val lastVInSeries = values.lastOrNull { it != null }
+        if (filledCount > 0 && lastVInSeries != null) {
             val lastX = xAtSlot(lastSlotInDay)
-            val lastY = yAt(lastV)
+            val lastY = yAt(lastVInSeries)
             val dotPaint = Paint().apply { color = cfg.line; isAntiAlias = true; style = Paint.Style.FILL }
             c.drawCircle(lastX, lastY, cfg.dotRadiusPx, dotPaint)
         }
-        // --- Min/Max vodilice + tekst ---
+
+// "Ghost" točka na desnom rubu ako lastPrice (gLast) != zadnjem sampleu
+        series.lastPrice?.let { lp ->
+            val eps = 1e-6
+            val needsGhost = (lastVInSeries == null) || kotlin.math.abs(lp - lastVInSeries) > eps
+            if (needsGhost) {
+                val ghostPaint = Paint().apply { color = cfg.line; isAntiAlias = true; style = Paint.Style.FILL }
+                val ghostX = area.right
+                val ghostY = yAt(lp)
+                c.drawCircle(ghostX, ghostY, cfg.dotRadiusPx, ghostPaint)
+            }
+        }
+// --- Min/Max vodilice + tekst --- (ostatak koda ostaje)
         run {
             val minVal = series.min
             val maxVal = series.max

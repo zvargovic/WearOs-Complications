@@ -28,5 +28,6 @@
     <string name="datastore_cleared_warning">⚠️ DataStore has been completely cleared!</string>
 
     <string name="market_closed_open_in">Market closed — opens at %s</string>
-
+    <string name="day_graph">Daily graph</string>
+    <string name="spot_sign">Price</string>
 </resources>

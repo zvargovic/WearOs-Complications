@@ -1,5 +1,7 @@
 package com.example.complicationprovider.data
 
+import android.content.ComponentName
+import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import com.example.complicationprovider.util.FileLogger
 import com.example.complicationprovider.tiles.TilePreRender
 import com.example.complicationprovider.util.MarketSession
@@ -148,36 +150,79 @@ object GoldFetcher {
         val usdCons = consensus(usdQuotes.filter { it.value != null })
         val eurCons = consensus(eurQuotes.filter { it.value != null })
         FileLogger.writeLine("[GF] consensus USD=$usdCons EUR=$eurCons")
-        // Global last
-        runCatching {
-            SnapshotStore.setGlobalLast(context, System.currentTimeMillis(), eurCons.toDouble())
-            Log.d(TAG, "[GLOBAL-LAST] set → EUR=${fmt(eurCons)}")
-        }.onFailure { Log.w(TAG, "[GLOBAL-LAST] set failed: ${it.message}") }
 
-        // upis u 48-slot seriju (slot na :00 / :30 ± tolerance)
+        fun Double.isGood() = this.isFinite() && this > 0.0
+
+        val usdD = usdCons.toDouble()
+        val eurD = eurCons.toDouble()
+        val fxD  = eurUsd.toDouble()
+
+// Global last – upiši samo ako je eur>0
+        if (eurD.isGood()) {
+            runCatching {
+                SnapshotStore.setGlobalLast(context, System.currentTimeMillis(), eurD)
+                Log.d(TAG, "[GLOBAL-LAST] set → EUR=${fmt(eurCons)}")
+            }.onFailure { Log.w(TAG, "[GLOBAL-LAST] set failed: ${it.message}") }
+        } else {
+            FileLogger.writeLine("[GLOBAL-LAST][SKIP] invalid eur=$eurD")
+        }
+
+// upis u 48-slot seriju (slot na :00 / :30 ± tolerance) – samo ako je eur>0
         val ts = System.currentTimeMillis()
-        SnapshotStore.appendIfOnSlot(context, ts, eurCons.toDouble(), toleranceSec = 90)
+        if (eurD.isGood()) {
+            SnapshotStore.appendIfOnSlot(context, ts, eurD, toleranceSec = 90)
+        } else {
+            FileLogger.writeLine("[SLOT][SKIP] invalid eur=$eurD")
+        }
 
-        val snap = Snapshot(
-            usdConsensus = usdCons.toDouble(),
-            eurConsensus = eurCons.toDouble(),
-            eurUsdRate = eurUsd.toDouble(),
-            updatedEpochMs = System.currentTimeMillis(),
-        )
-
-        // spremi snapshot + history
-        repo.saveSnapshot(snap)
-        FileLogger.writeLine("[GF] saved snapshot eur=${snap.eurConsensus} usd=${snap.usdConsensus} fx=${snap.eurUsdRate}")
-        repo.appendHistory(
-            HistoryRec(
-                ts = snap.updatedEpochMs,
-                usd = snap.usdConsensus,
-                eur = snap.eurConsensus,
-                fx  = snap.eurUsdRate
+// spremi snapshot + history samo ako su sve vrijednosti valjane
+        if (usdD.isGood() && eurD.isGood() && fxD.isGood()) {
+            val snap = Snapshot(
+                usdConsensus = usdD,
+                eurConsensus = eurD,
+                eurUsdRate = fxD,
+                updatedEpochMs = System.currentTimeMillis(),
             )
-        )
-        Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
+            repo.saveSnapshot(snap)
+            FileLogger.writeLine("[GF] saved snapshot eur=${snap.eurConsensus} usd=${snap.usdConsensus} fx=${snap.eurUsdRate}")
 
+            repo.appendHistory(
+                HistoryRec(
+                    ts = snap.updatedEpochMs,
+                    usd = snap.usdConsensus,
+                    eur = snap.eurConsensus,
+                    fx  = snap.eurUsdRate
+                )
+            )
+            Log.i(TAG, "[SNAPSHOT] saved: USD=${fmt(usdCons)} EUR=${fmt(eurCons)} FX=$eurUsd")
+            Log.d("TilesKick","requestUpdate → Spot, Chart, Complications")
+
+            // invalidiraj Tile i komplikacije čim su podaci spremljeni
+            com.example.complicationprovider.tiles.SpotTileService.requestUpdate(context)
+            com.example.complicationprovider.tiles.SparklineTileService.requestUpdate(context)
+            // osvježi sve komplikacije (svaki data source service posebno)
+            runCatching {
+                ComplicationDataSourceUpdateRequester.create(
+                    context,
+                    ComponentName(context, com.example.complicationprovider.complications.SpotComplicationService::class.java)
+                ).requestUpdateAll()
+
+                ComplicationDataSourceUpdateRequester.create(
+                    context,
+                    ComponentName(context, com.example.complicationprovider.complications.RsiComplicationService::class.java)
+                ).requestUpdateAll()
+
+                ComplicationDataSourceUpdateRequester.create(
+                    context,
+                    ComponentName(context, com.example.complicationprovider.complications.RangedPriceComplicationService::class.java)
+                ).requestUpdateAll()
+
+                ComplicationDataSourceUpdateRequester.create(
+                    context,
+                    ComponentName(context, com.example.complicationprovider.complications.RocComplicationService::class.java)
+                ).requestUpdateAll()
+            }.onFailure { Log.w(TAG, "Complication update request failed: ${it.message}") }
+        }
         // prerender PNG + zatraži update tile-a
         TilePreRender.run(context)
 
