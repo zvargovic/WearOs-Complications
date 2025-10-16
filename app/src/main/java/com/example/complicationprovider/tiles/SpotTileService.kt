@@ -1,20 +1,21 @@
 package com.example.complicationprovider.tiles
 
 import android.content.Context
-import androidx.wear.tiles.RequestBuilders
-import androidx.wear.tiles.TileBuilders
-import androidx.wear.tiles.TileService
-import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
-import androidx.wear.tiles.ResourceBuilders as TileResBuilders
-
+import android.util.Log
 import androidx.wear.protolayout.ColorBuilders
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.TimelineBuilders as ProtoTL
-
+import androidx.wear.tiles.RequestBuilders
+import androidx.wear.tiles.TileBuilders
+import androidx.wear.tiles.TileService
+import androidx.wear.tiles.ResourceBuilders as TileResBuilders
+import com.example.complicationprovider.data.Indicators
 import com.example.complicationprovider.data.SettingsRepo
+import com.example.complicationprovider.data.SnapshotStore
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -33,7 +34,8 @@ class SpotTileService : TileService() {
     override fun onTileRequest(
         requestParams: RequestBuilders.TileRequest
     ): ListenableFuture<TileBuilders.Tile> {
-        android.util.Log.d("SpotTile", "onTileRequest() start")
+        Log.e("SpotTile", ">>> onTileRequest START")
+
         val repo = SettingsRepo(applicationContext)
 
         val eurNow: Double
@@ -43,45 +45,33 @@ class SpotTileService : TileService() {
 
         runBlocking {
             val snap = repo.snapshotFlow.first()
+            val store = SnapshotStore.get(applicationContext)
 
-            // 1) SnapshotStore (lokalni cache + global last)
-            val store = com.example.complicationprovider.data.SnapshotStore.get(applicationContext)
-
-            // Fallback lanci: preferiraj gLast, pa zadnju točku iz serije, pa open
+            // --- 1) Cijena sada: consensus → gLast → lastInSeries → open
             val lastInSeries: Double = store.series.lastOrNull { it != null } ?: store.open
             val lastNow: Double = store.gLast ?: lastInSeries
-
-            // eurNow: prvo consensus sa mreže; ako ga nema → lastNow iz store-a
             eurNow = if (snap.eurConsensus > 0.0) snap.eurConsensus else lastNow
 
-            // 2) Min/Max za današnji dan (UTC). Ako history prazan, uzmi iz store-a.
+            // --- 2) Dnevni min/max (UTC): iz history; fallback na SnapshotStore min/max
             val history = repo.historyFlow.first()
             val dayStartUtcMs = LocalDate.now(ZoneOffset.UTC)
                 .atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 
-            val (mn, mx) = com.example.complicationprovider.data.Indicators
-                .dayMinMax(history, dayStartUtcMs) { it.eur }
+            val (mn, mx) = Indicators.dayMinMax(history, dayStartUtcMs) { it.eur }
             dayMin = mn ?: store.min
             dayMax = mx ?: store.max
 
-            // 3) RSI(14) na dostupnoj povijesti (ako prazno → 50.0)
-            val series = if (history.isNotEmpty()) history.map { it.eur } else emptyList()
-            rsiVal = com.example.complicationprovider.data.Indicators.rsi(series, 14) ?: 50.0
+            // --- 3) RSI(14): iz history; fallback na lokalnu seriju; default 50.0
+            val series = if (history.isNotEmpty()) history.map { it.eur } else store.series.filterNotNull()
+            rsiVal = Indicators.rsi(series, 14) ?: 50.0
 
-            // Debug pomoćni logovi
-            android.util.Log.d(
+            // Debug logovi
+            Log.d(
                 "SpotTile",
-                "fallbacks → lastInSeries=%.2f lastNow=%.2f eurConsensus=%.2f"
-                    .format(lastInSeries, lastNow, snap.eurConsensus)
+                "fallbacks → eurConsensus=${snap.eurConsensus} lastInSeries=$lastInSeries lastNow=$lastNow"
             )
+            Log.d("SpotTile", "Resolved → eurNow=$eurNow dayMin=$dayMin dayMax=$dayMax rsiVal=$rsiVal")
         }
-
-        android.util.Log.d(
-            "SpotTile",
-            "onTileRequest data → eurNow=%.2f min=%.2f max=%.2f rsi=%.1f".format(
-                eurNow, (dayMin ?: 0.0), (dayMax ?: 0.0), rsiVal
-            )
-        )
 
         val layout = buildLayout(
             spotTxt = "€" + "%,.2f".format(Locale.US, eurNow),
@@ -100,8 +90,18 @@ class SpotTileService : TileService() {
             .setFreshnessIntervalMillis(60_000)
             .build()
 
-        android.util.Log.d("SpotTile", "onTileRequest END → returning Tile")
+        Log.e("SpotTile", "<<< onTileRequest END → returning Tile")
         return Futures.immediateFuture(tile)
+    }
+
+    override fun onResourcesRequest(
+        requestParams: RequestBuilders.ResourcesRequest
+    ): ListenableFuture<TileResBuilders.Resources> {
+        Log.d("SpotTile", "onResourcesRequest() → version=${requestParams.version}")
+        val res = TileResBuilders.Resources.Builder()
+            .setVersion("1")
+            .build()
+        return Futures.immediateFuture(res)
     }
 
     private fun buildLayout(
@@ -110,18 +110,18 @@ class SpotTileService : TileService() {
         maxTxt: String,
         rsiTxt: String
     ): LayoutElementBuilders.Layout {
-        val cardBg = c(0x1FFFFFFF.toInt())
+        val cardBg  = c(0x1FFFFFFF.toInt())
         val titleCol = c(0xFFE0E0E0.toInt())
         val priceCol = c(0xFFFFFFFF.toInt())
-        val minCol = c(0xFFF05454.toInt())
-        val maxCol = c(0xFF38D66B.toInt())
-        val hintCol = c(0xFFB0B0B0.toInt())
+        val minCol   = c(0xFFF05454.toInt())
+        val maxCol   = c(0xFF38D66B.toInt())
+        val hintCol  = c(0xFFB0B0B0.toInt())
 
         val title = text("Spot (XAU/EUR)", 13f, titleCol, true)
         val price = text(spotTxt, 28f, priceCol, true)
-        val minT = text("▼ $minTxt", 14f, minCol, false)
-        val maxT = text("▲ $maxTxt", 14f, maxCol, false)
-        val rsi = text(rsiTxt, 14f, hintCol, false)
+        val minT  = text("▼ $minTxt", 14f, minCol, false)
+        val maxT  = text("▲ $maxTxt", 14f, maxCol, false)
+        val rsi   = text(rsiTxt, 14f, hintCol, false)
 
         val rowMinMax = LayoutElementBuilders.Row.Builder()
             .addContent(minT)
