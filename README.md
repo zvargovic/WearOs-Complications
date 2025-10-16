@@ -4,6 +4,7 @@
 > **EN**: Wear OS tiles showing **XAU/EUR spot**, daily **min/max**, and **RSI(14)** with a smooth intraday sparkline.
 
 <p align="center">
+   <img src="docs/screenshots/comp_1.png" width="240" />
   <img src="docs/screenshots/sparkline_1.png" width="240" />
   <img src="docs/screenshots/spot_1.png" width="240" />
   <img src="docs/screenshots/settings_1.png" width="240" />
